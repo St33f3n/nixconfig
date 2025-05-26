@@ -75,8 +75,6 @@ in {
 
   services.displayManager = {
     sddm.enable = true;
-    sddm.theme = "sddm-astronaut-theme";
-    #"${import ../home-manager/sddm-theme.nix { inherit pkgs; }}";
   };
 
   environment = {
@@ -147,7 +145,6 @@ in {
   environment.systemPackages = with pkgs; [
 
     libsForQt5.qt5.qtwayland
-    sddm-astronaut
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     dunst
     helix
@@ -216,7 +213,7 @@ in {
     typescript-language-server
     qalculate-gtk
     nix-prefetch-git
-    sddm
+    kdePackages.sddm
     nixfmt
     nix-tree
     nix-du
