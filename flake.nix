@@ -6,16 +6,13 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home manager
-    home-manager.url = "github:nix-community/home-manager/master";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Astal
-    my-shell.url = "./astal-module";
-    my-shell.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager = {
+      url = "github:nix-community/home-manager/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+      };
 
     # Hyprland
     hyprland.url = "github:hyprwm/Hyprland";
-
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
@@ -45,7 +42,6 @@
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
     overlays = import ./overlays {inherit inputs;};
-    nixosModules = import ./modules/nixos;
     homeManagerModules = import ./modules/home-manager;
 
     nixosConfigurations = {
@@ -53,7 +49,7 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main nixos configuration file <
-          ./nixos-triton/configuration.nix
+          ./machines/triton/configuration.nix
           home-manager.nixosModules.home-manager{
             home-manager.extraSpecialArgs = {inherit inputs outputs;};
             home-manager.useGlobalPkgs = true;
