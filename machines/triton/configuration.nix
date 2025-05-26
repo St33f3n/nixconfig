@@ -99,7 +99,6 @@ in {
   hardware = {
     graphics.enable = true;
     nvidia.modesetting.enable = true;
-    pulseaudio.enable = false;
   };
   security.polkit.enable = true;
   security.rtkit.enable = true;
@@ -158,22 +157,17 @@ in {
     nerd-fonts.zed-mono
     nerd-fonts.fira-code
     nerd-fonts.fira-mono
-    zed-editor
     git
     curl
-    webcord
     localsend
     alacritty
     yazi
-    fzf
     nvidia-container-toolkit
     uv
-    amber-secret
     arduino-ide
     blueman
     cliphist
     zoxide
-    zsh
     noisetorch
     picocrypt
     carapace
@@ -182,7 +176,6 @@ in {
     starship
     thunderbird-latest-unwrapped
     zellij
-    vscode-fhs
     protonmail-bridge
     atuin
     nextcloud-client
@@ -202,7 +195,6 @@ in {
     ripgrep
     eza
     direnv
-    elixir_1_16
     libreoffice-fresh
     rustup
     nodejs
@@ -248,7 +240,6 @@ in {
     bun
     bacon
     lazygit
-    #eww
   ];
 
 
