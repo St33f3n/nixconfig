@@ -94,7 +94,7 @@ in {
   programs.starship = {
     enable = true;
     enableNushellIntegration = true;
-    settings = starship_config.starship_string;
+    settings = lib.mkForce starship_config.starship_string;
   };
 
   programs.atuin = {
