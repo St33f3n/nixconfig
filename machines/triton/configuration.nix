@@ -173,7 +173,6 @@ in {
     starship
     thunderbird-latest-unwrapped
     zellij
-    protonmail-bridge
     atuin
     nextcloud-client
     fd
@@ -214,7 +213,7 @@ in {
     qalculate-gtk
     nix-prefetch-git
     kdePackages.sddm
-    nixfmt
+    nixfmt-rfc-style
     nix-tree
     nix-du
     nixpkgs-review

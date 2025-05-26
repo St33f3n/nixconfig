@@ -19,11 +19,11 @@ color_scheme = {
     base06 = "e6f3f7"; # text_primary
   };
 
-  imgLink = "https://nextcloud.organiccircuitlab.com/s/8mcMtc74RxcaBSz";
+  imgLink = "https://nextcloud.organiccircuitlab.com/s/8mcMtc74RxcaBSz/download/rocket_launch.jpg";
 
   image = pkgs.fetchurl {
     url = imgLink;
-    sha256 = "1k5cf0q3ycgcfk195hdngg89r15z0zyfb5xmmr1w79xfs5c0iihh";
+    sha256 = "16rbyymlczjz8i00kmkdfaxzih3d7drjj5xkc35rld91q1pjzrmi";
   };
   
 in{
