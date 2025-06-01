@@ -110,23 +110,36 @@ stdenv.mkDerivation rec {
 
   # Fix library paths and environment
   postFixup = ''
-    # The autoPatchelfHook handles most of this automatically!
-    # But we can add extra environment setup if needed
-    echo "=== autoPatchelfHook Debug ==="
-    find $out/lib/zen-browser -name "*glxtest*" -exec file {} \;
-    find $out/lib/zen-browser -name "*glxtest*" -exec ldd {} \; || true
+
+mkdir -p $out/lib/zen-browser-runtime
+  ln -sf ${pciutils}/lib/libpci.* $out/lib/zen-browser-runtime/ || true
+  ln -sf ${libglvnd}/lib/libGL.* $out/lib/zen-browser-runtime/ || true
+
   
-     patchelf --set-rpath "${lib.makeLibraryPath [
+echo "=== autoPatchelfHook Debug ==="
+  find $out/lib/zen-browser -name "*glxtest*" -exec file {} \;
+  find $out/lib/zen-browser -name "*glxtest*" -exec ldd {} \; || true
+  
+  echo "=== Manual patchelf for GPU libraries ==="
+  echo "Before manual patchelf:"
+  patchelf --print-rpath $out/lib/zen-browser/glxtest
+  
+  patchelf --set-rpath "${lib.makeLibraryPath [
     pciutils        # für libpci
     libglvnd        # für libGL.so.1  
-    mesa            # für libEGL (eventuell)
+    mesa            # für libEGL
   ]}:$(patchelf --print-rpath $out/lib/zen-browser/glxtest)" $out/lib/zen-browser/glxtest
   
+  echo "After manual patchelf:"
+  patchelf --print-rpath $out/lib/zen-browser/glxtest
+  echo "Testing glxtest after patch:"
+  $out/lib/zen-browser/glxtest || true  
     
 
     wrapProgram $out/bin/zen \
       --set-default MOZ_ENABLE_WAYLAND 1 \
       --set-default MOZ_USE_XINPUT2 1
+ --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ pciutils libglvnd mesa ]}"
     
   '';
 
