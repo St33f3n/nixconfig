@@ -3,7 +3,7 @@
 # Runtime dependencies
 , gtk3, glib, alsa-lib, dbus-glib, libxcb, libXcomposite, libXdamage, libXrandr
 , mesa, libGL, nss, nspr, openssl, ffmpeg, pipewire, at-spi2-atk, cups, libdrm
-, libxkbcommon, libXScrnSaver, libXtst, libudev0-shim }:
+,libpciaccess, libEGL, libxkbcommon, libXScrnSaver, libXtst, libudev0-shim }:
 
 stdenv.mkDerivation rec {
   pname = "zen-browser";
@@ -32,6 +32,8 @@ stdenv.mkDerivation rec {
     libxkbcommon
     libXScrnSaver
     libXtst
+    libpciaccess
+    libEGL
 
     # Audio (alsa + modern pipewire)
     alsa-lib
