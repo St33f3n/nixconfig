@@ -1,9 +1,9 @@
 { lib, stdenv, fetchurl, autoPatchelfHook, makeWrapper, wrapGAppsHook, desktop-file-utils
 
 # Runtime dependencies
-, gtk3, glib, alsa-lib, dbus-glib, libxcb, libXcomposite, libXdamage, libXrandr
+, gtk3, glib,pciutils,upower, alsa-lib, dbus-glib, libxcb, libXcomposite, libXdamage, libXrandr
 ,gst_all_1, mesa,libGLU, libGL, nss, nspr, openssl, ffmpeg, pipewire, at-spi2-atk, cups, libdrm
-,libpciaccess, egl-wayland, libxkbcommon, libXScrnSaver, libXtst, libudev0-shim }:
+,libpciaccess,libEGL, egl-wayland, libxkbcommon, libXScrnSaver, libXtst, libudev0-shim }:
 
 stdenv.mkDerivation rec {
   pname = "zen-browser";
@@ -45,6 +45,9 @@ stdenv.mkDerivation rec {
     mesa
     libGL
     libdrm
+    pciutils
+    upower
+    libEGL
 
     # Security & Crypto (your openssl insight!)
     nss
