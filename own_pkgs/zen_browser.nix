@@ -138,8 +138,8 @@ echo "=== autoPatchelfHook Debug ==="
 
     wrapProgram $out/bin/zen \
       --set-default MOZ_ENABLE_WAYLAND 1 \
-      --set-default MOZ_USE_XINPUT2 1
- --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ pciutils libglvnd mesa ]}"
+      --set-default MOZ_USE_XINPUT2 1 \
+      --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ pciutils libglvnd mesa ]}"
     
   '';
 
