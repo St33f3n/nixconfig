@@ -41,7 +41,11 @@
 
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
-    overlays = import ./overlays {inherit inputs;};
+    packages."systems[0]"= {
+      zen-browser = nixpkgs.legacyPackages.x86_64-linux.callPackage ./own_pkgs/zen_browser.nix {};
+    };
+
+    
     homeManagerModules = import ./modules/home-manager;
 
     nixosConfigurations = {

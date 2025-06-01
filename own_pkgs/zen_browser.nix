@@ -1,48 +1,24 @@
-{ lib
-, stdenv
-, fetchurl
-, autoPatchelfHook
-, makeWrapper
-, wrapGAppsHook
+{ lib, stdenv, fetchurl, autoPatchelfHook, makeWrapper, wrapGAppsHook
 
 # Runtime dependencies
-, gtk3
-, glib
-, alsa-lib
-, dbus-glib
-, libxcb
-, libXcomposite
-, libXdamage
-, libXrandr
-, mesa
-, libGL
-, nss
-, nspr
-, openssl
-, ffmpeg
-, pipewire
-, at-spi2-atk
-, cups
-, drm
-, libxkbcommon
-, libXScrnSaver
-, libXtst
-, libudev0-shim
-}:
+, gtk3, glib, alsa-lib, dbus-glib, libxcb, libXcomposite, libXdamage, libXrandr
+, mesa, libGL, nss, nspr, openssl, ffmpeg, pipewire, at-spi2-atk, cups, libdrm
+, libxkbcommon, libXScrnSaver, libXtst, libudev0-shim }:
 
 stdenv.mkDerivation rec {
   pname = "zen-browser";
   version = "1.12b";
 
   src = fetchurl {
-    url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz";
+    url =
+      "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz";
     sha256 = "1vsyqjy3ivixxfcz81rr61ab5gs4v5q93jbfj7ga1rgsx7p9zakn";
   };
 
   nativeBuildInputs = [
-    autoPatchelfHook  # Automatically patches ELF binaries
-    makeWrapper       # For creating wrapper scripts
-    wrapGAppsHook    # GTK application wrapping
+    autoPatchelfHook # Automatically patches ELF binaries
+    makeWrapper # For creating wrapper scripts
+    wrapGAppsHook # GTK application wrapping
   ];
 
   buildInputs = [
@@ -64,7 +40,7 @@ stdenv.mkDerivation rec {
     # Graphics & Rendering (your WebGL intuition!)
     mesa
     libGL
-    drm
+    libdrm
 
     # Security & Crypto (your openssl insight!)
     nss
@@ -86,37 +62,37 @@ stdenv.mkDerivation rec {
   dontConfigure = true;
 
   installPhase = ''
-    runHook preInstall
+        runHook preInstall
 
-    # Create output directories
-    mkdir -p $out/bin $out/lib $out/share
+        # Create output directories
+        mkdir -p $out/bin $out/lib $out/share
 
-    # Copy all browser files to lib directory
-    cp -r . $out/lib/zen-browser/
+        # Copy all browser files to lib directory
+        cp -r . $out/lib/zen-browser/
 
-    # Create symlink in bin (your symlink insight!)
-    ln -s $out/lib/zen-browser/zen $out/bin/zen
+        # Create symlink in bin (your symlink insight!)
+        ln -s $out/lib/zen-browser/zen $out/bin/zen
 
-    # Install desktop entry for system integration
-    mkdir -p $out/share/applications
-    cat > $out/share/applications/zen-browser.desktop << EOF
-[Desktop Entry]
-Version=1.0
-Name=Zen Browser
-Comment=Experience tranquillity while browsing the web
-GenericName=Web Browser
-Keywords=Internet;WWW;Browser;Web;Explorer
-Exec=zen %U
-Terminal=false
-X-MultipleArgs=false
-Type=Application
-Icon=$out/lib/zen-browser/browser/chrome/icons/default/default128.png
-Categories=GNOME;GTK;Network;WebBrowser;
-MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
-StartupNotify=true
-EOF
+        # Install desktop entry for system integration
+        mkdir -p $out/share/applications
+        cat > $out/share/applications/zen-browser.desktop << EOF
+    [Desktop Entry]
+    Version=1.0
+    Name=Zen Browser
+    Comment=Experience tranquillity while browsing the web
+    GenericName=Web Browser
+    Keywords=Internet;WWW;Browser;Web;Explorer
+    Exec=zen %U
+    Terminal=false
+    X-MultipleArgs=false
+    Type=Application
+    Icon=$out/lib/zen-browser/browser/chrome/icons/default/default128.png
+    Categories=GNOME;GTK;Network;WebBrowser;
+    MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+    StartupNotify=true
+    EOF
 
-    runHook postInstall
+        runHook postInstall
   '';
 
   # Fix library paths and environment
