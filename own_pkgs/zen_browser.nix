@@ -51,7 +51,6 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     autoPatchelfHook # Automatically patches ELF binaries
     makeWrapper # For creating wrapper scripts
-    wrapGAppsHook # GTK application wrapping
     desktop-file-utils
   ];
 
@@ -151,9 +150,9 @@ stdenv.mkDerivation rec {
     echo "Before wrapProgram - zen is:"
     file $out/bin/zen
 
-      gappsWrapperArgs+=(
-        --set-default MOZ_ENABLE_WAYLAND 1 
-        --set-default MOZ_USE_XINPUT2 1 
+      wrapProgram $out/bin/zen \
+        --set-default MOZ_ENABLE_WAYLAND 1 \
+        --set-default MOZ_USE_XINPUT2 1 \
         --prefix LD_LIBRARY_PATH : "${
           lib.makeLibraryPath [
             pciutils
@@ -162,7 +161,7 @@ stdenv.mkDerivation rec {
             upower
           ]
         }"
-        )
+        
 
 
     echo "After wrapProgram - zen is:"
