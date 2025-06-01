@@ -42,7 +42,7 @@ stdenv.mkDerivation rec {
     pipewire
 
     # Graphics & Rendering (your WebGL intuition!)
-    mesa.drivers
+    mesa
     libGL
     libglvnd
     libdrm
@@ -112,7 +112,17 @@ stdenv.mkDerivation rec {
   postFixup = ''
     # The autoPatchelfHook handles most of this automatically!
     # But we can add extra environment setup if needed
-    patchelf --set-rpath "${lib.makeLibraryPath buildInputs}" $out/lib/zen-browser/glxtest
+    echo "=== autoPatchelfHook Debug ==="
+    find $out/lib/zen-browser -name "*glxtest*" -exec file {} \;
+    find $out/lib/zen-browser -name "*glxtest*" -exec ldd {} \; || true
+  
+     patchelf --set-rpath "${lib.makeLibraryPath [
+    pciutils        # für libpci
+    libglvnd        # für libGL.so.1  
+    mesa            # für libEGL (eventuell)
+  ]}:$(patchelf --print-rpath $out/lib/zen-browser/glxtest)" $out/lib/zen-browser/glxtest
+  
+    
 
     wrapProgram $out/bin/zen \
       --set-default MOZ_ENABLE_WAYLAND 1 \
