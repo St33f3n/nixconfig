@@ -41,7 +41,7 @@
 
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
-    packages."systems[0]"= {
+    packages.x86_64-linux= {
       zen-browser = nixpkgs.legacyPackages.x86_64-linux.callPackage ./own_pkgs/zen_browser.nix {};
     };
 
