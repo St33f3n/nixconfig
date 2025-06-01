@@ -3,7 +3,7 @@
 # Runtime dependencies
 , gtk3, glib,pciutils,upower, alsa-lib, dbus-glib, libxcb, libXcomposite, libXdamage, libXrandr
 ,gst_all_1, mesa,libGLU, libGL, nss, nspr, openssl, ffmpeg, pipewire, at-spi2-atk, cups, libdrm
-,libpciaccess,libEGL, egl-wayland, libxkbcommon, libXScrnSaver, libXtst, libudev0-shim }:
+,libpciaccess, egl-wayland, libxkbcommon, libXScrnSaver, libXtst, libudev0-shim }:
 
 stdenv.mkDerivation rec {
   pname = "zen-browser";
@@ -47,7 +47,6 @@ stdenv.mkDerivation rec {
     libdrm
     pciutils
     upower
-    libEGL
 
     # Security & Crypto (your openssl insight!)
     nss
