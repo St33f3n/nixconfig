@@ -1,17 +1,50 @@
-{ lib, stdenv, fetchurl, autoPatchelfHook, makeWrapper, wrapGAppsHook, desktop-file-utils
+{
+  lib,
+  stdenv,
+  fetchurl,
+  autoPatchelfHook,
+  makeWrapper,
+  wrapGAppsHook,
+  desktop-file-utils,
 
-# Runtime dependencies
-, gtk3, glib,libglvnd,pciutils,upower, alsa-lib, dbus-glib, libxcb, libXcomposite, libXdamage, libXrandr
-,gst_all_1, mesa,libGLU, libGL, nss, nspr, openssl, ffmpeg, pipewire, at-spi2-atk, cups, libdrm
-,libpciaccess, egl-wayland, libxkbcommon, libXScrnSaver, libXtst, libudev0-shim }:
+  # Runtime dependencies
+  gtk3,
+  glib,
+  libglvnd,
+  pciutils,
+  upower,
+  alsa-lib,
+  dbus-glib,
+  libxcb,
+  libXcomposite,
+  libXdamage,
+  libXrandr,
+  gst_all_1,
+  mesa,
+  libGLU,
+  libGL,
+  nss,
+  nspr,
+  openssl,
+  ffmpeg,
+  pipewire,
+  at-spi2-atk,
+  cups,
+  libdrm,
+  libpciaccess,
+  egl-wayland,
+  libxkbcommon,
+  libXScrnSaver,
+  libXtst,
+  libudev0-shim,
+}:
 
 stdenv.mkDerivation rec {
   pname = "zen-browser";
   version = "1.12b";
 
   src = fetchurl {
-    url =
-      "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz";
+    url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz";
     sha256 = "1vsyqjy3ivixxfcz81rr61ab5gs4v5q93jbfj7ga1rgsx7p9zakn";
   };
 
@@ -111,36 +144,32 @@ stdenv.mkDerivation rec {
   # Fix library paths and environment
   postFixup = ''
 
-mkdir -p $out/lib/zen-browser-runtime
-  ln -sf ${pciutils}/lib/libpci.* $out/lib/zen-browser-runtime/ || true
-  ln -sf ${libglvnd}/lib/libGL.* $out/lib/zen-browser-runtime/ || true
+    echo "=== postFixup Debug ==="
+    echo "PATH: $PATH"
+    which wrapProgram || echo "wrapProgram not found!"
 
-  
-echo "=== autoPatchelfHook Debug ==="
-  find $out/lib/zen-browser -name "*glxtest*" -exec file {} \;
-  find $out/lib/zen-browser -name "*glxtest*" -exec ldd {} \; || true
-  
-  echo "=== Manual patchelf for GPU libraries ==="
-  echo "Before manual patchelf:"
-  patchelf --print-rpath $out/lib/zen-browser/glxtest
-  
-  patchelf --set-rpath "${lib.makeLibraryPath [
-    pciutils        # für libpci
-    libglvnd        # für libGL.so.1  
-    mesa            # für libEGL
-  ]}:$(patchelf --print-rpath $out/lib/zen-browser/glxtest)" $out/lib/zen-browser/glxtest
-  
-  echo "After manual patchelf:"
-  patchelf --print-rpath $out/lib/zen-browser/glxtest
-  echo "Testing glxtest after patch:"
-  $out/lib/zen-browser/glxtest || true  
-    
+    echo "Before wrapProgram - zen is:"
+    file $out/bin/zen
 
-    wrapProgram $out/bin/zen \
-      --set-default MOZ_ENABLE_WAYLAND 1 \
-      --set-default MOZ_USE_XINPUT2 1 \
-      --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ pciutils libglvnd mesa ]}"
-    
+      wrapProgram $out/bin/zen \
+        --set-default MOZ_ENABLE_WAYLAND 1 \
+        --set-default MOZ_USE_XINPUT2 1 \
+        --prefix LD_LIBRARY_PATH : "${
+          lib.makeLibraryPath [
+            pciutils
+            libglvnd
+            mesa
+            upower
+          ]
+        }"
+
+
+    echo "After wrapProgram - zen is:"
+    file $out/bin/zen
+
+    echo "Zen content:"
+    head $out/bin/zen || echo "Cannot read zen as text"
+      
   '';
 
   meta = with lib; {
