@@ -1,7 +1,7 @@
 { lib, stdenv, fetchurl, autoPatchelfHook, makeWrapper, wrapGAppsHook, desktop-file-utils
 
 # Runtime dependencies
-, gtk3, glib,pciutils,upower, alsa-lib, dbus-glib, libxcb, libXcomposite, libXdamage, libXrandr
+, gtk3, glib,libglvnd,pciutils,upower, alsa-lib, dbus-glib, libxcb, libXcomposite, libXdamage, libXrandr
 ,gst_all_1, mesa,libGLU, libGL, nss, nspr, openssl, ffmpeg, pipewire, at-spi2-atk, cups, libdrm
 ,libpciaccess, egl-wayland, libxkbcommon, libXScrnSaver, libXtst, libudev0-shim }:
 
@@ -42,8 +42,9 @@ stdenv.mkDerivation rec {
     pipewire
 
     # Graphics & Rendering (your WebGL intuition!)
-    mesa
+    mesa.drivers
     libGL
+    libglvnd
     libdrm
     pciutils
     upower
