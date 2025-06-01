@@ -1,8 +1,8 @@
-{ lib, stdenv, fetchurl, autoPatchelfHook, makeWrapper, wrapGAppsHook
+{ lib, stdenv, fetchurl, autoPatchelfHook, makeWrapper, wrapGAppsHook, desktop-file-utils
 
 # Runtime dependencies
 , gtk3, glib, alsa-lib, dbus-glib, libxcb, libXcomposite, libXdamage, libXrandr
-, mesa,libGLU, libGL, nss, nspr, openssl, ffmpeg, pipewire, at-spi2-atk, cups, libdrm
+,gst_all_1, mesa,libGLU, libGL, nss, nspr, openssl, ffmpeg, pipewire, at-spi2-atk, cups, libdrm
 ,libpciaccess, egl-wayland, libxkbcommon, libXScrnSaver, libXtst, libudev0-shim }:
 
 stdenv.mkDerivation rec {
@@ -19,6 +19,7 @@ stdenv.mkDerivation rec {
     autoPatchelfHook # Automatically patches ELF binaries
     makeWrapper # For creating wrapper scripts
     wrapGAppsHook # GTK application wrapping
+    desktop-file-utils
   ];
 
   buildInputs = [
@@ -58,6 +59,12 @@ stdenv.mkDerivation rec {
 
     # Media (your ffmpeg understanding!)
     ffmpeg
+    gst_all_1.gstreamer
+    gst_all_1.gst-plugins-base
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-plugins-bad
+    gst_all_1.gst-plugins-ugly
+    gst_all_1.gst-libav
   ];
 
   # No build phase needed - we have pre-built binaries!
