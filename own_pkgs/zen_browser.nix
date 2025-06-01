@@ -111,9 +111,12 @@ stdenv.mkDerivation rec {
   postFixup = ''
     # The autoPatchelfHook handles most of this automatically!
     # But we can add extra environment setup if needed
+    patchelf --set-rpath "${lib.makeLibraryPath buildInputs}" $out/lib/zen-browser/glxtest
+
     wrapProgram $out/bin/zen \
       --set-default MOZ_ENABLE_WAYLAND 1 \
       --set-default MOZ_USE_XINPUT2 1
+    
   '';
 
   meta = with lib; {
