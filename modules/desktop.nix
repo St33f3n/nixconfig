@@ -54,6 +54,17 @@ with lib;
     services.xserver.enable = true;
     programs.hyprland.enable = true;
     
+    xdg.portal = {
+      enable = true;
+      wlr.enable = false;
+      extraPortals = with pkgs;
+        [
+          xdg-desktop-portal-gtk
+        ];
+      config.common.default = "*";
+      config.common.defaultFallback = "gtk";
+
+    };
     # Hardware drivers
     boot.extraModulePackages = [ config.boot.kernelPackages.xpadneo ];
   };

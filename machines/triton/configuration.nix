@@ -12,11 +12,14 @@ in {
     ../../modules/core.nix
     ../../modules/desktop.nix
     ../../modules/shell.nix
+    ../../modules/dev.nix
   ];
 
   core.enable = true;
   desktop.enable= true;
   shell.enable = true;
+  dev.enable = true;
+  
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -166,18 +169,6 @@ in {
   services.dbus.packages = with pkgs; [ dconf ];
   programs.dconf.enable = true;
 
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = with pkgs;
-      [
-        xdg-desktop-portal-gtk
-        #xdg-desktop-portal-hyprland
-      ];
-    config.common.default = "*";
-    config.common.defaultFallback = "gtk";
-
-  };
 
 
   # Enable the OpenSSH daemon.
