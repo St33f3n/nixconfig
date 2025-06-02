@@ -31,6 +31,7 @@ with lib;
       networkmanagerapplet
       iwd
       usb-modeswitch
+      usbutils
       
       # Terminal & CLI Tools
       alacritty

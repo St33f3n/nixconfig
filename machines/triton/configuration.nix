@@ -22,23 +22,24 @@ in {
   networking.hostName = "triton"; # Define your hostname.
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  networking.interfaces.enp0s13f0u1u2 = {
-    ipv4 = {
-      addresses = [{
-        address = ip_address;
-        prefixLength = 24;
-      }];
+  networking.networkmanager = {
+    connectionConfig = {
+      "usb-ethernet" = {
+        "connection"= {
+          "id" = "USB-C Dock";
+          "type" = "ethernet";
+          "interface-name" = "enp0s13f0u1u2";
+          "autoconnect" = true;
+        };
+        "ipv4"= {
+          "method" = "manual";
+          "address1" = "192.168.2.26/24,192.168.2.1";
+          "dns" = "192.168.2.32;192.168.2.1";
+        };
+      };
     };
   };
 
-  # networking.interfaces.wlp0s20f3 = {
-  #   ipv4 = {
-  #     addresses = [{
-  #       address = "192.168.2.27";
-  #       prefixLength = 24;
-  #     }];
-  #   };
-  # };
 
   networking.nameservers = [ "192.168.2.32" "192.168.2.1" ];
   networking.firewall = {

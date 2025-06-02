@@ -16,10 +16,13 @@ with lib;
       
       # Display Manager & UI Toolkits
       kdePackages.sddm
-      sddm-astronaut 
+      (sddm-astronaut.override { embeddedTheme = "astronaut";}) 
       libsForQt5.qt5.qtwayland
       libsForQt5.qt5.qtquickcontrols2  
       libsForQt5.qt5.qtgraphicaleffects
+      kdePackages.qtmultimedia
+      kdePackages.qtsvg
+      kdePackages.qtvirtualkeyboard
       qt6.qtwayland
       gtk3
       gtk4
@@ -28,8 +31,9 @@ with lib;
       waybar dunst rofi-wayland wlogout
       swaylock-effects swayidle cliphist
       wl-clipboard wtype ffmpegthumbnailer
-      ags udiskie polkit-kde-agent
+      ags udiskie 
 
+kdePackages.polkit-kde-agent-1
       
     nerd-fonts.monofur
     nerd-fonts.zed-mono
@@ -40,7 +44,7 @@ with lib;
     # System Services
     services.displayManager.sddm = {
       enable = true;
-      theme = "astronaut";  
+      theme = "sddm-astronaut-theme";  
     };
     services.xserver.enable = true;
     programs.hyprland.enable = true;
