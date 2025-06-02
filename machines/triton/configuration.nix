@@ -140,6 +140,12 @@ in {
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  services.flatpak = {
+    enable = true;
+    packages = [
+      "com.usebottles.bottles"
+    ];
+  };
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -170,7 +176,7 @@ in {
     veracrypt
     vorta
     starship
-    thunderbird-latest-unwrapped
+    thunderbird
     zellij
     atuin
     nextcloud-client
@@ -193,6 +199,7 @@ in {
     libreoffice-fresh
     rustup
     nodejs
+    nix-prefetch-hg
     pkgs.nix-ld
     nixpkgs-fmt
     protonmail-bridge
