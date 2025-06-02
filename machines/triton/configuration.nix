@@ -23,7 +23,7 @@ in {
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   networking.networkmanager = {
-    connectionConfig = {
+    ensureProfiles.profiles = {
       "usb-ethernet" = {
         "connection"= {
           "id" = "USB-C Dock";
