@@ -22,7 +22,7 @@ with lib;
       
       # Document Processing
       pandoc
-      pandoc-crossref
+haskellPackages.pandoc-crossref      
       
       # Media & File Tools
       yt-dlp
