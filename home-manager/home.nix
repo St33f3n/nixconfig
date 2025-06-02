@@ -68,9 +68,7 @@
       General.SingleInstance = true;
       GUI = {
         LaunchAtStartup = true;
-        MinimizeOnStartup = true;
         ShowTrayIcon = true;
-        MinimizeToTray = true;
         ApplicationTheme = "dark";
       };
       Browser.Enabled = false;
