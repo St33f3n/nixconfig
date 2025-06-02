@@ -38,7 +38,7 @@ with lib;
     grim
     slurp
     wf-recorder
-    grimblast-git
+    grimblast
       
     nerd-fonts.monofur
     nerd-fonts.zed-mono
