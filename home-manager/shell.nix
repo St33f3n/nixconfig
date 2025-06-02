@@ -86,7 +86,6 @@ in {
           }
          
         }
-         ssh-agent -s out> /dev/null
          fastfetch
           
     '';
