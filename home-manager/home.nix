@@ -62,6 +62,29 @@
     # weitere XDG-Dirs nach Bedarf
   };
 
+  programs.keepassxc = {
+    enable = true;
+    settings = {
+      General.SingleInstance = true;
+      GUI = {
+        LaunchAtStartup = true;
+        MinimizeOnStartup = true;
+        ShowTrayIcon = true;
+        MinimizeToTray = true;
+        ApplicationTheme = "dark";
+      };
+      Browser.Enabled = false;
+      SSHAgent = {
+        Enabled = true;
+      };
+      FdoSecrets = {
+        Enabled = true;
+        ConfirmAccessItem=false;
+        ConfirmDeletItem=false;
+        UnlockBeforeSearch=false;
+      };
+    };
+  };
   # Enable home-manager and git
   programs.home-manager.enable = true;
 
