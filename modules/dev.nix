@@ -26,7 +26,6 @@ with lib;
       nixd
       nil
       typescript-language-server
-      pylsp
       taplo
       yaml-language-server
       openscad-lsp

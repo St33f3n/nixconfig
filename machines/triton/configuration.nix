@@ -127,7 +127,6 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    arduino-ide
     picocrypt
     veracrypt
     vorta
@@ -135,32 +134,12 @@ in {
     rustdesk
     spotify
     libreoffice-fresh
-    nodejs
-    nix-prefetch-hg
-    pkgs.nix-ld
-    nixpkgs-fmt
     protonmail-bridge
-    protonvpn-gui
-    wireguard-go
     tor-browser
-    nixd
     calibre
-    typescript-language-server
     qalculate-gtk
-    nix-prefetch-git
-    nixfmt-rfc-style
-    nix-tree
-    nix-du
-    nixpkgs-review
-    manix
-    statix
-    deadnix
     gimp-with-plugins
     fabric-ai
-    pkgs.nix-ld
-    nixpkgs-fmt
-    bun
-    bacon
   ] ++ [
     inputs.self.packages.x86_64-linux.zen-browser
   ];
