@@ -20,6 +20,9 @@
 
     #Stylix
     stylix.url = "github:danth/stylix";
+
+    #Flatpak
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
   outputs = {
@@ -27,6 +30,7 @@
     nixpkgs,
     home-manager,
     stylix,
+    nix-flatpak,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -61,7 +65,7 @@
             home-manager.users.steefen = import ./home-manager/home.nix;
           }
           inputs.stylix.nixosModules.stylix
-        
+          nix-flatpak.nixosModules.nix-flatpak
         ];
       };
 
