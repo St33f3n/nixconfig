@@ -13,12 +13,16 @@ in {
     ../../modules/desktop.nix
     ../../modules/shell.nix
     ../../modules/dev.nix
+    ../../modules/office.nix
+    ../../modules/misc.nix
   ];
 
   core.enable = true;
   desktop.enable= true;
   shell.enable = true;
   dev.enable = true;
+  office.enable = true;
+  misc.enable = true;
   
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -127,18 +131,7 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    picocrypt
-    veracrypt
-    vorta
-    thunderbird
-    rustdesk
-    spotify
-    libreoffice-fresh
-    protonmail-bridge
-    tor-browser
-    calibre
-    qalculate-gtk
-    gimp-with-plugins
+    orca-slicer
     fabric-ai
   ] ++ [
     inputs.self.packages.x86_64-linux.zen-browser

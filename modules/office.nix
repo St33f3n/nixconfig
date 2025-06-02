@@ -16,25 +16,24 @@ with lib;
       vesktop
       element-desktop
       zapzap
-      # nextcloudtalk  # Note: Verify package name
+      nextcloud-talk-desktop
       zoom-us
       
       # Browsers
       mullvad-browser
-      # zen-browser - Add via flake packages in configuration.nix
       
       # Office & Productivity
-      libreoffice-fresh
+      libreoffice-qt6-fresh
       anki
       qalculate-gtk
       
       # Document Processing & LaTeX
       texstudio
-      texlive.combined.scheme-full
+      texliveFull
       pandoc
       
       # Note Taking & Knowledge Management
-      # trilium-notes  # Note: Verify correct package name
+      trilium-next-desktop
       
       # Security & Encryption
       rustdesk
@@ -44,7 +43,7 @@ with lib;
       # Media & Books
       calibre
       spotify
-      # libation  # Note: Verify package name
+      libation 
     ];
   };
 }
