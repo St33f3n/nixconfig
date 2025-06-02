@@ -10,10 +10,11 @@ in {
     ./stylix.nix
     ./hardware-configuration.nix
     ../../modules/core.nix
+    ../../modules/desktop.nix
   ];
 
   core.enable = true;
-
+  desktop.enable= true;
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -65,16 +66,10 @@ in {
   };
 
   #Hyprland
-  programs.hyprland.enable = true;
   programs.hyprland.package =
     inputs.hyprland.packages."${pkgs.system}".hyprland;
 
 
-  services.xserver.enable = true;
-
-  services.displayManager = {
-    sddm.enable = true;
-  };
 
   environment = {
     sessionVariables = {
@@ -127,15 +122,7 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    libsForQt5.qt5.qtwayland
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    dunst
-    nerd-fonts.monofur
-    nerd-fonts.zed-mono
-    nerd-fonts.fira-code
-    nerd-fonts.fira-mono
     arduino-ide
-    cliphist
     picocrypt
     carapace
     veracrypt
@@ -157,7 +144,6 @@ in {
     tor-browser
     nixd
     yt-dlp
-    dunst
     calibre
     pandoc
     networkmanagerapplet
@@ -165,7 +151,6 @@ in {
     typescript-language-server
     qalculate-gtk
     nix-prefetch-git
-    kdePackages.sddm
     nixfmt-rfc-style
     nix-tree
     nix-du
@@ -173,15 +158,11 @@ in {
     manix
     statix
     deadnix
-    ags
     gimp-with-plugins
-    libsForQt5.qt5.qtquickcontrols2
-    libsForQt5.qt5.qtgraphicaleffects
     fabric-ai
     pkgs.nix-ld
     nixpkgs-fmt
     docker-credential-helpers
-    hyprpaper
     bun
     bacon
   ] ++ [
