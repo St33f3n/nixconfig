@@ -56,6 +56,9 @@ with lib;
       python3
       uv
       
+      networkmanagerapplet
+      home-manager
+      docker-credential-helpers
       # System Monitoring
       btop
       nvtopPackages.full
@@ -71,6 +74,8 @@ with lib;
       wakeonlan
       dnsmasq
       bridge-utils
+      protonvpn-gui
+      wireguard-go
       
       # File Management & Sync
       localsend

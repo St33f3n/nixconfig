@@ -33,7 +33,12 @@ with lib;
       wl-clipboard wtype ffmpegthumbnailer
       ags udiskie 
 
-kdePackages.polkit-kde-agent-1
+    kdePackages.polkit-kde-agent-1
+
+    grim
+    slurp
+    wf-recorder
+    grimblast-git
       
     nerd-fonts.monofur
     nerd-fonts.zed-mono

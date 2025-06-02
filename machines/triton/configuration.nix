@@ -11,10 +11,12 @@ in {
     ./hardware-configuration.nix
     ../../modules/core.nix
     ../../modules/desktop.nix
+    ../../modules/shell.nix
   ];
 
   core.enable = true;
   desktop.enable= true;
+  shell.enable = true;
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -33,7 +35,7 @@ in {
         };
         "ipv4"= {
           "method" = "manual";
-          "address1" = "192.168.2.26/24,192.168.2.1";
+          "address1" = "${ip_address}/24,192.168.2.1";
           "dns" = "192.168.2.32;192.168.2.1";
         };
       };
@@ -95,7 +97,6 @@ in {
     isNormalUser = true;
     description = "Stefan Simmeth";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [ ];
   };
 
   security.sudo.extraRules = [{
@@ -125,13 +126,9 @@ in {
   environment.systemPackages = with pkgs; [
     arduino-ide
     picocrypt
-    carapace
     veracrypt
     vorta
-    starship
     thunderbird
-    zellij
-    atuin
     rustdesk
     spotify
     libreoffice-fresh
@@ -144,11 +141,7 @@ in {
     wireguard-go
     tor-browser
     nixd
-    yt-dlp
     calibre
-    pandoc
-    networkmanagerapplet
-    home-manager
     typescript-language-server
     qalculate-gtk
     nix-prefetch-git
@@ -163,7 +156,6 @@ in {
     fabric-ai
     pkgs.nix-ld
     nixpkgs-fmt
-    docker-credential-helpers
     bun
     bacon
   ] ++ [
