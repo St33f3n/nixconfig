@@ -23,7 +23,8 @@ with lib;
       # Audio & Bluetooth
       noisetorch
       bluez
-      bluez-utils
+      bluez-tools
+      bluez-alsa
       blueman
       
       # Network Management Tools
