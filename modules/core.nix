@@ -16,7 +16,8 @@ with lib;
       libsecret
       dconf
       libnotify
-      
+      glib
+      gsettings-desktop-schemas
       # Security & Secrets
       keepassxc
       

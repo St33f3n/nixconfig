@@ -65,7 +65,7 @@ in {
       ];
 
       exec-once =
-        [ "[workspace 3 silent] webcord" "[workspace 5 silent] nextcloud" ];
+        [ "[workspace 3 silent] webcord" "[workspace 5 silent] nextcloud" "wl-paste --watch cliphist store"];
       env = [ "ELECTRON_OZONE_PLATFORM_HINT,auto" ];
       input = {
         "kb_layout" = "de";

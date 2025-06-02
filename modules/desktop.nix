@@ -56,13 +56,15 @@ with lib;
     
     xdg.portal = {
       enable = true;
-      wlr.enable = false;
+      wlr.enable = true;
       extraPortals = with pkgs;
         [
           xdg-desktop-portal-gtk
         ];
-      config.common.default = "*";
-      config.common.defaultFallback = "gtk";
+      config.common = {
+      default = "*";
+      defaultFallback = "gtk";
+      };
 
     };
     # Hardware drivers
