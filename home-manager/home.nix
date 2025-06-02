@@ -73,7 +73,7 @@
       };
       Browser.Enabled = false;
       SSHAgent = {
-        Enabled = true;
+        Enabled = false;
       };
       FdoSecrets = {
         Enabled = true;
