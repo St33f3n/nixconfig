@@ -29,19 +29,19 @@ with lib;
       taplo
       yaml-language-server
       openscad-lsp
-      clangd
+      llvmPackages_20.clang-tools
       marksman
       hyprls
       gopls
-      ada_language_server
       bash-language-server
       
       # Programming Language Runtimes & Package Managers
-      nodejs
-      juliaup
+      nodejs_24
+      julia-lts
       uv
       bun
       dart
+      alire
       
       # Development Environments & IDEs
       arduino-ide
@@ -54,7 +54,7 @@ with lib;
       
       # Language-Specific Tools
       bacon          # Rust background compiler
-      lldb-dap       # Debug adapter
+      lldb# Debug adapter
       ruff           # Python linter/formatter
     ];
   };
