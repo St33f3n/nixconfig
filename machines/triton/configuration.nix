@@ -242,6 +242,7 @@ in {
     bun
     bacon
     lazygit
+    keepassxc
   ] ++ [
     inputs.self.packages.x86_64-linux.zen-browser
   ];
