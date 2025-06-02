@@ -16,7 +16,6 @@ with lib;
       vesktop
       element-desktop
       zapzap
-      nextcloud-talk-desktop
       zoom-us
       
       # Browsers
@@ -44,6 +43,22 @@ with lib;
       calibre
       spotify
       libation 
+
+
+
+
+
+(nextcloud-talk-desktop.overrideAttrs (oldAttrs: {
+    nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [ makeWrapper ];
+    
+    postFixup = ''
+      wrapProgram $out/bin/nextcloud-talk-desktop \
+        --set GSETTINGS_SCHEMA_DIR "${glib.getSchemaPath gsettings-desktop-schemas}:${glib.getSchemaPath gtk3}" \
+        --set XDG_CURRENT_DESKTOP "Hyprland" \
+        --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ libglvnd mesa ]}"
+    '';
+  }))
+      
     ];
   };
 }
