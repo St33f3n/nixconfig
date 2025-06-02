@@ -77,7 +77,6 @@ with lib;
       filezilla
       rsync
       borgbackup
-      kdePackages.ksshaskpass
       # Documentation
       tealdeer
       
