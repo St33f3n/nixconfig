@@ -13,7 +13,7 @@ in {
       bind = [
         #Applications
         "$mainMod, RETURN, exec, alacritty"
-        "$mainMod, B, exec, firefox"
+        "$mainMod, B, exec, zen"
         "$mainMod, period, exec, emote"
         "$mainMod, O, exec, trilium"
         "$mainMod, E, exec, alacritty -e yazi"
@@ -62,6 +62,11 @@ in {
       bindm = [
         "$mainMod, mouse:272, movewindow"
         "$mainMod, mouse:273, resizewindow"
+      ];
+
+      monitor = [
+        "eDP-1,2560x1600@60,0x0,1"
+        ",preferred,auto,1"
       ];
 
       exec-once =
