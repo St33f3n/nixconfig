@@ -104,7 +104,6 @@ with lib;
       # Basic services every machine needs
       blueman.enable = true;
       printing.enable = true;
-      networkmanager.enable = true;  # Basic enable, no config
       openssh.enable = true;         # Basic enable, no settings
     };
 
@@ -116,7 +115,7 @@ with lib;
 
     # Basic firewall (machines configure specific rules)
     networking.firewall.enable = true;
-
+    networking.networkmanager.enable = true;
     # Programs requiring system-level setup
     programs = {
       direnv.enable = true;
