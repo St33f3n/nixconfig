@@ -30,7 +30,7 @@ with lib;
       # Network Management Tools
       networkmanagerapplet
       iwd
-      usb_modeswitch
+      usb-modeswitch
       
       # Terminal & CLI Tools
       alacritty
@@ -66,7 +66,7 @@ with lib;
       inotify-info
       nmap
       netcat
-      net-tools
+      nettools
       wakeonlan
       dnsmasq
       bridge-utils
@@ -84,7 +84,6 @@ with lib;
       # Print System
       cups
     ];
-
     # Essential Hardware Support - Foundation only
     hardware = {
       graphics.enable = true;        # Every machine has some GPU

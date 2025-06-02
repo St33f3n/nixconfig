@@ -14,8 +14,4 @@
     userEmail = "stefan.simmeth@protonmail.com";
   };
 
-  services.gnome-keyring = {
-    enable = true;
-    components = ["secrets" "ssh"];
-  };
 }
