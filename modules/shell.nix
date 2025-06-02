@@ -26,7 +26,7 @@ haskellPackages.pandoc-crossref
       
       # Media & File Tools
       yt-dlp
-      exfat-progs
+      exfatprogs
     ];
   };
 }
