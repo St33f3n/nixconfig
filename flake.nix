@@ -19,6 +19,16 @@
       inputs.hyprland.follows = "hyprland";
     };
 
+
+    astal = {
+      url = "github:aylur/astal";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ags = {
+      url = "github:aylur/ags";  
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
     #Stylix
     stylix.url = "github:danth/stylix";
 
@@ -37,6 +47,8 @@
     stylix,
     nix-flatpak,
     zen-browser,
+    astal,
+    ags,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -44,6 +56,7 @@
     systems = [
       "x86_64-linux"
     ];
+    
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -55,6 +68,10 @@
       zen-browser = nixpkgs.legacyPackages.x86_64-linux.callPackage ./own_pkgs/zen_browser.nix {};
     };
 
+    packages.x86_64-linux.astal-shell = import ./modules/astal-module {
+      inherit (nixpkgs.legacyPackages.x86_64-linux) pkgs;
+      inherit astal ags ;
+    };
     
     homeManagerModules = import ./modules/home-manager;
 

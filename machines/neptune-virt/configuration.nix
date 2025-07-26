@@ -133,7 +133,9 @@ in {
   environment.systemPackages = with pkgs; [
     orca-slicer
     fabric-ai
+    inputs.astal.packages.x86_64-linux.default
   ] ++ [
+    inputs.self.packages.x86_64-linux.astal-shell
    # inputs.self.packages.x86_64-linux.zen-browser
   ];
 

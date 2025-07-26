@@ -66,13 +66,14 @@ in {
 
       monitor = [
         "eDP-1,2560x1600@60,0x0,1"
+          "Virtual-1,1920x1080@60,0x0,1"       # VM Monitor
         ",preferred,auto,1"
       ];
 
       exec-once =
         [ "[workspace 3 silent] webcord" "[workspace 5 silent] nextcloud" "wl-paste --watch cliphist store" "[workspace 2 silent] keepassxc"];
       env = [ "ELECTRON_OZONE_PLATFORM_HINT,auto"
-      "XCURSOR_THEME,Qogir-dark"
+      "XCURSOR_THEME,Qogir-Dark"
       "XCURSOR_SIZE,24"];
       input = {
         "kb_layout" = "de";
