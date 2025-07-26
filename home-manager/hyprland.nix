@@ -20,8 +20,8 @@ in {
 
         #Windows
         "$mainMod, Q, killactive"
-        "$mainMod, F, fullscreen"
-        "$mainMod, T, togglefloating"
+        "$mainMod, T, fullscreen"
+        "$mainMod, F, togglefloating"
         "$mainMod, J, togglesplit"
         "$mainMod, left, movefocus, l"
         "$mainMod, right, movefocus, r"
@@ -70,7 +70,7 @@ in {
       ];
 
       exec-once =
-        [ "[workspace 3 silent] webcord" "[workspace 5 silent] nextcloud" "wl-paste --watch cliphist store"];
+        [ "[workspace 3 silent] webcord" "[workspace 5 silent] nextcloud" "wl-paste --watch cliphist store" "[workspace 2 silent] keepassxc"];
       env = [ "ELECTRON_OZONE_PLATFORM_HINT,auto" ];
       input = {
         "kb_layout" = "de";

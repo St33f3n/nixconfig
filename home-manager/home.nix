@@ -66,6 +66,8 @@
     enable = true;
     settings = {
       General.SingleInstance = true;
+      General.MinimizeAfterUnlock= false;
+      
       GUI = {
         LaunchAtStartup = true;
         ShowTrayIcon = true;
