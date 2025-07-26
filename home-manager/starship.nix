@@ -1,370 +1,218 @@
 {
   starship_string = {
-
     add_newline = false;
-    command_timeout = 1000;
-    format = "[░▒▓](fg:deep_sapphire bg:midnight)$os[󰛡 ](fg:beige bg:deep_sapphire)$username$hostname[󰛡 ](fg:deep_sapphire bg:kelp_green)$directory$git_status$git_branch[󰛡 ](fg:kelp_green bg:deep_teal)$rust$python$golang$nodejs$java$nix_shell$elixr$julia$kotlin$c$ruby$cmake$dart$lua$zig$package$docker_context[󰛡](bg:coral_pink fg:deep_teal)$time$memory_usage$character[󰛡 ](fg:coral_pink  )$cmd_duration\n[└─>](fg:sea_foam)";
+    command_timeout = 2000;
+    
+    # Optimiertes Format: Gradient von links nach rechts mit besserer Lesbarkeit
+    format = "[░▒▓](fg:deep_sapphire bg:abyss)$os$username$hostname[](fg:deep_sapphire bg:kelp_green)$directory$git_branch$git_status[](fg:kelp_green bg:deep_teal)$dev_env[](fg:deep_teal bg:coral_accent)$time$memory_usage[](fg:coral_accent)$character\n[└─>](fg:sea_foam) ";
 
-    palette = "ocean";
-    palettes.ocean = {
-      primary_accent = "#0088cc"; # coral-blue
-      surface = "#263440"; # surface
-      deep_water = "#1a2832"; # deep-water
-      deep_teal = "#006666"; # deep-teal
-      coral_orange = "#ff6347"; # coral-orange
-      coral_deep = "#d65d52"; # coral-deep
-      deep_sapphire = "#004d66"; # deep-sapphire
-      text_primary = "#e6f3f7"; # text-primary
-      text_secondary = "#b3d1d9"; # text-secondary
-      kelp_green = "#1d4d4f";
-      coral_red = "#ff4500";
-      sea_foam = "#2d8a8a";
-      coral_blue = "#0088cc";
-      arctic_blue = "#00bfff";
-      bioluminescent = "#00c2c2";
-      abyss = "#141e26";
-      coral_light = "#ffa07a";
-      coral_pink = "#e57f6f";
-      seafoam_gray = "#a3b8c2";
-      marine_blue = "#006bb3";
-      midnight = "#202d36";
-      beige = "#ffcc99";
+    # Ocean-Koral Farbpalette - optimiert für besseren Kontrast
+    palette = "ocean_koral";
+    palettes.ocean_koral = {
+      # Basis-Farben aus deinem Alacritty-Theme
+      abyss = "#1e1e1e";              # Dein background
+      deep_sapphire = "#262626";       # Dein footer_bar bg
+      kelp_green = "#4a6b4a";         # Gedämpftes Grün
+      deep_teal = "#5a9a9a";          # Dein cyan
+      coral_accent = "#c84a2c";        # Dein red (coral-red)
+      sea_foam = "#6b8e6b";           # Dein green
+      text_primary = "#f7f2e3";       # Dein foreground
+      text_muted = "#c4b89f";         # Dein dim_foreground
+      
+      # Feature-Farben für Programmiersprachen
+      rust_orange = "#d49284";         # Für Rust
+      python_blue = "#6b8db3";         # Für Python  
+      ts_blue = "#7ba3d4";            # Für TypeScript
+      docker_cyan = "#5a9a9a";        # Für Docker
+      go_cyan = "#4a7a7a";            # Für Go
+      julia_purple = "#b85347";       # Für Julia
+      zig_yellow = "#d4634a";         # Für Zig
     };
 
-    fill = {
-      style = "coral_light";
-      symbol = "󰛡";
-    };
-
+    # OS-Symbol mit besserer Distro-Unterstützung
     os = {
-      format = "[$symbol](bg:deep_sapphire fg:arctic_blue)";
+      format = "[$symbol](bold bg:deep_sapphire fg:text_primary)";
       disabled = false;
+      symbols = {
+        Arch = " ";
+        Ubuntu = " ";
+        Debian = " ";
+        Raspbian = " ";
+        CentOS = " ";
+        Manjaro = " ";
+        NixOS = " ";
+        EndeavourOS = " ";
+        Linux = " ";
+      };
     };
 
+    # User & Hostname - kompakt aber informativ
     username = {
-      style_root = "fg:beige bg:deep_sapphire";
-      style_user = "fg:beige bg:deep_sapphire";
-      format = "[$user]($style)";
+      style_user = "bold bg:deep_sapphire fg:text_primary";
+      style_root = "bold bg:coral_accent fg:text_primary";
+      format = "[ $user]($style)";
       disabled = false;
       show_always = true;
     };
+
     hostname = {
-      style = "bold fg:beige bg:deep_sapphire";
-      ssh_only = false;
-      format = "[ 󰿨 ](bold $style)[$hostname$ssh_symbol]($style)";
+      style = "bold bg:deep_sapphire fg:text_muted";
+      format = "[@$hostname ]($style)";
       disabled = false;
-      ssh_symbol = " ";
+      ssh_only = false;
     };
 
+    # Directory - bessere Truncation
     directory = {
-      read_only = " ";
-      home_symbol = "󰟐 ";
-      truncation_length = 4;
+      style = "bold bg:kelp_green fg:text_primary";
+      format = "[ $path ]($style)";
+      truncation_length = 3;
       truncate_to_repo = true;
-      truncation_symbol = "󰇘/";
-      format = "[$path ]($style)";
-      style = "bold fg:coral_light bg:kelp_green";
+      truncation_symbol = "…/";
+      home_symbol = "󰟐 ";
+      read_only = " 󰌾";
     };
 
+    # Git - informativ aber kompakt
     git_branch = {
-      symbol = "";
-      format = "[$symbol$branch ]($style)";
-      truncation_symbol = "…/";
-      style = "bold fg:coral_light bg:kelp_green";
+      style = "bold bg:kelp_green fg:text_primary";
+      format = "[ $symbol$branch]($style)";
+      symbol = " ";
+      truncation_length = 20;
     };
 
     git_status = {
+      style = "bold bg:kelp_green fg:coral_accent";
       format = "[$all_status$ahead_behind ]($style)";
-      style = "bold fg:coral_light bg:kelp_green";
-      conflicted = "🏳";
-      up_to_date = "";
-      untracked = " ";
-      ahead = "⇡\${count}";
-      diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
-      behind = "⇣\${count} ";
-      stashed = "󰜦";
-      modified = "";
-      staged = "[++($count)]($style)";
-      renamed = "襁 ";
-      deleted = "󱂥";
+      conflicted = "󰞇 ";
+      ahead = "⇡${count} ";
+      behind = "⇣${count} ";
+      diverged = "⇕⇡${ahead_count}⇣${behind_count} ";
+      up_to_date = "";
+      untracked = "? ";
+      stashed = "󰜦 ";
+      modified = " ";
+      staged = "+ ";
+      renamed = "󰑕 ";
+      deleted = " ";
     };
 
-    git_commit = { tag_symbol = "  "; };
-
-    character = {
-      format = "$symbol";
-      success_symbol = "[ 󰄴 ](bold bg:coral_pink fg:deep_teal)";
-      error_symbol = "[ 󰳶 ](fg:black bg:bright-red)[](fg:bright-red)";
-      vimcmd_symbol = "[  ](fg:black bg:bright-red)[](fg:bright-red)";
+    # Development Environment - alle deine Sprachen mit Feature-Farben
+    dev_env = {
+      format = "$rust$python$nodejs$julia$golang$zig$c$cmake$docker$ansible$yaml";
     };
 
-    docker_context = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    package = {
-      symbol = "󰏖 ";
-      format = "[ $symbol$version ]($style)";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    memory_usage = {
-      symbol = " ";
-      style = "bold bg:coral_pink fg:deep_teal";
-      format = "[$symbol\${ram_pct}]($style)";
-      threshold = 1;
-      disabled = false;
-    };
-
-    python = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
+    # Rust - mit Feature-Farbe
     rust = {
+      style = "bold bg:deep_teal fg:rust_orange";
+      format = "[ $symbol$version ]($style)";
       symbol = "🦀 ";
-      format = "[$symbol($version)]($style)";
-      style = "bold fg:coral_deep bg:deep_teal";
     };
 
-    golang = {
-      symbol = "󰟓 ";
-      style = "bold fg:coral_deep bg:deep_teal";
+    # Python - mit Feature-Farbe  
+    python = {
+      style = "bold bg:deep_teal fg:python_blue";
+      format = "[ $symbol$version ]($style)";
+      symbol = " ";
     };
 
+    # Node.js/TypeScript - mit Feature-Farbe
     nodejs = {
-      symbol = "";
-      style = "bold fg:coral_deep bg:deep_teal";
+      style = "bold bg:deep_teal fg:ts_blue";
+      format = "[ $symbol$version ]($style)";
+      symbol = " ";
     };
 
-    java = {
-      symbol = "󰬷 ";
-      style = "bold fg:coral_deep bg:deep_teal";
+    # Julia - mit Feature-Farbe
+    julia = {
+      style = "bold bg:deep_teal fg:julia_purple";
+      format = "[ $symbol$version ]($style)";
+      symbol = " ";
     };
 
-    aws = {
-      symbol = "󰸏 ";
-      style = "bold fg:coral_deep bg:deep_teal";
+    # Go - mit Feature-Farbe
+    golang = {
+      style = "bold bg:deep_teal fg:go_cyan";
+      format = "[ $symbol$version ]($style)";
+      symbol = "󰟓 ";
     };
 
+    # Zig - mit Feature-Farbe
+    zig = {
+      style = "bold bg:deep_teal fg:zig_yellow";
+      format = "[ $symbol$version ]($style)";
+      symbol = " ";
+    };
+
+    # C/C++ - kompakt
     c = {
-      symbol = "󰙱 ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    ruby = {
-      symbol = "rb ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    scala = {
-      symbol = "scala ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    bun = {
-      symbol = "bun";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    cobol = {
-      symbol = "cobol ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    conda = {
-      symbol = "󱔎 ";
-      ignore_base = true;
-      format = "[$symbol$environment on ](bg:blue bold fg:green)";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    crystal = {
-      symbol = "cr ";
-      style = "bold fg:coral_deep bg:deep_teal";
+      style = "bold bg:deep_teal fg:text_primary";
+      format = "[ $symbol$version ]($style)";
+      symbol = " ";
     };
 
     cmake = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
+      style = "bold bg:deep_teal fg:text_primary";
+      format = "[ $symbol$version ]($style)";
+      symbol = " ";
     };
 
-    daml = {
-      symbol = "daml ";
-      style = "bold fg:coral_deep bg:deep_teal";
+    # Docker - mit Feature-Farbe
+    docker_context = {
+      style = "bold bg:deep_teal fg:docker_cyan";
+      format = "[ $symbol$context ]($style)";
+      symbol = " ";
     };
 
-    dart = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
+    # DevOps Tools
+    ansible = {
+      style = "bold bg:deep_teal fg:coral_accent";
+      format = "[ $symbol$version ]($style)";
+      symbol = "󱂚 ";
     };
 
-    deno = {
-      symbol = "deno ";
-      style = "bold fg:coral_deep bg:deep_teal";
+    # YAML für Ansible/K8s
+    yaml = {
+      style = "bold bg:deep_teal fg:text_muted";
+      format = "[ $symbol ]($style)";
+      symbol = " ";
     };
 
-    dotnet = {
-      symbol = "󰪮 ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    elixir = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    elm = {
-      symbol = "elm ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    guix_shell = {
-      symbol = "guix ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    hg_branch = {
-      symbol = "hg ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    julia = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    kotlin = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    lua = {
-      symbol = "󰢱 ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    meson = {
-      symbol = "meson ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    nim = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    nix_shell = {
-      symbol = "󱄅 ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    ocaml = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    opa = {
-      symbol = "opa ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    os.symbols = { # Note the dot notation for nested tables
-      Alpine = " ";
-      Amazon = " ";
-      Android = " ";
-      Arch = "󰣇 ";
-      CentOS = " ";
-      Debian = " ";
-      DragonFly = "dfbsd ";
-      Emscripten = "emsc ";
-      EndeavourOS = " ";
-      Fedora = " ";
-      FreeBSD = "󰣠 ";
-      Garuda = "garu ";
-      Gentoo = "󰣨 ";
-      HardenedBSD = "hbsd ";
-      Illumos = "lum ";
-      Linux = " ";
-      Macos = "mac ";
-      Manjaro = "󱘊 ";
-      Mariner = "mrn ";
-      MidnightBSD = "mid ";
-      Mint = "󰣭 ";
-      NetBSD = "nbsd ";
-      NixOS = "󱄅 ";
-      OpenBSD = "obsd ";
-      openSUSE = " ";
-      OracleLinux = "orac ";
-      Pop = "pop ";
-      Raspbian = " ";
-      Redhat = "rhl ";
-      RedHatEnterprise = "rhel ";
-      Redox = "redox ";
-      Solus = "sol ";
-      SUSE = "suse ";
-      Ubuntu = " ";
-      Unknown = "unk ";
-      Windows = " ";
-    };
-
-    perl = {
-      symbol = "pl ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    php = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    pulumi = {
-      symbol = "pulumi ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    purescript = {
-      symbol = "purs ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    raku = {
-      symbol = "raku ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    spack = {
-      symbol = "spack ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    sudo = {
-      symbol = "󰆥 ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    swift = {
-      symbol = "swift ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
-    terraform = {
-      symbol = "terraform ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-    zig = {
-      symbol = " ";
-      style = "bold fg:coral_deep bg:deep_teal";
-    };
-
+    # Time & Memory - rechter Rand
     time = {
       disabled = false;
-      time_format = "%H:%M:%S %Y-%m-%d";
-      style = "bold bg:coral_pink fg:deep_teal";
-      format = "[ 󱑍 $time ]($style)";
+      time_format = "%H:%M";
+      style = "bold bg:coral_accent fg:text_primary";
+      format = "[ 󰥔 $time ]($style)";
     };
 
-    cmd_duration = { format = "[execution time: $duration](fg:coral_pink )"; };
+    # Memory - optimierter Threshold für bessere Performance
+    memory_usage = {
+      disabled = false;
+      threshold = 75;  # Nur anzeigen wenn >75% verwendet
+      style = "bold bg:coral_accent fg:text_primary";
+      format = "[ 󰍛 $\{ram_pct\} ]($style)";
+    };
+
+    # Character - status-sensitiv
+    character = {
+      success_symbol = "[ ](bold fg:sea_foam)";
+      error_symbol = "[ ](bold fg:coral_accent)";
+      vimcmd_symbol = "[ ](bold fg:julia_purple)";
+    };
+
+    # Nix Shell - wichtig für NixOS-User
+    nix_shell = {
+      style = "bold bg:deep_teal fg:text_primary";
+      format = "[ $symbol$name ]($style)";
+      symbol = "󱄅 ";
+    };
+
+    # Package Manager Context
+    package = {
+      style = "bold bg:deep_teal fg:text_muted";
+      format = "[ $symbol$version ]($style)";
+      symbol = "󰏗 ";
+    };
   };
 }
