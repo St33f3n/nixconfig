@@ -64,14 +64,22 @@
 
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
+    devShells.x86_64-linux = {
+    astal = nixpkgs.legacyPackages.x86_64-linux.callPackage ./modules/astal-module/dev-shell.nix {
+      inherit astal;
+      system = "x86_64-linux";
+    };
+  };
+
+
     packages.x86_64-linux= {
       zen-browser = nixpkgs.legacyPackages.x86_64-linux.callPackage ./own_pkgs/zen_browser.nix {};
+      astal-shell =  nixpkgs.legacyPackages.x86_64-linux.callPackage ./modules/astal-module {
+        inherit astal;
+        system = "x86_64-linux";
+      };
     };
 
-    packages.x86_64-linux.astal-shell = import ./modules/astal-module {
-      inherit (nixpkgs.legacyPackages.x86_64-linux) pkgs;
-      inherit astal ags ;
-    };
     
     homeManagerModules = import ./modules/home-manager;
 

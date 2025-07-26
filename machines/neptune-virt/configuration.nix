@@ -130,15 +130,13 @@ in {
   };
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    orca-slicer
-    fabric-ai
-    inputs.astal.packages.x86_64-linux.default
-  ] ++ [
-    inputs.self.packages.x86_64-linux.astal-shell
-   # inputs.self.packages.x86_64-linux.zen-browser
-  ];
-
+environment.systemPackages = with pkgs; [
+  orca-slicer
+  fabric-ai
+] ++ lib.optionals (inputs ? astal) [
+  inputs.astal.packages.x86_64-linux.default  # Astal CLI
+  inputs.self.packages.x86_64-linux.astal-shell
+];
 
   services.dbus.packages = with pkgs; [ dconf ];
   programs.dconf.enable = true;

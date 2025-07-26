@@ -1,112 +1,104 @@
-{ pkgs, astal, ags }:
-let
-  system = "x86_64-linux";
-in
-pkgs.stdenvNoCC.mkDerivation rec {
-  name = "my-shell";
-  src = ./.;
+{ pkgs, astal ? null, system ? "x86_64-linux" }:
 
+# Fallback falls astal nicht verfügbar
+if astal == null then pkgs.hello else
+
+let
+  astalPackages = with astal.packages.${system}; [
+    io
+    astal4
+    battery
+    wireplumber
+    network
+    tray
+  ];
+in
+pkgs.stdenv.mkDerivation {
+  name = "astal-shell";
+  
+  # Kein src nötig - wir erstellen alles in buildPhase
+  unpackPhase = "true";  # Skip unpack
+  
   nativeBuildInputs = with pkgs; [
-    nodejs_24
-    esbuild
-    wrapGAppsHook
+    wrapGAppsHook4
     gobject-introspection
   ];
-
-  buildInputs = with pkgs; [
-    gjs
-    glib  
-    gtk4
-    gtk3
-    gdk-pixbuf
-    cairo
-    pango
-  ] ++ [
-    astal.packages.${system}.astal4
-    astal.packages.${system}.io
-    astal.packages.${system}.tray
-    astal.packages.${system}.wireplumber
-    astal.packages.${system}.network
-    astal.packages.${system}.bluetooth
-    astal.packages.${system}.battery
-  ];
+  
+  buildInputs = astalPackages ++ [ pkgs.gjs ];
 
   buildPhase = ''
-    # Create basic app structure if not exists
-    if [ ! -f src/app.ts ]; then
-      mkdir -p src
-      cat > src/app.ts << 'EOF'
-import { App } from "astal/gtk4"
-import Bar from "./bar"
+    mkdir -p app
+    cd app
+    
+    # JavaScript App erstellen
+    cat > app.js << 'EOF'
+import { App } from "gi://Astal?version=4.0"
+import { Variable, bind } from "gi://Astal?version=4.0"
+import { Astal, Gtk } from "gi://Astal?version=4.0"
+
+function createClock() {
+    const time = Variable("").poll(1000, () => 
+        new Date().toLocaleTimeString("de-DE"))
+    
+    const label = new Gtk.Label()
+    bind(time).subscribe(t => label.set_text(t))
+    return label
+}
+
+function createBar(monitor) {
+    const window = new Astal.Window({
+        className: "NeptuneBar",
+        monitor: monitor,
+        exclusivity: Astal.Exclusivity.EXCLUSIVE,
+        anchor: Astal.WindowAnchor.TOP | 
+               Astal.WindowAnchor.LEFT | 
+               Astal.WindowAnchor.RIGHT,
+    })
+    
+    const centerbox = new Gtk.CenterBox()
+    centerbox.set_center_widget(createClock())
+    
+    window.set_child(centerbox)
+    window.show()
+}
 
 App.start({
-    css: "./style.css",
-    main: () => App.get_monitors().map(Bar),
+    main() {
+        App.get_monitors().forEach(createBar)
+    }
 })
 EOF
 
-      cat > src/bar.ts << 'EOF'
-import { Variable, bind } from "astal"
-import { Astal, Gtk, Gdk } from "astal/gtk4"
-
-function time() {
-    const time = Variable("").poll(1000, () => 
-        new Date().toLocaleTimeString())
-    
-    return <label label={bind(time)} />
-}
-
-export default function Bar(monitor: Gdk.Monitor) {
-    return <window
-        className="Bar"
-        monitor={monitor}
-        exclusivity={Astal.Exclusivity.EXCLUSIVE}
-        anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.LEFT | Astal.WindowAnchor.RIGHT}
-        application={App}>
-        <centerbox>
-            <box />
-            <box>{time()}</box>
-            <box />
-        </centerbox>
-    </window>
-}
-EOF
-
-      cat > style.css << 'EOF'
-.Bar {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
+    # CSS erstellen
+    cat > style.css << 'EOF'
+.NeptuneBar {
+    background-color: rgba(32, 45, 54, 0.95);
+    color: #e6f3f7;
     padding: 8px;
+    font-family: "MartianMono Nerd Font";
 }
 EOF
-    fi
   '';
 
   installPhase = ''
-    mkdir -p $out/bin $out/share/my-shell
+    mkdir -p $out/bin $out/share/astal-shell
+    
+    # JavaScript files installieren
+    cp app.js $out/share/astal-shell/
+    cp style.css $out/share/astal-shell/
+    
+    # Launcher script erstellen
+    cat > $out/bin/astal-shell << 'EOF'
+#!/usr/bin/env gjs
+imports.gi.versions.Gtk = "4.0"
+imports.gi.versions.Astal = "4.0"
 
-    # Copy source files  
-    cp -r src $out/share/my-shell/
-    cp style.css $out/share/my-shell/ || true
-
-    # Bundle with esbuild
-    ${pkgs.esbuild}/bin/esbuild \
-      --bundle src/app.ts \
-      --outfile=$out/bin/my-shell \
-      --format=esm \
-      --platform=node \
-      --target=node18 \
-      --external:gi://* \
-      --external:resource://* \
-      --jsx-factory=jsx \
-      --jsx-fragment=Fragment
-
-    # Make executable
-    chmod +x $out/bin/my-shell
+import("file://$\{out\}/share/astal-shell/app.js")
+EOF
+    
+    chmod +x $out/bin/astal-shell
   '';
-
-  meta = with pkgs.lib; {
-    description = "Custom Astal desktop shell";
-    platforms = platforms.linux;
-  };
+  
+  # Skip configure phase completely
+  dontConfigure = true;
 }
