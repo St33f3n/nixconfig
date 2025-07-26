@@ -1,0 +1,316 @@
+add_newline = false
+command_timeout = 1000
+format = "[░▒▓](fg:deep_sapphire bg:midnight)$os[󰛡 ](fg:beige bg:deep_sapphire)$username$hostname[󰛡 ](fg:deep_sapphire bg:kelp_green)$directory$git_status$git_branch[󰛡 ](fg:kelp_green bg:deep_teal)$rust$python$golang$nodejs$java$nix_shell$elixr$julia$kotlin$c$ruby$cmake$dart$lua$zig$package$docker_context[󰛡](bg:coral_pink fg:deep_teal)$time$memory_usage$character[󰛡 ](fg:coral_pink  )$cmd_duration\n[└─>](fg:sea_foam)"
+palette = "ocean"
+
+[aws]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "󰸏 "
+
+[bun]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "bun"
+
+[c]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "󰙱 "
+
+[character]
+error_symbol = "[ 󰳶 ](fg:black bg:bright-red)[](fg:bright-red)"
+format = "$symbol"
+success_symbol = "[ 󰄴 ](bold bg:coral_pink fg:deep_teal)"
+vimcmd_symbol = "[  ](fg:black bg:bright-red)[](fg:bright-red)"
+
+[cmake]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = " "
+
+[cmd_duration]
+format = "[execution time: $duration](fg:coral_pink )"
+
+[cobol]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "cobol "
+
+[conda]
+format = "[$symbol$environment on ](bg:blue bold fg:green)"
+ignore_base = true
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "󱔎 "
+
+[crystal]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "cr "
+
+[daml]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "daml "
+
+[dart]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = " "
+
+[deno]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "deno "
+
+[directory]
+format = "[$path ]($style)"
+home_symbol = "󰟐 "
+read_only = " "
+style = "bold fg:coral_light bg:kelp_green"
+truncate_to_repo = true
+truncation_length = 4
+truncation_symbol = "󰇘/"
+
+[docker_context]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = " "
+
+[dotnet]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "󰪮 "
+
+[elixir]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = " "
+
+[elm]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "elm "
+
+[fill]
+style = "coral_light"
+symbol = "󰛡"
+
+[git_branch]
+format = "[$symbol$branch ]($style)"
+style = "bold fg:coral_light bg:kelp_green"
+symbol =  " "
+truncation_symbol = "…/"
+
+[git_commit]
+tag_symbol = "  "
+
+[git_status]
+ahead = "⇡${count}"
+behind = "⇣${count} "
+conflicted = "🏳 "
+deleted = "󱂥 "
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+format = "[$all_status$ahead_behind ]($style)"
+modified = " "
+renamed = "襁 "
+staged = "[++($count)]($style)"
+stashed = "󰜦 "
+style = "bold fg:coral_light bg:kelp_green"
+untracked = " "
+up_to_date = " "
+
+[golang]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "󰟓 "
+
+[guix_shell]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "guix "
+
+[hg_branch]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "hg "
+
+[hostname]
+disabled = false
+format = "[ 󰿨 ](bold $style)[$hostname$ssh_symbol]($style)"
+ssh_only = false
+ssh_symbol = " "
+style = "bold fg:beige bg:deep_sapphire"
+
+[java]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "󰬷 "
+
+[julia]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = " "
+
+[kotlin]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = " "
+
+[lua]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "󰢱 "
+
+[memory_usage]
+disabled = false
+format = "[$symbol${ram_pct}]($style)"
+style = "bold bg:coral_pink fg:deep_teal"
+symbol = " "
+threshold = 1
+
+[meson]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "meson "
+
+[nim]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = " "
+
+[nix_shell]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "󱄅 "
+
+[nodejs]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = ""
+
+[ocaml]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = " "
+
+[opa]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "opa "
+
+[os]
+disabled = false
+format = "[$symbol](bg:deep_sapphire fg:arctic_blue)"
+
+[os.symbols]
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = "󰣇 "
+CentOS = " "
+Debian = " "
+DragonFly = "dfbsd "
+Emscripten = "emsc "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = "󰣠 "
+Garuda = "garu "
+Gentoo = "󰣨 "
+HardenedBSD = "hbsd "
+Illumos = "lum "
+Linux = " "
+Macos = "mac "
+Manjaro = "󱘊 "
+Mariner = "mrn "
+MidnightBSD = "mid "
+Mint = "󰣭 "
+NetBSD = "nbsd "
+NixOS = "󱄅 "
+OpenBSD = "obsd "
+OracleLinux = "orac "
+Pop = "pop "
+Raspbian = " "
+RedHatEnterprise = "rhel "
+Redhat = "rhl "
+Redox = "redox "
+SUSE = "suse "
+Solus = "sol "
+Ubuntu = " "
+Unknown = "unk "
+Windows = " "
+openSUSE = " "
+
+[package]
+format = "[ $symbol$version ]($style)"
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "󰏖 "
+
+[palettes.ocean]
+abyss = "#141e26"
+arctic_blue = "#00bfff"
+beige = "#ffcc99"
+bioluminescent = "#00c2c2"
+coral_blue = "#0088cc"
+coral_deep = "#d65d52"
+coral_light = "#ffa07a"
+coral_orange = "#ff6347"
+coral_pink = "#e57f6f"
+coral_red = "#ff4500"
+deep_sapphire = "#004d66"
+deep_teal = "#006666"
+deep_water = "#1a2832"
+kelp_green = "#1d4d4f"
+marine_blue = "#006bb3"
+midnight = "#202d36"
+primary_accent = "#0088cc"
+sea_foam = "#2d8a8a"
+seafoam_gray = "#a3b8c2"
+surface = "#263440"
+text_primary = "#e6f3f7"
+text_secondary = "#b3d1d9"
+
+[perl]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "pl "
+
+[php]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = " "
+
+[pulumi]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "pulumi "
+
+[purescript]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "purs "
+
+[python]
+style = "bold fg:coral_deep bg:deep_teal"
+format ="[${symbol}${pyenv_prefix}(${version} )(\\($virtualenv\\) )]($style)"
+symbol = " "
+
+[raku]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "raku "
+
+[ruby]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "rb "
+
+[rust]
+format = "[$symbol($version)]($style)"
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "🦀 "
+
+[scala]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "scala "
+
+[spack]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "spack "
+
+[sudo]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "󰆥 "
+
+[swift]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "swift "
+
+[terraform]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = "terraform "
+
+[time]
+disabled = false
+format = "[ 󱑍 $time ]($style)"
+style = "bold bg:coral_pink fg:deep_teal"
+time_format = "%H:%M:%S %Y-%m-%d"
+
+[username]
+disabled = false
+format = "[$user]($style)"
+show_always = true
+style_root = "fg:beige bg:deep_sapphire"
+style_user = "fg:beige bg:deep_sapphire"
+
+[zig]
+style = "bold fg:coral_deep bg:deep_teal"
+symbol = " "

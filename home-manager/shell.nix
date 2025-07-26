@@ -1,6 +1,5 @@
 { pkgs, lib, inputs, ... }:
-let starship_config = import ./starship.nix;
-in {
+{
   programs.alacritty = {
     enable = true;
     settings = lib.mkForce {
@@ -93,7 +92,7 @@ in {
   programs.starship = {
     enable = true;
     enableNushellIntegration = true;
-    settings = lib.mkForce starship_config.starship_string;
+    settings = lib.mkForce (lib.importTOML ./starship.toml);
   };
 
   programs.atuin = {
