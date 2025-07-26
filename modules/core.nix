@@ -22,7 +22,10 @@ with lib;
       gsettings-desktop-schemas
       # Security & Secrets
       keepassxc
+
+
       
+      qogir-icon-theme      
       # Audio & Bluetooth
       noisetorch
       bluez

@@ -1,23 +1,23 @@
 { pkgs, inputs, ... }: let
 
 color_scheme = {
-    base00 = "202d36"; # midnight
-    base08 = "ff4500"; # coral_red
-    base07 = "1d4d4f"; # kelp_green
-    base05 = "ffcc99"; # beige
-    base03 = "0088cc"; # coral_blue
-    base09 = "d65d52"; # coral_deep
-    base0B = "00c2c2"; # bioluminescent
-    base0F = "a3b8c2"; # seafoam_gray
-    base01 = "141e26"; # abyss
-    base0E = "ff6347"; # coral_orange
-    base0C = "2d8a8a"; # sea_foam
-    base02 = "ffa07a"; # coral_light
-    base0A = "006666"; # deep_teal
-    base0D = "006bb3"; # marine_blue
-    base04 = "004d66"; # deep_sapphire
-    base06 = "e6f3f7"; # text_primary
-  };
+  base00 = "1e1e1e"; # Default Background (abyss - darker anthracite)
+  base01 = "262626"; # Lighter Background (deep-water - für status bars)
+  base02 = "6b8e6b"; # Selection Background (sea-foam morandi green)
+  base03 = "4a4a4a"; # Comments, Invisibles (normal black - lighter for visibility)
+  base04 = "c4b89f"; # Dark Foreground (text-muted warm beige)
+  base05 = "f7f2e3"; # Default Foreground (text-primary warm beige)
+  base06 = "f7f2e3"; # Light Foreground (bright_foreground)
+  base07 = "ffffff"; # Light Background (white bright)
+  base08 = "c84a2c"; # Variables/Red (coral-red dimmed)
+  base09 = "d49284"; # Integers/Orange (coral-light dimmed)
+  base0A = "d49284"; # Classes/Yellow (coral-light dimmed) 
+  base0B = "6b8e6b"; # Strings/Green (sea-foam morandi green)
+  base0C = "5a9a9a"; # Support/Cyan (bioluminescent morandi teal)
+  base0D = "6b8db3"; # Functions/Blue (coral-blue softer)
+  base0E = "b85347"; # Keywords/Magenta (coral-deep dimmed)
+  base0F = "8a9a8a"; # Deprecated (seafoam-gray)
+};
 
   imgLink = "https://nextcloud.organiccircuitlab.com/s/8mcMtc74RxcaBSz/download/rocket_launch.jpg";
 
