@@ -46,6 +46,7 @@ with lib;
       # Development Environments & IDEs
       arduino-ide
       godot
+      vscode-fhs
       
       # Automation & System Tools
       ansible

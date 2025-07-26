@@ -40,11 +40,11 @@
 
 stdenv.mkDerivation rec {
   pname = "zen-browser";
-  version = "1.12b";
+  version = "1.14.7b";
 
   src = fetchurl {
     url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz";
-    sha256 = "1vsyqjy3ivixxfcz81rr61ab5gs4v5q93jbfj7ga1rgsx7p9zakn";
+    sha256 = "A13d92nlgk1kpfj91d7nbs2nf34x174k7vdbafzrcjigh4lwqzjcy";
   };
 
   nativeBuildInputs = [

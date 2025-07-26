@@ -13,7 +13,7 @@ with lib;
       # Compositor & Core
       hyprland
       xwayland
-      
+      niri
       # Display Manager & UI Toolkits
       kdePackages.sddm
       (sddm-astronaut.override { embeddedTheme = "astronaut";}) 
