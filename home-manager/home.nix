@@ -20,6 +20,7 @@
     ./hyprland.nix
     ./git.nix
     ./shell.nix
+    ./helix.nix
     #./theming.nix
   ];
 
