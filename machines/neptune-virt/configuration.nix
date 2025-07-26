@@ -36,7 +36,7 @@ in {
     ensureProfiles.profiles = {
       "usb-ethernet" = {
         "connection"= {
-          "id" = "USB-C Dock";
+          "id" = "Local";
           "type" = "ethernet";
           "interface-name" = "enp1s0";
           "autoconnect" = true;

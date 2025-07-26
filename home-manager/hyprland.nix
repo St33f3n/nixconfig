@@ -71,7 +71,9 @@ in {
 
       exec-once =
         [ "[workspace 3 silent] webcord" "[workspace 5 silent] nextcloud" "wl-paste --watch cliphist store" "[workspace 2 silent] keepassxc"];
-      env = [ "ELECTRON_OZONE_PLATFORM_HINT,auto" ];
+      env = [ "ELECTRON_OZONE_PLATFORM_HINT,auto"
+      "XCURSOR_THEME,Qogir-dark"
+      "XCURSOR_SIZE,24"];
       input = {
         "kb_layout" = "de";
         "numlock_by_default" = "true";

@@ -27,8 +27,6 @@ with lib;
       qalculate-gtk
       
       # Document Processing & LaTeX
-      texstudio
-      texliveFull
       pandoc
       
       # Note Taking & Knowledge Management

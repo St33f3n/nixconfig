@@ -31,11 +31,12 @@ in{
   stylix.autoEnable = true;
 
   stylix.targets.gtk.enable = true;
+  stylix.targets.qt.enable = true;
   stylix.base16Scheme = color_scheme;
   stylix.image = image;
   
   stylix.cursor.package = pkgs.qogir-icon-theme;
-  stylix.cursor.name = "Qogir-dark";
+  stylix.cursor.name = "Qogir-Dark";
   stylix.cursor.size = 24;
 
   stylix.fonts = {
@@ -57,8 +58,19 @@ in{
     };
   };
 
+  environment.systemPackages = with pkgs; [
+    libsForQt5.qt5ct
+    qt6ct
+    libsForQt5.qtstyleplugins
+  ];
+
   services.colord.enable = true; # Ensure colord is running
   environment.sessionVariables = {
+    XCURSOR_THEME = "Qogir-Dark";
+    XCURSOR_SIZE = "24";
+    HYPRCURSOR_THEME = "Qogir-Dark";
+    HYPRCURSOR_SIZE = "24";
+
     WAYLAND_DISPLAY = "wayland-0"; # Or whatever your Wayland display is named
     COLORSCHEME =
       builtins.toJSON color_scheme; # Export the color scheme
