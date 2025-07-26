@@ -21,6 +21,7 @@
     ./git.nix
     ./shell.nix
     ./helix.nix
+    inputs.zen-browser.homeModules.beta
     #./theming.nix
   ];
 
@@ -88,6 +89,8 @@
   };
   # Enable home-manager and git
   programs.home-manager.enable = true;
+
+  programs.zen-browser.enable=true;
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";

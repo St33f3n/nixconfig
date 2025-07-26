@@ -24,6 +24,10 @@
 
     #Flatpak
     nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    # Zen-browser
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    
   };
 
   outputs = {
@@ -32,6 +36,7 @@
     home-manager,
     stylix,
     nix-flatpak,
+    zen-browser,
     ...
   } @ inputs: let
     inherit (self) outputs;

@@ -53,7 +53,7 @@ with lib;
     };
     services.xserver.enable = true;
     programs.hyprland.enable = true;
-    
+    programs.niri.enable = true;    
     xdg.portal = {
       enable = true;
       wlr.enable = true;
