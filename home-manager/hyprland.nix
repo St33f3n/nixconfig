@@ -16,7 +16,10 @@ in
 
       #Variabels
       "$mainMod" = "SUPER";
-
+      general = {
+          resize_on_border = true;
+          extend_border_grab_area = 15;  # Pixel-Bereich um Fensterrand für Resize
+        };
       bind = [
         #Applications
         "$mainMod, RETURN, exec, alacritty"
@@ -152,6 +155,45 @@ in
 
       ];
 
+
+      windowrulev2 = [
+    # Workspace Rules - für deine installierten Apps
+    "workspace 4,class:^(vesktop)$"                              # Discord client
+    "workspace 8 silent,class:^(com.borgbase.Vorta)$"          # Backup tool (Vorta)
+    "workspace 7 silent,class:^(org.keepassxc.KeePassXC)$"     # KeePassXC
+
+
+    # Float Rules - für deine Apps
+    "float,title:^(About Mozilla Firefox)$"
+    "float,class:^(firefox)$,title:^(Picture-in-Picture)$"
+    "float,class:^(firefox)$,title:^(Library)$"
+    "float,class:^(Alacritty)$,title:^(btop)$"                  # btop floating
+    "float,class:^(Alacritty)$,title:^(fastfetch)$"             # fastfetch floating
+    "float,class:^(qt5ct)$"                                      # Qt5 Settings floating
+    "float,class:^(qt6ct)$"                                      # Qt6 Settings floating
+    "float,class:^(kvantummanager)$"                             # Kvantum floating
+    "float,class:^(org.pulseaudio.pavucontrol)$"
+    "float,class:^(blueman-manager)$"
+    "float,class:^(nm-connection-editor)$"
+    "float,class:^(org.kde.polkit-kde-authentication-agent-1)$"
+  ];
+
+  # Standard File Dialogs - universell relevant
+  windowrule = [
+    "float,title:^(Open)$"
+    "float,title:^(Choose Files)$"
+    "float,title:^(Save As)$"
+    "float,title:^(Confirm to replace files)$"
+    "float,title:^(File Operation Progress)$"
+  ];
+
+  # Layer Rules - für Rofi und Notifications
+  layerrule = [
+    "blur,rofi"
+    "ignorezero,rofi"
+    "blur,notifications"
+    "ignorezero,notifications"
+  ];
       misc = {
         vrr = 0;
         disable_hyprland_logo = true;

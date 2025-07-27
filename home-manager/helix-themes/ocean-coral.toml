@@ -1,0 +1,263 @@
+# Ocean Coral Theme for Helix
+# Converted from CSS theme with ocean and coral color palette
+
+# UI Elements - Enhanced
+"ui.background" = { bg = "abyss" }
+"ui.background.separator" = "text_secondary"
+"ui.text" = "text_primary"
+"ui.text.focus" = "text_primary"
+"ui.text.inactive" = "text_muted"
+"ui.text.info" = "arctic_blue"
+"ui.text.directory" = { fg = "sea_foam" }
+
+# Cursor - Using proper modifiers
+"ui.cursor" = { fg = "text_primary", modifiers = ["reversed"] }
+"ui.cursor.normal" = { fg = "text_primary", modifiers = ["reversed"] }
+"ui.cursor.insert" = { fg = "coral_orange", modifiers = ["reversed"] }
+"ui.cursor.select" = { fg = "sea_foam", modifiers = ["reversed"] }
+"ui.cursor.match" = { fg = "coral_blue", modifiers = ["underlined"] }
+"ui.cursor.primary" = { fg = "text_primary", modifiers = ["reversed"] }
+"ui.cursor.primary.normal" = { fg = "text_primary", modifiers = ["reversed"] }
+"ui.cursor.primary.insert" = { fg = "coral_orange", modifiers = ["reversed"] }
+"ui.cursor.primary.select" = { fg = "sea_foam", modifiers = ["reversed"] }
+
+# Line numbers
+"ui.linenr" = "text_muted"
+"ui.linenr.selected" = { fg = "text_secondary", modifiers = ["bold"] }
+
+# Statusline
+"ui.statusline" = { fg = "text_primary", bg = "deep_water" }
+"ui.statusline.inactive" = { fg = "text_muted", bg = "midnight" }
+"ui.statusline.normal" = { fg = "text_primary", bg = "sea_foam" }
+"ui.statusline.insert" = { fg = "text_primary", bg = "coral_orange" }
+"ui.statusline.select" = { fg = "text_primary", bg = "coral_pink" }
+"ui.statusline.separator" = "surface"
+
+# Bufferline
+"ui.bufferline" = { fg = "text_secondary", bg = "deep_water" }
+"ui.bufferline.active" = { fg = "abyss", bg = "sea_foam", modifiers = ["bold"] }
+"ui.bufferline.background" = "abyss"
+
+# Gutter
+"ui.gutter" = { bg = "abyss" }
+"ui.gutter.selected" = { bg = "deep_water" }
+
+# Selection
+"ui.selection" = { bg = "sea_foam" }
+"ui.selection.primary" = { bg = "deep_teal" }
+
+# Menus and Popups
+"ui.menu" = { fg = "text_primary", bg = "deep_water" }
+"ui.menu.selected" = { fg = "text_primary", bg = "sea_foam" }
+"ui.menu.scroll" = { fg = "text_muted", bg = "midnight" }
+"ui.popup" = { fg = "text_primary", bg = "deep_water" }
+"ui.popup.info" = { fg = "text_primary", bg = "deep_water" }
+
+# Window and Help
+"ui.window" = { fg = "sea_foam" }
+"ui.help" = { fg = "text_primary", bg = "deep_water" }
+
+# Picker
+"ui.picker.header" = { fg = "text_secondary", bg = "midnight" }
+"ui.picker.header.column" = { fg = "text_secondary", bg = "midnight" }
+"ui.picker.header.column.active" = { fg = "text_primary", bg = "sea_foam" }
+
+# Highlight
+"ui.highlight" = { bg = "coral_pink", fg = "abyss" }
+"ui.highlight.frameline" = { bg = "coral_red" }
+
+# Cursorline and Cursorcolumn
+"ui.cursorline.primary" = { bg = "deep_water" }
+"ui.cursorline.secondary" = { bg = "deep_water" }
+"ui.cursorcolumn.primary" = { bg = "deep_water" }
+"ui.cursorcolumn.secondary" = { bg = "deep_water" }
+
+# Virtual elements
+"ui.virtual" = { fg = "text_muted" }
+"ui.virtual.ruler" = { bg = "deep_water" }
+"ui.virtual.whitespace" = "text_muted"
+"ui.virtual.indent-guide" = "surface"
+"ui.virtual.inlay-hint" = "seafoam_gray"
+"ui.virtual.inlay-hint.parameter" = "marine_blue"
+"ui.virtual.inlay-hint.type" = "coral_blue"
+"ui.virtual.wrap" = "text_muted"
+"ui.virtual.jump-label" = { fg = "coral_red", modifiers = ["bold"] }
+
+# Debug
+"ui.debug" = { fg = "coral_red" }
+"ui.debug.breakpoint" = "coral_red"
+"ui.debug.active" = "coral_orange"
+
+# Syntax Highlighting - Swapped golden beige and coral usage
+keyword = "coral_red"
+"keyword.control" = "coral_red"
+"keyword.control.conditional" = "coral_orange"    # if, else, elif - now coral
+"keyword.control.repeat" = "coral_orange"         # for, while, loop - now coral
+"keyword.control.import" = "sea_foam"
+"keyword.control.return" = "coral_red"
+"keyword.control.exception" = "coral_deep"
+"keyword.operator" = "marine_blue"
+"keyword.directive" = "coral_orange"
+"keyword.function" = "coral_blue"
+"keyword.storage" = "coral_orange"               # let, var, const - now coral
+"keyword.storage.type" = "coral_blue"
+"keyword.storage.modifier" = "coral_pink"
+
+"type" = "golden_beige"                          # Types now use golden beige
+"type.builtin" = "sea_foam"
+"type.parameter" = "arctic_blue"
+"type.enum" = "golden_beige"                     # Enums now use golden beige
+"type.enum.variant" = "coral_light"
+
+constructor = "golden_beige"                     # Constructors now use golden beige
+
+"constant" = "coral_deep"
+"constant.builtin" = "coral_deep"
+"constant.builtin.boolean" = "coral_red"
+"constant.character" = "coral_pink"
+"constant.character.escape" = "coral_orange"
+"constant.numeric" = "bioluminescent"
+"constant.numeric.integer" = "bioluminescent"
+"constant.numeric.float" = "bioluminescent"
+
+"string" = "bioluminescent"
+"string.regexp" = "coral_light"
+"string.special" = "coral_pink"
+"string.special.path" = "sea_foam"
+"string.special.url" = "arctic_blue"
+"string.special.symbol" = "coral_light"
+
+"comment" = { fg = "seafoam_gray", modifiers = ["italic"] }
+"comment.line" = "seafoam_gray"
+"comment.block" = "seafoam_gray"
+"comment.block.documentation" = "seafoam_gray"
+
+"variable" = "text_primary"
+"variable.builtin" = "coral_light"
+"variable.parameter" = "arctic_blue"
+"variable.other.member" = "marine_blue"
+"variable.other.member.private" = "deep_sapphire"
+
+label = "coral_orange"
+
+punctuation = "text_secondary"
+"punctuation.delimiter" = "seafoam_gray"
+"punctuation.bracket" = "text_primary"
+"punctuation.special" = "coral_blue"
+
+operator = "marine_blue"
+
+"function" = "sea_foam"
+"function.builtin" = "golden_beige"              # Built-in functions now use golden beige
+"function.method" = "arctic_blue"
+"function.method.private" = "marine_blue"
+"function.macro" = "coral_orange"                # Macros now use coral
+"function.special" = "coral_deep"
+
+"tag" = "coral_orange"
+"tag.builtin" = "coral_deep"
+
+namespace = { fg = "golden_beige", modifiers = ["italic"] }  # Namespaces now use golden beige
+
+attribute = { fg = "coral_pink", modifiers = ["italic"] }
+
+special = "coral_blue"
+
+# Markup - Enhanced
+"markup.heading" = "coral_pink"
+"markup.heading.marker" = "coral_red"
+"markup.heading.1" = { fg = "coral_red", modifiers = ["bold"] }
+"markup.heading.2" = { fg = "coral_orange", modifiers = ["bold"] }
+"markup.heading.3" = { fg = "coral_pink", modifiers = ["bold"] }
+"markup.heading.4" = { fg = "coral_light", modifiers = ["bold"] }
+"markup.heading.5" = { fg = "coral_blue", modifiers = ["bold"] }
+"markup.heading.6" = { fg = "marine_blue", modifiers = ["bold"] }
+"markup.list" = "coral_pink"
+"markup.list.unnumbered" = "coral_pink"
+"markup.list.numbered" = "coral_orange"
+"markup.list.checked" = "sea_foam"
+"markup.list.unchecked" = "coral_red"
+"markup.bold" = { fg = "coral_orange", modifiers = ["bold"] }
+"markup.italic" = { fg = "coral_light", modifiers = ["italic"] }
+"markup.strikethrough" = { fg = "seafoam_gray", modifiers = ["crossed_out"] }
+"markup.link.url" = { fg = "arctic_blue", modifiers = ["underlined"] }
+"markup.link.label" = "coral_pink"
+"markup.link.text" = "coral_light"
+"markup.quote" = "sea_foam"
+"markup.raw" = "bioluminescent"
+"markup.raw.inline" = "bioluminescent"
+"markup.raw.block" = "bioluminescent"
+
+# Completion/Hover popup styling
+"markup.normal.completion" = "text_primary"
+"markup.normal.hover" = "text_primary"
+"markup.heading.completion" = "coral_orange"
+"markup.heading.hover" = "coral_orange"
+"markup.raw.inline.completion" = "bioluminescent"
+"markup.raw.inline.hover" = "bioluminescent"
+
+# Diff - Enhanced
+"diff.plus" = "sea_foam"
+"diff.plus.gutter" = "sea_foam"
+"diff.minus" = "coral_red"
+"diff.minus.gutter" = "coral_red"
+"diff.delta" = "coral_orange"
+"diff.delta.moved" = "coral_pink"
+"diff.delta.conflict" = "coral_deep"
+"diff.delta.gutter" = "coral_orange"
+
+# Diagnostics - Enhanced with yellow warnings
+error = { fg = "coral_red", modifiers = ["bold"] }
+warning = { fg = "yellow", modifiers = ["bold"] }
+info = { fg = "arctic_blue", modifiers = ["bold"] }
+hint = { fg = "sea_foam", modifiers = ["bold"] }
+diagnostic = "coral_red"
+"diagnostic.error" = "coral_red"
+"diagnostic.warning" = "yellow"
+"diagnostic.info" = "arctic_blue"
+"diagnostic.hint" = "sea_foam"
+"diagnostic.unnecessary" = { modifiers = ["dim"] }
+"diagnostic.deprecated" = { modifiers = ["crossed_out"] }
+
+# Snippet placeholders
+tabstop = { bg = "coral_pink", fg = "abyss" }
+
+# Color Palette - MUST BE AT THE END
+[palette]
+
+# Primary Colors
+deep_ocean = "#edf2f7"
+ocean_current = "#e6e6e6"
+sea_foam = "#6b8e6b"
+deep_teal = "#4a6b4a"
+kelp_green = "#3d5a3d"
+
+# Coral Accent Colors
+coral_pink = "#c4766a"
+coral_orange = "#d4634a"
+coral_red = "#c84a2c"
+coral_light = "#d49284"
+coral_deep = "#b85347"
+
+# Ocean Accent Colors
+bioluminescent = "#5a9a9a"
+coral_blue = "#6b8db3"
+arctic_blue = "#8cb8e8"
+deep_sapphire = "#4a5f7a"
+marine_blue = "#5c7ba3"
+
+# Anthracite Neutral Colors
+abyss = "#1e1e1e"
+deep_water = "#262626"
+midnight = "#2e2e2e"
+surface = "#363636"
+seafoam_gray = "#8a9a8a"
+
+# Text Colors
+text_primary = "#f7f2e3"
+text_secondary = "#e5dcc8"
+text_muted = "#c4b89f"
+
+# Special Colors
+yellow = "#f0c674"
+golden_beige = "#d4c5a9"

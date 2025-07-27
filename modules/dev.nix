@@ -36,6 +36,11 @@ with lib;
       openscad-lsp
       llvmPackages_20.clang-tools
       marksman
+      rust-analyzer
+      python311Packages.python-lsp-server
+      ruff
+      black
+      ruff
       hyprls
       gopls
       bash-language-server
