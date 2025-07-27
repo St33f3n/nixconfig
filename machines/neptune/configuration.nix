@@ -112,9 +112,55 @@ in
   # Configure console keymap
   console.keyMap = "de";
 
-  hardware = {
-    nvidia.modesetting.enable = true;
+hardware = {
+  graphics = {
+    enable = true;
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      # AMD RX 7700 XT drivers
+      mesa
+      amdvlk
+      rocmPackages.clr.icd
+      
+      # NVIDIA RTX 3070 Ti drivers
+      nvidia-vaapi-driver
+      libvdpau-va-gl
+    ];
   };
+
+  # NVIDIA configuration (discrete card)
+  nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;  # Not needed for desktop
+    open = false;  # Use proprietary for RTX 3070 Ti
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    
+    # NO PRIME configuration - these are two separate cards
+  };
+};
+
+# GPU selection and detection tools
+environment.systemPackages = with pkgs; [
+  
+  orca-slicer
+  fabric-ai
+  nvtopPackages.full
+  radeontop          # AMD GPU monitoring
+  vulkan-tools       # vulkaninfo command
+  clinfo             # OpenCL info for both GPUs
+  switcheroo-control      # GPU switching for apps
+];
+
+# Environment for dual GPU setup
+environment.sessionVariables = {
+  # Let apps choose GPU dynamically
+  __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
+  # AMD GPU support
+  AMD_VULKAN_ICD = "RADV";
+  # Keep both drivers available
+  VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.json:/run/opengl-driver/share/vulkan/icd.d/radeon_icd.json";
+};
 
   users.users.biocirc = {
     isNormalUser = true;
@@ -153,14 +199,11 @@ in
     enable = true;
     packages = [
       "com.usebottles.bottles"
+      "eu.betterbird.Betterbird"
     ];
   };
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    orca-slicer
-    fabric-ai
-  ];
 
   services.dbus.packages = with pkgs; [ dconf ];
   programs.dconf.enable = true;

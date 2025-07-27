@@ -1,13 +1,14 @@
+{ lib, ... }:
 {
   programs.helix = {
     enable = true;
     
     # Editor settings aus config.toml
     settings = {
-      theme = "ocean-coral";
+      theme =  lib.mkForce "ocean-coral";
       
       editor = {
-        clipboard-provider = "termcode";  # ← Das hatte ich vergessen
+        clipboard-provider = "termcode";
         line-number = "relative";
         cursorline = true;
         rulers = [120 200];
@@ -64,8 +65,9 @@
       esc = ["collapse_selection", "keep_primary_selection"]
     '';
     
-    # Language configuration
+    # Language configuration - korrigierte Syntax
     languages = {
+      # Language servers definieren
       language-server = {
         pylsp = {
           command = "pylsp";
@@ -76,8 +78,23 @@
             mccabe = { enabled = false; };
           };
         };
+        rust-analyzer = {
+          command = "rust-analyzer";
+        };
+        taplo = {
+          command = "taplo";
+          args = ["lsp" "stdio"];
+        };
+        yaml-language-server = {
+          command = "yaml-language-server";
+          args = ["--stdio"];
+        };
+        clangd = {
+          command = "clangd";
+        };
       };
       
+      # Sprachen mit Verweis auf Language servers
       language = [
         {
           name = "rust";
@@ -85,7 +102,7 @@
           injection-regex = "rust";
           file-types = ["rs"];
           indent = { tab-width = 4; unit = "    "; };
-          language-server = { command = "rust-analyzer"; };
+          language-servers = ["rust-analyzer"];  # ← Plural und Array
           auto-format = true;
         }
         {
@@ -97,6 +114,7 @@
           roots = ["pyproject.toml" "setup.py" "poetry.lock" "requirements.txt"];
           indent = { tab-width = 4; unit = "    "; };
           formatter = { command = "black"; args = ["--quiet" "-"]; };
+          language-servers = ["pylsp"];  # ← Korrekte Syntax
           auto-format = true;
         }
         {
@@ -105,7 +123,7 @@
           injection-regex = "toml";
           file-types = ["toml"];
           comment-token = "#";
-          language-server = { command = "taplo"; args = ["lsp" "stdio"]; };
+          language-servers = ["taplo"];
           indent = { tab-width = 2; unit = "  "; };
         }
         {
@@ -115,7 +133,7 @@
           file-types = ["yaml" "yml"];
           roots = [];
           comment-token = "#";
-          language-server = { command = "yaml-language-server"; args = ["--stdio"]; };
+          language-servers = ["yaml-language-server"];
           indent = { tab-width = 2; unit = "  "; };
         }
         {
@@ -124,7 +142,7 @@
           injection-regex = "cpp";
           file-types = ["cpp" "hpp" "cc" "hh" "cxx" "hxx"];
           roots = ["compile_commands.json" ".clangd"];
-          language-server = { command = "clangd"; };
+          language-servers = ["clangd"];
           indent = { tab-width = 4; unit = "    "; };
         }
       ];

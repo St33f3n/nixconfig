@@ -137,6 +137,17 @@
       max_preview_height = 4;                           # Preview-Größe
       keymap_mode = "auto";                             # Auto-detect vim/emacs
       enter_accept = true;                              # Enter führt direkt aus
+      
+      # UI-Einstellungen
+      show_help = true;
+      show_tabs = true;
+      
+      # Stats-Optimierungen  
+      common_prefix = [ "sudo" "bundle exec" "docker" "docker-compose" "git" ];
+      common_subcommands = [
+        "cargo" "git" "npm" "yarn" "docker" "kubectl" "systemctl"
+        "sudo" "nix" "nixos-rebuild" "home-manager"
+      ];
     };
   };
 
@@ -157,12 +168,12 @@
     enableNushellIntegration = true;
   };
 
-  programs.yazi = {
+programs.yazi = {
     enable = true;
     enableNushellIntegration = true;
     shellWrapperName = "y";
     settings = {
-      manager = {
+      mgr = {                              # Geändert von 'manager' zu 'mgr'
         show_hidden = true;                # Typo-Fix
         sort_by = "natural";
         sort_dir_first = true;             # Syntax-Fix
@@ -170,6 +181,8 @@
         show_symlink = true;               # Symlink-Ziele anzeigen
         scrolloff = 5;                     # Cursor-Padding
       };
+
+      theme.manager.folder= lib.mkForce { fg = "#ffcc99"; };
       preview = {
         wrap = "no";
         tab_size = 2;                      # Kleinere Tabs
@@ -188,13 +201,7 @@
       };
     };
     
-    # Git-Plugin Integration
-    initLua = ''
-      require("git"):setup()
-      require("full-border"):setup()
-    '';
   };
-
   programs.tealdeer = {
     enable = true;
     settings = {
@@ -207,23 +214,4 @@
       };
     };
   };
-
-  # Zusätzliche Atuin-Konfiguration
-  home.file.".config/atuin/config.toml".text = ''
-    # Erweiterte Atuin-Einstellungen für bessere UX
-    [search]
-    # Ctrl-R: Global fuzzy search
-    # Up-Arrow: Host-specific prefix search (aus programs.atuin.settings)
-    
-    [ui]
-    show_help = true
-    show_tabs = true
-    
-    [stats]
-    common_prefix = ["sudo", "bundle exec", "docker", "docker-compose", "git"]
-    common_subcommands = [
-      "cargo", "git", "npm", "yarn", "docker", "kubectl", "systemctl",
-      "sudo", "nix", "nixos-rebuild", "home-manager"
-    ]
-  '';
 }
