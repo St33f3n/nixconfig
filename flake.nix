@@ -3,9 +3,8 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home manager
     home-manager = {
@@ -20,9 +19,9 @@
       inputs.hyprland.follows = "hyprland";
     };
 
+    
     #Stylix
     stylix.url = "github:danth/stylix";
-    stylix.inputs.nixpkgs.follows = "nixpkgs";
 
     #Flatpak
     nix-flatpak.url = "github:gmodena/nix-flatpak";
@@ -46,15 +45,15 @@
     systems = [
       "x86_64-linux"
     ];
-
-  
-      
+    
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
 
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+
+
 
     packages.x86_64-linux= {
       zen-browser = nixpkgs.legacyPackages.x86_64-linux.callPackage ./own_pkgs/zen_browser.nix {};
@@ -80,11 +79,11 @@
         ];
       };
 
-      neptune= nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs ;};
+      neptune_virt = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main nixos configuration file <
-          ./machines/neptune/configuration.nix
+          ./machines/neptune-virt/configuration.nix
           home-manager.nixosModules.home-manager{
             home-manager.extraSpecialArgs = {inherit inputs outputs;};
             home-manager.useGlobalPkgs = true;

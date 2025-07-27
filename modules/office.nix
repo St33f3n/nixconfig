@@ -1,5 +1,5 @@
 # modules/office.nix
-{ config, lib, pkgs, pkgsUnstable, ... }:
+{ config, lib, pkgs,  ... }:
 
 with lib;
 
@@ -30,7 +30,7 @@ with lib;
       pandoc
       
       # Note Taking & Knowledge Management
-      pkgsUnstable.trilium-next-desktop
+      trilium-next-desktop
 
             
       # Security & Encryption
