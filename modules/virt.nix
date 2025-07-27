@@ -4,19 +4,21 @@
 with lib;
 
 {
-  options.virtualization = {
-    docker = {
+  options.virt = {
+    enable = mkEnableOption "trigger virtualisation";
+    
+     docker = {
       enable = mkEnableOption "Docker container platform";
     };
     
-    virt = {
+    quemu = {
       enable = mkEnableOption "KVM/QEMU virtualization with virt-manager";
     };
   };
 
   config = mkMerge [
     # Docker Configuration
-    (mkIf config.virtualization.docker.enable {
+    (mkIf config.virt.docker.enable {
       environment.systemPackages = with pkgs; [
         docker
         docker-buildx
@@ -32,7 +34,7 @@ with lib;
     })
     
     # KVM/QEMU Virtualization Configuration
-    (mkIf config.virtualization.virt.enable {
+    (mkIf config.virt.quemu.enable {
       environment.systemPackages = with pkgs; [
         qemu_full
         virt-manager

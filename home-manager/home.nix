@@ -28,11 +28,11 @@
 
   
   home = {
-    username = "steefen";
-    homeDirectory = "/home/steefen";
+    username = "biocirc";
+    homeDirectory = "/home/biocirc";
     sessionVariables = {
       EDITOR = "hx";
-      SHELL = "zsh";
+      SHELL = "nu";
     };
     file = {
       "p/active/.keep".text = "";

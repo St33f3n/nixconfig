@@ -28,7 +28,7 @@ with lib;
       ardour
       
       # Graphics & Image Editing
-      gimp-with-plugins
+      gimp3-with-plugins
       libresprite
     ];
   };

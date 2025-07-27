@@ -3,8 +3,9 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
 
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home manager
     home-manager = {
@@ -19,18 +20,9 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-
-    astal = {
-      url = "github:aylur/astal";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    ags = {
-      url = "github:aylur/ags";  
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    
     #Stylix
     stylix.url = "github:danth/stylix";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
 
     #Flatpak
     nix-flatpak.url = "github:gmodena/nix-flatpak";
@@ -47,8 +39,6 @@
     stylix,
     nix-flatpak,
     zen-browser,
-    astal,
-    ags,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -56,7 +46,9 @@
     systems = [
       "x86_64-linux"
     ];
-    
+
+  
+      
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -64,20 +56,8 @@
 
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
-    devShells.x86_64-linux = {
-    astal = nixpkgs.legacyPackages.x86_64-linux.callPackage ./modules/astal-module/dev-shell.nix {
-      inherit astal;
-      system = "x86_64-linux";
-    };
-  };
-
-
     packages.x86_64-linux= {
       zen-browser = nixpkgs.legacyPackages.x86_64-linux.callPackage ./own_pkgs/zen_browser.nix {};
-      astal-shell =  nixpkgs.legacyPackages.x86_64-linux.callPackage ./modules/astal-module {
-        inherit astal;
-        system = "x86_64-linux";
-      };
     };
 
     
@@ -93,23 +73,23 @@
             home-manager.extraSpecialArgs = {inherit inputs outputs;};
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.steefen = import ./home-manager/home.nix;
+            home-manager.users.biocirc = import ./home-manager/home.nix;
           }
           inputs.stylix.nixosModules.stylix
           nix-flatpak.nixosModules.nix-flatpak
         ];
       };
 
-      neptune_virt = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
+      neptune= nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs ;};
         modules = [
           # > Our main nixos configuration file <
-          ./machines/neptune-virt/configuration.nix
+          ./machines/neptune/configuration.nix
           home-manager.nixosModules.home-manager{
             home-manager.extraSpecialArgs = {inherit inputs outputs;};
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.steefen = import ./home-manager/home.nix;
+            home-manager.users.biocirc = import ./home-manager/home.nix;
           }
           inputs.stylix.nixosModules.stylix
           nix-flatpak.nixosModules.nix-flatpak
