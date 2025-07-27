@@ -31,6 +31,7 @@ with lib;
       qogir-icon-theme
       # Audio & Bluetooth
       noisetorch
+      pavucontrol
       bluez
       bluez-tools
       bluez-alsa
