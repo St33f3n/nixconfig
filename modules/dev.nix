@@ -1,5 +1,10 @@
 # modules/dev.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -21,7 +26,7 @@ with lib;
       nix-prefetch-hg
       nix-ld
       nixfmt-rfc-style
-      
+
       # Language Servers
       nixd
       nil
@@ -34,7 +39,7 @@ with lib;
       hyprls
       gopls
       bash-language-server
-      
+
       # Programming Language Runtimes & Package Managers
       nodejs_24
       julia-lts
@@ -42,21 +47,21 @@ with lib;
       bun
       dart
       alire
-      
+
       # Development Environments & IDEs
       arduino-ide
       godot
       vscode-fhs
-      
+
       # Automation & System Tools
       ansible
       scrcpy
       keymapp
-      
+
       # Language-Specific Tools
-      bacon          # Rust background compiler
-      lldb# Debug adapter
-      ruff           # Python linter/formatter
+      bacon # Rust background compiler
+      lldb # Debug adapter
+      ruff # Python linter/formatter
     ];
   };
 }

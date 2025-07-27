@@ -7,7 +7,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # You can import other home-manager modules here
   imports = [
     # If you want to use modules your own flake exports (from modules/home-manager):
@@ -26,7 +27,6 @@
     #./theming.nix
   ];
 
-  
   home = {
     username = "biocirc";
     homeDirectory = "/home/biocirc";
@@ -69,8 +69,8 @@
     enable = true;
     settings = {
       General.SingleInstance = true;
-      General.MinimizeAfterUnlock= false;
-      
+      General.MinimizeAfterUnlock = false;
+
       GUI = {
         LaunchAtStartup = true;
         ShowTrayIcon = true;
@@ -82,16 +82,16 @@
       };
       FdoSecrets = {
         Enabled = true;
-        ConfirmAccessItem=false;
-        ConfirmDeletItem=false;
-        UnlockBeforeSearch=false;
+        ConfirmAccessItem = false;
+        ConfirmDeletItem = false;
+        UnlockBeforeSearch = false;
       };
     };
   };
   # Enable home-manager and git
   programs.home-manager.enable = true;
 
-  programs.zen-browser.enable=true;
+  programs.zen-browser.enable = true;
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";

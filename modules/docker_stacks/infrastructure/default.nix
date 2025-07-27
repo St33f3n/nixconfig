@@ -4,31 +4,28 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.services.infrastructure;
 
   # Hilfsfunktion zur Generierung der Standard-Service-Konfiguration
-  mkDockerService = name: restartPolicy: extraConfig:
+  mkDockerService =
+    name: restartPolicy: extraConfig:
     {
       serviceConfig = {
-        Restart = lib.mkOverride 90 (
-          if restartPolicy
-          then "always"
-          else "no"
-        );
+        Restart = lib.mkOverride 90 (if restartPolicy then "always" else "no");
         RestartMaxDelaySec = lib.mkOverride 90 "1m";
         RestartSec = lib.mkOverride 90 "10s";
         RestartSteps = lib.mkOverride 90 9;
       };
-      after = ["docker-network-${cfg.networkName}.service"];
-      requires = ["docker-network-${cfg.networkName}.service"];
-      partOf = ["docker-compose-infrastructure-root.target"];
-      wantedBy =
-        mkIf cfg.docker.autoStart
-        ["docker-compose-infrastructure-root.target"];
+      after = [ "docker-network-${cfg.networkName}.service" ];
+      requires = [ "docker-network-${cfg.networkName}.service" ];
+      partOf = [ "docker-compose-infrastructure-root.target" ];
+      wantedBy = mkIf cfg.docker.autoStart [ "docker-compose-infrastructure-root.target" ];
     }
     // extraConfig;
-in {
+in
+{
   options.services.infrastructure = {
     enable = mkEnableOption "infrastructure";
     dataDir = mkOption {
@@ -78,7 +75,11 @@ in {
         description = "Container automatisch beim Systemstart starten";
       };
       logDriver = mkOption {
-        type = types.enum ["journald" "json-file" "none"];
+        type = types.enum [
+          "journald"
+          "json-file"
+          "none"
+        ];
         default = "journald";
         description = "Standard Log-Driver für Container";
       };
@@ -86,14 +87,13 @@ in {
   };
 
   config = mkIf cfg.enable {
-    virtualisation.oci-containers.containers =
-      import ./docker-compose.nix {inherit config lib pkgs;};
+    virtualisation.oci-containers.containers = import ./docker-compose.nix { inherit config lib pkgs; };
 
     systemd.services = mkMerge [
       # Netzwerk-Service
       {
         "docker-network-${cfg.networkName}" = {
-          path = [pkgs.docker];
+          path = [ pkgs.docker ];
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
@@ -102,17 +102,17 @@ in {
           script = ''
             docker network inspect ${cfg.networkName} || docker network create ${cfg.networkName}
           '';
-          partOf = ["docker-compose-infrastructure-root.target"];
-          wantedBy = ["docker-compose-infrastructure-root.target"];
+          partOf = [ "docker-compose-infrastructure-root.target" ];
+          wantedBy = [ "docker-compose-infrastructure-root.target" ];
         };
       }
 
       (mkIf cfg.mail_bridge.enable {
-        "mail_bridge" = mkDockerService "mail_bridge" true {};
+        "mail_bridge" = mkDockerService "mail_bridge" true { };
       })
 
       (mkIf cfg.rustdesk.enable {
-        "docker-rustdesk-hbbr" = mkDockerService "rustdesk-hbbr" true {};
+        "docker-rustdesk-hbbr" = mkDockerService "rustdesk-hbbr" true { };
         "docker-rustdesk-hbbs" = mkDockerService "rustdesk-hbbs" true {
           after = [
             "docker-network-${cfg.networkName}.service"
@@ -129,7 +129,7 @@ in {
     # Root target
     systemd.targets."docker-compose-infrastructure-root" = {
       description = "Root target für infrastructure Docker-Compose Stack";
-      wantedBy = ["multi-user.target"];
+      wantedBy = [ "multi-user.target" ];
     };
   };
 }

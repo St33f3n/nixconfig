@@ -1,5 +1,10 @@
 # modules/creative.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -14,19 +19,19 @@ with lib;
       openscad
       freecad
       blender
-      
+
       # Electronics Design
       kicad
-      
+
       # 3D Printing
       orca-slicer
-      
+
       # Video Production
       obs-studio
-      
+
       # Audio Production
       ardour
-      
+
       # Graphics & Image Editing
       gimp3-with-plugins
       libresprite

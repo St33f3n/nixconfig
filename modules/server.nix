@@ -1,5 +1,10 @@
 # modules/server.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -13,15 +18,15 @@ with lib;
       samba
       vsftpd
     ];
-    
+
     # Basic service configurations - enable as needed
     services.samba = {
-      enable = false;  # Set to true and configure when needed
+      enable = false; # Set to true and configure when needed
       # package = pkgs.samba4Full;
     };
-    
+
     services.vsftpd = {
-      enable = false;  # Set to true and configure when needed
+      enable = false; # Set to true and configure when needed
     };
   };
 }

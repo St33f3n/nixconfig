@@ -1,9 +1,16 @@
-{ pkgs, lib, inputs, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 {
   programs.alacritty = {
     enable = true;
     settings = lib.mkForce {
-      terminal.shell = { program = "nu"; };
+      terminal.shell = {
+        program = "nu";
+      };
       window.padding = {
         x = 15;
         y = 15;
@@ -28,7 +35,9 @@
         }
 
       ];
-      general = { import = [ "./ocean-koral.toml" ]; };
+      general = {
+        import = [ "./ocean-koral.toml" ];
+      };
 
     };
 
@@ -141,7 +150,9 @@
         compact = false;
         use_pager = true;
       };
-      updates = { auto_update = true; };
+      updates = {
+        auto_update = true;
+      };
     };
 
   };

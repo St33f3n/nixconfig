@@ -1,5 +1,10 @@
 # modules/shell.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -15,15 +20,15 @@ with lib;
       starship
       atuin
       carapace
-      
+
       # Terminal Multiplexer & Task Management
       zellij
       pueue
-      
+
       # Document Processing
       pandoc
-haskellPackages.pandoc-crossref      
-      
+      haskellPackages.pandoc-crossref
+
       # Media & File Tools
       yt-dlp
       exfatprogs

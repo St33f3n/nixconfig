@@ -1,5 +1,10 @@
 # modules/ai.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -13,12 +18,12 @@ with lib;
       # AI Tools
       fabric-ai
       ollama
-      
+
       # NVIDIA CUDA Support
       nvidia-container-toolkit
       cudaPackages.cudatoolkit
     ];
-    
+
     # Enable CUDA support
     nixpkgs.config.allowUnfree = true;
     nixpkgs.config.cudaSupport = true;

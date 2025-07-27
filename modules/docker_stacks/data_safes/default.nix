@@ -4,30 +4,28 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.services.doc_safe;
 
   # Hilfsfunktion zur Generierung der Standard-Service-Konfiguration
-  mkDockerService = name: restartPolicy: extraConfig:
+  mkDockerService =
+    name: restartPolicy: extraConfig:
     {
       serviceConfig = {
-        Restart = lib.mkOverride 90 (
-          if restartPolicy
-          then "always"
-          else "no"
-        );
+        Restart = lib.mkOverride 90 (if restartPolicy then "always" else "no");
         RestartMaxDelaySec = lib.mkOverride 90 "1m";
         RestartSec = lib.mkOverride 90 "10s";
         RestartSteps = lib.mkOverride 90 9;
       };
-      after = ["docker-network-${cfg.networkName}.service"];
-      requires = ["docker-network-${cfg.networkName}.service"];
-      partOf = ["docker-compose-doc_safe-root.target"];
-      wantedBy =
-        mkIf cfg.docker.autoStart ["docker-compose-doc_safe-root.target"];
+      after = [ "docker-network-${cfg.networkName}.service" ];
+      requires = [ "docker-network-${cfg.networkName}.service" ];
+      partOf = [ "docker-compose-doc_safe-root.target" ];
+      wantedBy = mkIf cfg.docker.autoStart [ "docker-compose-doc_safe-root.target" ];
     }
     // extraConfig;
-in {
+in
+{
   options.services.doc_safe = {
     enable = mkEnableOption "doc_safe";
     dataDir = mkOption {
@@ -260,7 +258,11 @@ in {
         description = "Container automatisch beim Systemstart starten";
       };
       logDriver = mkOption {
-        type = types.enum ["journald" "json-file" "none"];
+        type = types.enum [
+          "journald"
+          "json-file"
+          "none"
+        ];
         default = "journald";
         description = "Standard Log-Driver für Container";
       };
@@ -268,14 +270,13 @@ in {
   };
 
   config = mkIf cfg.enable {
-    virtualisation.oci-containers.containers =
-      import ./docker-compose.nix {inherit config lib pkgs;};
+    virtualisation.oci-containers.containers = import ./docker-compose.nix { inherit config lib pkgs; };
 
     systemd.services = mkMerge [
       # Netzwerk-Service
       {
         "docker-network-${cfg.networkName}" = {
-          path = [pkgs.docker];
+          path = [ pkgs.docker ];
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
@@ -284,14 +285,14 @@ in {
           script = ''
             docker network inspect ${cfg.networkName} || docker network create ${cfg.networkName}
           '';
-          partOf = ["docker-compose-doc_safe-root.target"];
-          wantedBy = ["docker-compose-doc_safe-root.target"];
+          partOf = [ "docker-compose-doc_safe-root.target" ];
+          wantedBy = [ "docker-compose-doc_safe-root.target" ];
         };
       }
 
       # Calibre-Web
       (mkIf cfg.calibreWeb.enable {
-        "docker-calibre-web" = mkDockerService "calibre-web" true {};
+        "docker-calibre-web" = mkDockerService "calibre-web" true { };
       })
 
       # Picsur
@@ -315,9 +316,8 @@ in {
             "docker-network-${cfg.networkName}.service"
             "docker-picsurdb.service"
           ];
-          partOf = ["docker-compose-doc_safe-root.target"];
-          wantedBy =
-            mkIf cfg.docker.autoStart ["docker-compose-doc_safe-root.target"];
+          partOf = [ "docker-compose-doc_safe-root.target" ];
+          wantedBy = mkIf cfg.docker.autoStart [ "docker-compose-doc_safe-root.target" ];
         };
         "docker-picsurdb" = mkDockerService "picsurdb" true {
           preStart = ''
@@ -325,19 +325,17 @@ in {
             mkdir -p ${cfg.dataDir}/picsur-data/pgdata
             chmod 700 ${cfg.dataDir}/picsur-data/pgdata
           '';
-          after = ["docker-network-${cfg.networkName}.service"];
-          requires = ["docker-network-${cfg.networkName}.service"];
-          partOf = ["docker-compose-doc_safe-root.target"];
-          wantedBy =
-            mkIf cfg.docker.autoStart ["docker-compose-doc_safe-root.target"];
+          after = [ "docker-network-${cfg.networkName}.service" ];
+          requires = [ "docker-network-${cfg.networkName}.service" ];
+          partOf = [ "docker-compose-doc_safe-root.target" ];
+          wantedBy = mkIf cfg.docker.autoStart [ "docker-compose-doc_safe-root.target" ];
         };
       })
 
       # Wallabag
       (mkIf cfg.wallabag.enable {
-        "docker-doc_safe-walladb" =
-          mkDockerService "doc_safe-walladb" false {};
-        "docker-doc_safe-redis" = mkDockerService "doc_safe-redis" false {};
+        "docker-doc_safe-walladb" = mkDockerService "doc_safe-walladb" false { };
+        "docker-doc_safe-redis" = mkDockerService "doc_safe-redis" false { };
         "docker-wallabag" = mkDockerService "wallabag" false {
           after = [
             "docker-network-${cfg.networkName}.service"
@@ -354,17 +352,17 @@ in {
 
       # JupyterLab
       (mkIf cfg.jupyterLab.enable {
-        "docker-jupyterlab" = mkDockerService "jupyterlab" true {};
+        "docker-jupyterlab" = mkDockerService "jupyterlab" true { };
       })
 
       # Mealie
       (mkIf cfg.mealie.enable {
-        "docker-mealie" = mkDockerService "mealie" true {};
+        "docker-mealie" = mkDockerService "mealie" true { };
       })
 
       # Wiki.js
       (mkIf cfg.wikiJs.enable {
-        "docker-wiki-db" = mkDockerService "wiki-db" true {};
+        "docker-wiki-db" = mkDockerService "wiki-db" true { };
         "docker-wikijs" = mkDockerService "wikijs" true {
           after = [
             "docker-network-${cfg.networkName}.service"
@@ -379,14 +377,14 @@ in {
 
       # Trilium
       (mkIf cfg.trilium.enable {
-        "docker-trilium-notes" = mkDockerService "trilium-notes" true {};
+        "docker-trilium-notes" = mkDockerService "trilium-notes" true { };
       })
     ];
 
     # Root target
     systemd.targets."docker-compose-doc_safe-root" = {
       description = "Root target für doc_safe Docker-Compose Stack";
-      wantedBy = ["multi-user.target"];
+      wantedBy = [ "multi-user.target" ];
     };
   };
 }

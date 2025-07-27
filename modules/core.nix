@@ -1,5 +1,10 @@
 # modules/core.nix - Clean separation of concerns
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -23,22 +28,20 @@ with lib;
       # Security & Secrets
       keepassxc
 
-
-      
-      qogir-icon-theme      
+      qogir-icon-theme
       # Audio & Bluetooth
       noisetorch
       bluez
       bluez-tools
       bluez-alsa
       blueman
-      
+
       # Network Management Tools
       networkmanagerapplet
       iwd
       usb-modeswitch
       usbutils
-      
+
       # Terminal & CLI Tools
       alacritty
       yazi
@@ -50,18 +53,18 @@ with lib;
       ripgrep
       bat
       jq
-      
+
       # Editors
       helix
       nano
-      
+
       # Development
       git
       lazygit
       rustup
       python3
       uv
-      
+
       networkmanagerapplet
       home-manager
       docker-credential-helpers
@@ -69,7 +72,7 @@ with lib;
       btop
       nvtopPackages.full
       fastfetch
-      
+
       # Network Tools
       ethtool
       inotify-tools
@@ -82,7 +85,7 @@ with lib;
       bridge-utils
       protonvpn-gui
       wireguard-go
-      
+
       # File Management & Sync
       localsend
       nextcloud-client
@@ -91,14 +94,14 @@ with lib;
       borgbackup
       # Documentation
       tealdeer
-      
+
       # Print System
       cups
     ];
     # Essential Hardware Support - Foundation only
     hardware = {
-      graphics.enable = true;        # Every machine has some GPU
-      bluetooth.enable = true;       # Most modern machines
+      graphics.enable = true; # Every machine has some GPU
+      bluetooth.enable = true; # Most modern machines
     };
 
     # Essential System Services - Foundation only
@@ -111,17 +114,17 @@ with lib;
         pulse.enable = true;
         jack.enable = true;
       };
-      
+
       # Basic services every machine needs
       blueman.enable = true;
       printing.enable = true;
-      openssh.enable = true;         # Basic enable, no settings
+      openssh.enable = true; # Basic enable, no settings
     };
 
     # Security & System Essentials
     security = {
-      rtkit.enable = true;   # Required for pipewire
-      polkit.enable = true;  # Essential for desktop operations
+      rtkit.enable = true; # Required for pipewire
+      polkit.enable = true; # Essential for desktop operations
     };
 
     # Basic firewall (machines configure specific rules)

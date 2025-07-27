@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   gtk = {
     enable = true;
     theme.package = pkgs.qogir-theme;
@@ -13,10 +14,10 @@
   qt = {
     enable = true;
     platformTheme.name = "qt5ct";
-    
+
   };
 
-  home.sessionVariables={
+  home.sessionVariables = {
     GTK_THEME = "Qogir-Dark";
   };
 }

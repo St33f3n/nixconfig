@@ -1,6 +1,13 @@
-{ lib, config, pkgs, inputs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 let
-in {
+in
+{
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -65,22 +72,45 @@ in {
       ];
 
       monitor = [
+        "desc:Samsung Electric Company C49RG9x H1AK500000,5120x1440@120,0x0,1.066"
+        "desc:Ancor Communications Inc VE228 C7LMQS030933,preferred,-1980x0,1"
+        "desc:AOC U2868 0x00000656,3840x2160@60,4178x-500,2,transform,1"
         "eDP-1,2560x1600@60,0x0,1"
-          "Virtual-1,1920x1080@60,0x0,1"       # VM Monitor
+        "Virtual-1,1920x1080@60,0x0,1" # VM Monitor
         ",preferred,auto,1"
       ];
 
-      exec-once =
-        [ "[workspace 3 silent] webcord" "[workspace 5 silent] nextcloud" "wl-paste --watch cliphist store" "[workspace 2 silent] keepassxc"];
-      env = [ "ELECTRON_OZONE_PLATFORM_HINT,auto"
-      "XCURSOR_THEME,Qogir-Dark"
-      "XCURSOR_SIZE,24"];
+      exec-once = [
+        "[workspace 3 silent] vesktop"
+        "[workspace 7 silent] nextcloud"
+        "wl-paste --watch cliphist store"
+        "[workspace 2 silent] keepassxc"
+        "[workspace 6 silent] spotify"
+        "[workspace 1 silent] zen"
+      ];
+      env = [
+        "ELECTRON_OZONE_PLATFORM_HINT,auto"
+        "XDG_CURRENT_DESKTOP,Hyprland"
+        "XCURSOR_THEME,Qogir-Dark"
+        #"AQ_DRM_DEVICES,/dev/dri/card0:/dev"
+        "XDG_SESSION_TYPE,wayland"
+        "XDG_SESSION_DESKTOP,Hyprland"
+        "QT_QPA_PLATFORM,wayland;xcb"
+        "QT_QPA_PLATFORMTHEME,qt6ct"
+        "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+        "QT_AUTO_SCREEN_SCALE_FACTOR,1"
+        "MOZ_ENABLE_WAYLAND,1"
+        "GDK_SCALE,1"
+        "XCURSOR_SIZE,24"
+      ];
       input = {
         "kb_layout" = "de";
         "numlock_by_default" = "true";
         "mouse_refocus" = "false";
         "follow_mouse" = "1";
-        touchpad = { "middle_button_emulation" = "true"; };
+        touchpad = {
+          "middle_button_emulation" = "true";
+        };
         sensitivity = 0;
       };
       animations = {
@@ -102,7 +132,32 @@ in {
           "workspaces, 1, 5, wind"
         ];
       };
+      gestures = {
+        workspace_swipe = true;
+        workspace_swipe_fingers = 3;
+      };
 
+      workspace = [
+        "1, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
+        "2, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
+        "3, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
+
+        "6, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
+        "7, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
+        "8, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
+        "9, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
+        "10, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
+        "5, monitor:desc:AOC U2868 0x00000656, default:true"
+        "4, monitor:desc:AOC U2868 0x00000656, default:true"
+
+      ];
+
+      misc = {
+        vrr = 0;
+        disable_hyprland_logo = true;
+        disable_splash_rendering = true;
+        force_default_wallpaper = 0;
+      };
       decoration = {
         rounding = 10;
         blur = {

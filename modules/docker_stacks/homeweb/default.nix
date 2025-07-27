@@ -4,30 +4,28 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.services.homeweb;
 
   # Hilfsfunktion zur Generierung der Standard-Service-Konfiguration
-  mkDockerService = name: restartPolicy: extraConfig:
+  mkDockerService =
+    name: restartPolicy: extraConfig:
     {
       serviceConfig = {
-        Restart = lib.mkOverride 90 (
-          if restartPolicy
-          then "always"
-          else "no"
-        );
+        Restart = lib.mkOverride 90 (if restartPolicy then "always" else "no");
         RestartMaxDelaySec = lib.mkOverride 90 "1m";
         RestartSec = lib.mkOverride 90 "10s";
         RestartSteps = lib.mkOverride 90 9;
       };
-      after = ["docker-network-${cfg.networkName}.service"];
-      requires = ["docker-network-${cfg.networkName}.service"];
-      partOf = ["docker-compose-homeweb-root.target"];
-      wantedBy =
-        mkIf cfg.docker.autoStart ["docker-compose-homeweb-root.target"];
+      after = [ "docker-network-${cfg.networkName}.service" ];
+      requires = [ "docker-network-${cfg.networkName}.service" ];
+      partOf = [ "docker-compose-homeweb-root.target" ];
+      wantedBy = mkIf cfg.docker.autoStart [ "docker-compose-homeweb-root.target" ];
     }
     // extraConfig;
-in {
+in
+{
   options.services.homeweb = {
     enable = mkEnableOption "homeweb";
     dataDir = mkOption {
@@ -111,7 +109,11 @@ in {
         description = "Container automatisch beim Systemstart starten";
       };
       logDriver = mkOption {
-        type = types.enum ["journald" "json-file" "none"];
+        type = types.enum [
+          "journald"
+          "json-file"
+          "none"
+        ];
         default = "journald";
         description = "Standard Log-Driver für Container";
       };
@@ -119,14 +121,13 @@ in {
   };
 
   config = mkIf cfg.enable {
-    virtualisation.oci-containers.containers =
-      import ./docker-compose.nix {inherit config lib pkgs;};
+    virtualisation.oci-containers.containers = import ./docker-compose.nix { inherit config lib pkgs; };
 
     systemd.services = mkMerge [
       # Netzwerk-Service
       {
         "docker-network-${cfg.networkName}" = {
-          path = [pkgs.docker];
+          path = [ pkgs.docker ];
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
@@ -135,31 +136,31 @@ in {
           script = ''
             docker network inspect ${cfg.networkName} || docker network create ${cfg.networkName}
           '';
-          partOf = ["docker-compose-homeweb-root.target"];
-          wantedBy = ["docker-compose-homeweb-root.target"];
+          partOf = [ "docker-compose-homeweb-root.target" ];
+          wantedBy = [ "docker-compose-homeweb-root.target" ];
         };
       }
 
       # Homepage
       (mkIf cfg.homepage.enable {
-        "docker-homepage" = mkDockerService "homepage" true {};
+        "docker-homepage" = mkDockerService "homepage" true { };
       })
 
       # Wallos
       (mkIf cfg.wallos.enable {
-        "docker-wallos" = mkDockerService "homewallos" true {};
+        "docker-wallos" = mkDockerService "homewallos" true { };
       })
 
       # Homebox
       (mkIf cfg.homebox.enable {
-        "docker-homebox" = mkDockerService "homebox" true {};
+        "docker-homebox" = mkDockerService "homebox" true { };
       })
     ];
 
     # Root target
     systemd.targets."docker-compose-homeweb-root" = {
       description = "Root target für homeweb Docker-Compose Stack";
-      wantedBy = ["multi-user.target"];
+      wantedBy = [ "multi-user.target" ];
     };
   };
 }

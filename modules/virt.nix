@@ -1,16 +1,21 @@
 # modules/virtualization.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 {
   options.virt = {
     enable = mkEnableOption "trigger virtualisation";
-    
-     docker = {
+
+    docker = {
       enable = mkEnableOption "Docker container platform";
     };
-    
+
     quemu = {
       enable = mkEnableOption "KVM/QEMU virtualization with virt-manager";
     };
@@ -26,13 +31,13 @@ with lib;
         nvidia-container-toolkit
         docker-credential-helpers
       ];
-      
+
       virtualisation.docker = {
         enable = true;
-        enableNvidia = true;  # Enable if you have NVIDIA GPU
+        enableNvidia = true; # Enable if you have NVIDIA GPU
       };
     })
-    
+
     # KVM/QEMU Virtualization Configuration
     (mkIf config.virt.quemu.enable {
       environment.systemPackages = with pkgs; [
@@ -40,7 +45,7 @@ with lib;
         virt-manager
         virt-viewer
       ];
-      
+
       virtualisation.libvirtd = {
         enable = true;
         qemu = {
@@ -48,7 +53,7 @@ with lib;
           runAsRoot = false;
         };
       };
-      
+
       programs.virt-manager.enable = true;
     })
   ];

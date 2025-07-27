@@ -3,10 +3,12 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   cfg = config.services.homeweb;
-in {
+in
+{
   # Homepage
   "homepage" = mkIf cfg.homepage.enable {
     image = "ghcr.io/gethomepage/homepage:latest";
@@ -18,7 +20,7 @@ in {
       "${cfg.dataDir}/homepage:/app/config"
       "/var/run/docker.sock:/var/run/docker.sock:ro"
     ];
-    ports = ["${toString cfg.homepage.port}:3000/tcp"];
+    ports = [ "${toString cfg.homepage.port}:3000/tcp" ];
     log-driver = cfg.docker.logDriver;
     extraOptions = [
       "--network-alias=homepage"
@@ -40,8 +42,8 @@ in {
       "HBOX_MAILER_PASSWORD" = cfg.homebox.mail_server.user_pwd;
       "HBOX_MAILER_FROM" = cfg.homebox.mail_server.e_mail;
     };
-    volumes = ["${cfg.dataDir}/homebox:/data"];
-    ports = ["${toString cfg.homebox.port}:7745/tcp"];
+    volumes = [ "${cfg.dataDir}/homebox:/data" ];
+    ports = [ "${toString cfg.homebox.port}:7745/tcp" ];
     log-driver = cfg.docker.logDriver;
   };
 
@@ -51,8 +53,11 @@ in {
     environment = {
       "TZ" = "Europe/Berlin";
     };
-    volumes = ["${cfg.dataDir}/wallos/db:/var/www/html/db" "${cfg.dataDir}/wallos/logos:/var/www/html/images/uploads/logos"];
-    ports = ["${toString cfg.wallos.port}:80/tcp"];
+    volumes = [
+      "${cfg.dataDir}/wallos/db:/var/www/html/db"
+      "${cfg.dataDir}/wallos/logos:/var/www/html/images/uploads/logos"
+    ];
+    ports = [ "${toString cfg.wallos.port}:80/tcp" ];
     log-driver = cfg.docker.logDriver;
   };
 }

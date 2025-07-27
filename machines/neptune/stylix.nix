@@ -1,23 +1,24 @@
-{ pkgs, inputs, ... }: let
+{ pkgs, inputs, ... }:
+let
 
-color_scheme = {
-  base00 = "1e1e1e"; # Default Background (abyss - darker anthracite)
-  base01 = "262626"; # Lighter Background (deep-water - für status bars)
-  base02 = "6b8e6b"; # Selection Background (sea-foam morandi green)
-  base03 = "4a4a4a"; # Comments, Invisibles (normal black - lighter for visibility)
-  base04 = "c4b89f"; # Dark Foreground (text-muted warm beige)
-  base05 = "f7f2e3"; # Default Foreground (text-primary warm beige)
-  base06 = "f7f2e3"; # Light Foreground (bright_foreground)
-  base07 = "ffffff"; # Light Background (white bright)
-  base08 = "c84a2c"; # Variables/Red (coral-red dimmed)
-  base09 = "d49284"; # Integers/Orange (coral-light dimmed)
-  base0A = "d49284"; # Classes/Yellow (coral-light dimmed) 
-  base0B = "6b8e6b"; # Strings/Green (sea-foam morandi green)
-  base0C = "5a9a9a"; # Support/Cyan (bioluminescent morandi teal)
-  base0D = "6b8db3"; # Functions/Blue (coral-blue softer)
-  base0E = "b85347"; # Keywords/Magenta (coral-deep dimmed)
-  base0F = "8a9a8a"; # Deprecated (seafoam-gray)
-};
+  color_scheme = {
+    base00 = "1e1e1e"; # Default Background (abyss - darker anthracite)
+    base01 = "262626"; # Lighter Background (deep-water - für status bars)
+    base02 = "6b8e6b"; # Selection Background (sea-foam morandi green)
+    base03 = "4a4a4a"; # Comments, Invisibles (normal black - lighter for visibility)
+    base04 = "c4b89f"; # Dark Foreground (text-muted warm beige)
+    base05 = "f7f2e3"; # Default Foreground (text-primary warm beige)
+    base06 = "f7f2e3"; # Light Foreground (bright_foreground)
+    base07 = "ffffff"; # Light Background (white bright)
+    base08 = "c84a2c"; # Variables/Red (coral-red dimmed)
+    base09 = "d49284"; # Integers/Orange (coral-light dimmed)
+    base0A = "d49284"; # Classes/Yellow (coral-light dimmed)
+    base0B = "6b8e6b"; # Strings/Green (sea-foam morandi green)
+    base0C = "5a9a9a"; # Support/Cyan (bioluminescent morandi teal)
+    base0D = "6b8db3"; # Functions/Blue (coral-blue softer)
+    base0E = "b85347"; # Keywords/Magenta (coral-deep dimmed)
+    base0F = "8a9a8a"; # Deprecated (seafoam-gray)
+  };
 
   imgLink = "https://nextcloud.organiccircuitlab.com/s/8mcMtc74RxcaBSz/download/rocket_launch.jpg";
 
@@ -25,16 +26,17 @@ color_scheme = {
     url = imgLink;
     sha256 = "16rbyymlczjz8i00kmkdfaxzih3d7drjj5xkc35rld91q1pjzrmi";
   };
-  
-in{
-  
+
+in
+{
+
   stylix.autoEnable = true;
 
   stylix.targets.gtk.enable = true;
   stylix.targets.qt.enable = true;
   stylix.base16Scheme = color_scheme;
   stylix.image = image;
-  
+
   stylix.cursor.package = pkgs.qogir-icon-theme;
   stylix.cursor.name = "Qogir-Dark";
   stylix.cursor.size = 24;
@@ -72,7 +74,6 @@ in{
     HYPRCURSOR_SIZE = "24";
 
     WAYLAND_DISPLAY = "wayland-0"; # Or whatever your Wayland display is named
-    COLORSCHEME =
-      builtins.toJSON color_scheme; # Export the color scheme
+    COLORSCHEME = builtins.toJSON color_scheme; # Export the color scheme
   };
 }

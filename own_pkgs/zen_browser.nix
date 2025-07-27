@@ -161,14 +161,17 @@ stdenv.mkDerivation rec {
             gst_all_1.gstreamer
             gst_all_1.gst-plugins-base
             ffmpeg
-    ]}" \
-    --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${lib.makeSearchPath "lib/gstreamer-1.0" [
-      gst_all_1.gst-plugins-base
-      gst_all_1.gst-plugins-good
-      gst_all_1.gst-plugins-bad
-      gst_all_1.gst-plugins-ugly
-      gst_all_1.gst-libav
-    ]}"        
+          ]
+        }" \
+    --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "${
+      lib.makeSearchPath "lib/gstreamer-1.0" [
+        gst_all_1.gst-plugins-base
+        gst_all_1.gst-plugins-good
+        gst_all_1.gst-plugins-bad
+        gst_all_1.gst-plugins-ugly
+        gst_all_1.gst-libav
+      ]
+    }"        
 
 
     echo "After wrapProgram - zen is:"

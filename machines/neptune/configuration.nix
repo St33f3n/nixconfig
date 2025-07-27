@@ -1,10 +1,17 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ config, pkgs, inputs,  ... }:
-let ip_address = "192.168.2.56";
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
+let
+  ip_address = "192.168.2.56";
 
-in {
+in
+{
   imports = [
     # Include the results of the hardware scan.
     ./stylix.nix
@@ -21,15 +28,15 @@ in {
   ];
 
   core.enable = true;
-  desktop.enable= true;
+  desktop.enable = true;
   shell.enable = true;
   dev.enable = true;
   office.enable = true;
   misc.enable = true;
-  virt.enable= true;
+  virt.enable = true;
   creative.enable = true;
-  ai.enable = true; 
-  
+  ai.enable = false;
+
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/nvme0n1";
@@ -39,17 +46,16 @@ in {
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   #
 
-
   networking.networkmanager = {
     ensureProfiles.profiles = {
       "usb-ethernet" = {
-        "connection"= {
+        "connection" = {
           "id" = "Local";
           "type" = "ethernet";
           "interface-name" = "enp9s0";
           "autoconnect" = true;
         };
-        "ipv4"= {
+        "ipv4" = {
           "method" = "manual";
           "address1" = "${ip_address}/24,192.168.2.1";
           "dns" = "192.168.2.32;192.168.2.1";
@@ -58,12 +64,18 @@ in {
     };
   };
 
-
   networking.firewall = {
-    allowedTCPPorts = [ 22 80 443 53317 ];
-    allowedUDPPorts = [ 53317 22 ];
+    allowedTCPPorts = [
+      22
+      80
+      443
+      53317
+    ];
+    allowedUDPPorts = [
+      53317
+      22
+    ];
   };
-
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
@@ -84,10 +96,7 @@ in {
   };
 
   #Hyprland
-  programs.hyprland.package =
-    inputs.hyprland.packages."${pkgs.system}".hyprland;
-
-
+  programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
 
   environment = {
     sessionVariables = {
@@ -97,12 +106,11 @@ in {
     };
   };
   stylix.enable = true;
-  
+
   home-manager.backupFileExtension = "../backup";
 
   # Configure console keymap
   console.keyMap = "de";
-
 
   hardware = {
     nvidia.modesetting.enable = true;
@@ -111,18 +119,29 @@ in {
   users.users.biocirc = {
     isNormalUser = true;
     description = "Stefan Simmeth";
-    extraGroups = [ "networkmanager" "wheel" "docker"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+    ];
   };
 
-  security.sudo.extraRules = [{
-    users = [ "biocirc" ];
-    commands = [{
-      command = "ALL";
-      options = [ "NOPASSWD" ];
-    }];
-  }];
+  security.sudo.extraRules = [
+    {
+      users = [ "biocirc" ];
+      commands = [
+        {
+          command = "ALL";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
   # Experimental Feature
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
   # Install firefox.
   programs.firefox.enable = true;
@@ -138,15 +157,13 @@ in {
   };
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-environment.systemPackages = with pkgs; [
-  orca-slicer
-  fabric-ai
-]; 
+  environment.systemPackages = with pkgs; [
+    orca-slicer
+    fabric-ai
+  ];
 
   services.dbus.packages = with pkgs; [ dconf ];
   programs.dconf.enable = true;
-
-
 
   # Enable the OpenSSH daemon.
   services.openssh.settings.PasswordAuthentication = true;

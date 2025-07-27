@@ -4,10 +4,12 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   cfg = config.services.doc_safe;
-in {
+in
+{
   # Runtime
   # Calibre Web
   "calibre-web" = mkIf cfg.calibreWeb.enable {
@@ -23,9 +25,12 @@ in {
       "${cfg.dataDir}/EBooks:/books/raw:rw"
       "${cfg.dataDir}/calibre-web/config:/config:rw"
     ];
-    ports = ["${toString cfg.calibreWeb.port}:8083/tcp"];
+    ports = [ "${toString cfg.calibreWeb.port}:8083/tcp" ];
     log-driver = cfg.docker.logDriver;
-    extraOptions = ["--network-alias=calibre-web" "--network=${cfg.networkName}"];
+    extraOptions = [
+      "--network-alias=calibre-web"
+      "--network=${cfg.networkName}"
+    ];
   };
   # Picsur
   "picsur" = mkIf cfg.picsur.enable {
@@ -39,10 +44,13 @@ in {
       "PICSUR_ADMIN_PASSWORD" = cfg.picsur.adminPassword;
       "PICSUR_MAX_FILE_SIZE" = toString cfg.picsur.maxFileSize;
     };
-    ports = ["${toString cfg.picsur.port}:8080"];
+    ports = [ "${toString cfg.picsur.port}:8080" ];
     log-driver = cfg.docker.logDriver;
-    dependsOn = ["picsurdb"];
-    extraOptions = ["--network-alias=picsur" "--network=${cfg.networkName}"];
+    dependsOn = [ "picsurdb" ];
+    extraOptions = [
+      "--network-alias=picsur"
+      "--network=${cfg.networkName}"
+    ];
   };
 
   # Picsur Database
@@ -54,8 +62,8 @@ in {
       "POSTGRES_USER" = cfg.picsur.database.user;
       "PGDATA" = "/var/lib/postgresql/data/pgdata";
     };
-    volumes = ["${cfg.dataDir}/picsur-data:/var/lib/postgresql/data:rw"];
-    ports = ["${toString cfg.picsur.database.port}:5432"];
+    volumes = [ "${cfg.dataDir}/picsur-data:/var/lib/postgresql/data:rw" ];
+    ports = [ "${toString cfg.picsur.database.port}:5432" ];
     log-driver = cfg.docker.logDriver;
     extraOptions = [
       "--network-alias=picsurdb"
@@ -79,11 +87,14 @@ in {
       "NB_UID" = toString cfg.jupyterLab.uid;
       "NB_USER" = cfg.jupyterLab.user;
     };
-    volumes = ["${cfg.dataDir}/notebooks:/home/jupyternb:rw"];
-    ports = ["${toString cfg.jupyterLab.port}:8888/tcp"];
+    volumes = [ "${cfg.dataDir}/notebooks:/home/jupyternb:rw" ];
+    ports = [ "${toString cfg.jupyterLab.port}:8888/tcp" ];
     user = "root";
     log-driver = cfg.docker.logDriver;
-    extraOptions = ["--network-alias=jupyterlab" "--network=${cfg.networkName}"];
+    extraOptions = [
+      "--network-alias=jupyterlab"
+      "--network=${cfg.networkName}"
+    ];
   };
 
   "mealie" = mkIf cfg.mealie.enable {
@@ -97,10 +108,13 @@ in {
       "TZ" = "Europe/Berlin";
       "WEB_CONCURRENCY" = "1";
     };
-    volumes = ["${cfg.dataDir}/mealie:/app/data:rw"];
-    ports = ["${toString cfg.mealie.port}:9000/tcp"];
+    volumes = [ "${cfg.dataDir}/mealie:/app/data:rw" ];
+    ports = [ "${toString cfg.mealie.port}:9000/tcp" ];
     log-driver = cfg.docker.logDriver;
-    extraOptions = ["--network-alias=mealie" "--network=${cfg.networkName}"];
+    extraOptions = [
+      "--network-alias=mealie"
+      "--network=${cfg.networkName}"
+    ];
   };
   # Wiki.js
   "wikijs" = mkIf cfg.wikiJs.enable {
@@ -113,10 +127,13 @@ in {
       "DB_TYPE" = "postgres";
       "DB_USER" = cfg.wikiJs.database.user;
     };
-    ports = ["${toString cfg.wikiJs.port}:3000/tcp"];
-    dependsOn = ["wiki-db"];
+    ports = [ "${toString cfg.wikiJs.port}:3000/tcp" ];
+    dependsOn = [ "wiki-db" ];
     log-driver = cfg.docker.logDriver;
-    extraOptions = ["--network-alias=wiki" "--network=${cfg.networkName}"];
+    extraOptions = [
+      "--network-alias=wiki"
+      "--network=${cfg.networkName}"
+    ];
   };
 
   # Wiki.js Database
@@ -127,9 +144,12 @@ in {
       "POSTGRES_PASSWORD" = cfg.wikiJs.database.password;
       "POSTGRES_USER" = cfg.wikiJs.database.user;
     };
-    volumes = ["${cfg.dataDir}/wikijs/db:/var/lib/postgresql/data:rw"];
+    volumes = [ "${cfg.dataDir}/wikijs/db:/var/lib/postgresql/data:rw" ];
     log-driver = cfg.docker.logDriver;
-    extraOptions = ["--network-alias=wiki-db" "--network=${cfg.networkName}"];
+    extraOptions = [
+      "--network-alias=wiki-db"
+      "--network=${cfg.networkName}"
+    ];
   };
 
   # Wallabag
@@ -153,10 +173,16 @@ in {
     volumes = [
       "${cfg.dataDir}/wallabag/images:/var/www/wallabag/web/assets/images:rw"
     ];
-    ports = ["${toString cfg.wallabag.port}:80/tcp"];
-    dependsOn = ["doc_safe-redis" "doc_safe-walladb"];
+    ports = [ "${toString cfg.wallabag.port}:80/tcp" ];
+    dependsOn = [
+      "doc_safe-redis"
+      "doc_safe-walladb"
+    ];
     log-driver = cfg.docker.logDriver;
-    extraOptions = ["--network-alias=wallabag" "--network=${cfg.networkName}"];
+    extraOptions = [
+      "--network-alias=wallabag"
+      "--network=${cfg.networkName}"
+    ];
   };
 
   # Wallabag Database
@@ -165,9 +191,12 @@ in {
     environment = {
       "MYSQL_ROOT_PASSWORD" = cfg.wallabag.database.rootPassword;
     };
-    volumes = ["${cfg.dataDir}/wallabag/data:/var/lib/mysql:rw"];
+    volumes = [ "${cfg.dataDir}/wallabag/data:/var/lib/mysql:rw" ];
     log-driver = cfg.docker.logDriver;
-    extraOptions = ["--network-alias=walladb" "--network=${cfg.networkName}"];
+    extraOptions = [
+      "--network-alias=walladb"
+      "--network=${cfg.networkName}"
+    ];
   };
 
   # Redis
@@ -186,9 +215,12 @@ in {
   # Trilium Notes
   "trilium-notes" = mkIf cfg.trilium.enable {
     image = "triliumnext/notes:stable";
-    volumes = ["${cfg.dataDir}/trilium:/home/node/trilium-data:rw"];
-    ports = ["${toString cfg.trilium.port}:8080/tcp"];
+    volumes = [ "${cfg.dataDir}/trilium:/home/node/trilium-data:rw" ];
+    ports = [ "${toString cfg.trilium.port}:8080/tcp" ];
     log-driver = cfg.docker.logDriver;
-    extraOptions = ["--network-alias=trilium-notes" "--network=${cfg.networkName}"];
+    extraOptions = [
+      "--network-alias=trilium-notes"
+      "--network=${cfg.networkName}"
+    ];
   };
 }

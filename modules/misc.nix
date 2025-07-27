@@ -1,5 +1,10 @@
 # modules/misc.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -13,7 +18,7 @@ with lib;
       # Game Streaming
       moonlight-qt
       sunshine
-      
+
       # Backup Tools
       vorta
     ];

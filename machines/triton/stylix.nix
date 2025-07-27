@@ -1,6 +1,7 @@
-{ pkgs, inputs, ... }: let
+{ pkgs, inputs, ... }:
+let
 
-color_scheme = {
+  color_scheme = {
     base00 = "202d36"; # midnight
     base08 = "ff4500"; # coral_red
     base07 = "1d4d4f"; # kelp_green
@@ -25,15 +26,16 @@ color_scheme = {
     url = imgLink;
     sha256 = "16rbyymlczjz8i00kmkdfaxzih3d7drjj5xkc35rld91q1pjzrmi";
   };
-  
-in{
-  
+
+in
+{
+
   stylix.autoEnable = true;
 
   stylix.targets.gtk.enable = true;
   stylix.base16Scheme = color_scheme;
   stylix.image = image;
-  
+
   stylix.cursor.package = pkgs.qogir-icon-theme;
   stylix.cursor.name = "Qogir-dark";
   stylix.cursor.size = 24;
@@ -60,7 +62,6 @@ in{
   services.colord.enable = true; # Ensure colord is running
   environment.sessionVariables = {
     WAYLAND_DISPLAY = "wayland-0"; # Or whatever your Wayland display is named
-    COLORSCHEME =
-      builtins.toJSON color_scheme; # Export the color scheme
+    COLORSCHEME = builtins.toJSON color_scheme; # Export the color scheme
   };
 }
