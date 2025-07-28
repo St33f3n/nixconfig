@@ -16,10 +16,37 @@ in
 
       #Variabels
       "$mainMod" = "SUPER";
-      general = {
-          resize_on_border = true;
-          extend_border_grab_area = 15;  # Pixel-Bereich um Fensterrand für Resize
-        };
+general = {
+  # Window Management
+  resize_on_border = true;
+  extend_border_grab_area = 15;
+  no_focus_fallback = true;
+  allow_tearing = true;
+  
+  # Layout & Spacing - Reduced gaps
+  gaps_in = 3;   # Back to your original, compact spacing
+  gaps_out = 6;  # Minimal outer gaps
+  border_size = 2;
+  
+  # Border Colors - Coral orange active, morandi green inactive
+  "col.active_border" = lib.mkForce "rgb(ff6347)";      # coral_orange
+  "col.inactive_border" = lib. mkForce "rgba(6b8e6b66)"; # sea_foam (morandi green) with transparency
+  
+  # Snapping & Tiling
+  snap = {
+    enabled = true;
+    window_gap = 3;    # Match gaps_in
+    monitor_gap = 6;   # Match gaps_out
+  };
+  
+  # Layout behavior
+  layout = "dwindle";
+};
+      cursor = {
+        zoom_factor  = 1;
+        zoom_rigid = false;
+      };
+      
       bind = [
         #Applications
         "$mainMod, RETURN, exec, alacritty"
@@ -87,9 +114,10 @@ in
         "[workspace 3 silent] vesktop"
         "[workspace 7 silent] nextcloud"
         "wl-paste --watch cliphist store"
-        "[workspace 2 silent] keepassxc"
+        "[workspace 7 silent] keepassxc"
         "[workspace 6 silent] spotify"
         "[workspace 1 silent] zen"
+        "[workspace 2 silent] trilium"
       ];
       env = [
         "ELECTRON_OZONE_PLATFORM_HINT,auto"
@@ -116,28 +144,54 @@ in
         };
         sensitivity = 0;
       };
-      animations = {
-        enabled = true;
-        bezier = [
-          "wind, 0.05, 0.9, 0.1, 1.05"
-          "winIn, 0.1, 1.1, 0.1, 1.1"
-          "winOut, 0.3, -0.3, 0, 1"
-          "liner, 1, 1, 1, 1"
-        ];
-        animation = [
-          "windows, 1, 6, wind, slide"
-          "windowsIn, 1, 6, winIn, slide"
-          "windowsOut, 1, 5, winOut, slide"
-          "windowsMove, 1, 5, wind, slide"
-          "border, 1, 1, liner"
-          "borderangle, 1, 30, liner, loop"
-          "fade, 1, 10, default"
-          "workspaces, 1, 5, wind"
-        ];
-      };
+
+          animations = {
+      enabled = true;
+  
+      # Curves
+      bezier = [
+        "expressiveFastSpatial, 0.42, 1.67, 0.21, 0.90"
+        "expressiveSlowSpatial, 0.39, 1.29, 0.35, 0.98"
+        "expressiveDefaultSpatial, 0.38, 1.21, 0.22, 1.00"
+        "emphasizedDecel, 0.05, 0.7, 0.1, 1"
+        "emphasizedAccel, 0.3, 0, 0.8, 0.15"
+        "standardDecel, 0, 0, 0, 1"
+        "menu_decel, 0.1, 1, 0, 1"
+        "menu_accel, 0.52, 0.03, 0.72, 0.08"
+      ];
+  
+      # Configs
+      animation = [
+        # windows
+        "windowsIn, 1, 3, emphasizedDecel, popin 80%"
+        "windowsOut, 1, 2, emphasizedDecel, popin 90%"
+        "windowsMove, 1, 3, emphasizedDecel, slide"
+        "border, 1, 10, emphasizedDecel"
+        # layers
+        "layersIn, 1, 2.7, emphasizedDecel, popin 93%"
+        "layersOut, 1, 2.4, menu_accel, popin 94%"
+        # fade
+        "fadeLayersIn, 1, 0.5, menu_decel"
+        "fadeLayersOut, 1, 2.7, menu_accel"
+        # workspaces
+        "workspaces, 1, 7, menu_decel, slide"
+        # specialWorkspace
+        "specialWorkspaceIn, 1, 2.8, emphasizedDecel, slidevert"
+        "specialWorkspaceOut, 1, 1.2, emphasizedAccel, slidevert"
+      ];
+    };
+      
+      
       gestures = {
+        workspace_swipe_distance=700;
         workspace_swipe = true;
         workspace_swipe_fingers = 3;
+       workspace_swipe_min_fingers = true;
+        workspace_swipe_cancel_ratio = 0.2;
+        workspace_swipe_min_speed_to_force = 5;
+        workspace_swipe_direction_lock = true;
+        workspace_swipe_direction_lock_threshold = 10;
+        workspace_swipe_create_new = true;
       };
 
       workspace = [
@@ -196,6 +250,11 @@ in
   ];
       misc = {
         vrr = 0;
+        vfr = 0;
+        mouse_move_enables_dpms = true;
+        key_press_enables_dpms = true;
+        allow_session_lock_restore = true;
+        focus_on_activate  = true;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         force_default_wallpaper = 0;

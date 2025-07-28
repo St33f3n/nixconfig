@@ -23,6 +23,7 @@
     ./shell.nix
     ./helix.nix
     ./rofi.nix
+    ./niri.nix
     inputs.zen-browser.homeModules.beta
     #./theming.nix
   ];

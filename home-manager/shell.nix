@@ -182,7 +182,6 @@ programs.yazi = {
         scrolloff = 5;                     # Cursor-Padding
       };
 
-      theme.manager.folder= lib.mkForce { fg = "#ffcc99"; };
       preview = {
         wrap = "no";
         tab_size = 2;                      # Kleinere Tabs

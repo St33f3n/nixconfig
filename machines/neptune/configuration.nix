@@ -25,6 +25,7 @@ in
     ../../modules/virt.nix
     ../../modules/creative.nix
     ../../modules/ai.nix
+    ../../skripts/keepass-unlock.nix
   ];
 
   core.enable = true;
@@ -41,6 +42,11 @@ in
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/nvme0n1";
   boot.loader.grub.useOSProber = true;
+
+
+
+  boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
+  services.xserver.videoDrivers = [ "nvidia" "amdgpu" ];
 
   networking.hostName = "neptune"; # Define your hostname.
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -142,7 +148,7 @@ hardware = {
 
 # GPU selection and detection tools
 environment.systemPackages = with pkgs; [
-  
+  nvidia-system-monitor-qt
   orca-slicer
   fabric-ai
   nvtopPackages.full
