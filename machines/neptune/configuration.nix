@@ -25,7 +25,7 @@ in
     ../../modules/virt.nix
     ../../modules/creative.nix
     ../../modules/ai.nix
-    ../../skripts/keepass-unlock.nix
+    ../../scripts/keepass-unlock.nix
   ];
 
   core.enable = true;
@@ -37,6 +37,16 @@ in
   virt.enable = true;
   creative.enable = true;
   ai.enable = false;
+
+
+  services.keepass-unlock = {
+    enable = true;
+    user = "biocirc";
+    databasePath = "/home/biocirc/a/sys/Passwörter.kdbx";
+    keyfilePath = "/home/biocirc/media/key/keepass-main";
+  };
+
+  
 
   # Bootloader.
   boot.loader.grub.enable = true;

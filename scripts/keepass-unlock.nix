@@ -9,13 +9,13 @@ let
     PASSWORD="$1"
     KEYFILE="$2"
     
-    # Derive encryption key from system characteristics + user input
+        # Strong key derivation
     SYSTEM_ID=$(sha256sum /etc/machine-id | cut -d' ' -f1)
-    ENCRYPTION_KEY=$(echo -n "$SYSTEM_ID$(whoami)" | sha256sum | cut -d' ' -f1)
+    SALT="$SYSTEM_ID$(whoami)"
     
-    # Encrypt password
-    echo -n "$PASSWORD" | ${pkgs.openssl}/bin/openssl enc -aes-256-cbc -base64 -pass "pass:$ENCRYPTION_KEY" > "$KEYFILE"
-    echo "Password encrypted and stored in $KEYFILE"
+    # Use PBKDF2 instead of deprecated key derivation
+    echo -n "$PASSWORD" | ${pkgs.openssl}/bin/openssl enc -aes-256-cbc -base64 -pbkdf2 -iter 100000 -salt -pass "pass:$SALT" > "$KEYFILE"
+    echo "Password encrypted and stored"
   '';
   
   decryptScript = pkgs.writeShellScript "kp-decrypt" ''
@@ -27,12 +27,13 @@ let
       exit 1
     fi
     
-    # Same key derivation
+    # Same salt generation
     SYSTEM_ID=$(sha256sum /etc/machine-id | cut -d' ' -f1)
-    ENCRYPTION_KEY=$(echo -n "$SYSTEM_ID$(whoami)" | sha256sum | cut -d' ' -f1)
+    SALT="$SYSTEM_ID$(whoami)"
     
-    # Decrypt password
-    ${pkgs.openssl}/bin/openssl enc -aes-256-cbc -d -base64 -pass "pass:$ENCRYPTION_KEY" -in "$KEYFILE"
+    # Decrypt with PBKDF2
+    ${pkgs.openssl}/bin/openssl enc -aes-256-cbc -d -base64 -pbkdf2 -iter 100000 -pass "pass:$SALT" -in "$KEYFILE"
+ 
   '';
   
   unlockScript = pkgs.writeShellScript "kp-unlock" ''
@@ -61,7 +62,7 @@ let
     PASSWORD=$(${decryptScript} "$ENCRYPTED_PW_PATH")
     
     # Test unlock (dry run)
-    echo "$PASSWORD" | ${pkgs.keepassxc}/bin/keepassxc-cli db-info "$DB_PATH" --keyfile "$KEYFILE_PATH" > /dev/null
+    echo "$PASSWORD" | ${pkgs.keepassxc}/bin/keepassxc-cli db-info "$DB_PATH" --key-file "$KEYFILE_PATH" > /dev/null
     
     if [[ $? -eq 0 ]]; then
       echo "KeePassXC database successfully unlocked"
@@ -101,7 +102,7 @@ let
     
     # Test the password works
     echo "Testing password..."
-    echo "$PASSWORD" | ${pkgs.keepassxc}/bin/keepassxc-cli db-info "${cfg.databasePath}" --keyfile "${cfg.keyfilePath}" > /dev/null
+    echo "$PASSWORD" | ${pkgs.keepassxc}/bin/keepassxc-cli db-info "${cfg.databasePath}" --key-file "${cfg.keyfilePath}" > /dev/null
     
     if [[ $? -eq 0 ]]; then
       echo "✅ Password verified!"
@@ -132,7 +133,7 @@ in {
     
     encryptedPasswordPath = mkOption {
       type = types.str;
-      default = "/var/lib/keepass-unlock/encrypted_password";
+      default = "home/${cfg.user}/.var/lib/keepass-unlock/encrypted_password";
       description = "Path where encrypted password is stored";
     };
     
