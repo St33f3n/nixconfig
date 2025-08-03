@@ -104,26 +104,26 @@ general = {
       monitor = [
         "desc:Samsung Electric Company C49RG9x H1AK500000,5120x1440@120,0x0,1.066"
         "desc:Ancor Communications Inc VE228 C7LMQS030933,preferred,-1980x0,1"
-        "desc:AOC U2868 0x00000656,3840x2160@60,4178x-500,2,transform,1"
+        "desc:Samsung Electric Company LS32DG30X H8CX600213,1920x1080@60,4678x-500,1,transform,1"
         "eDP-1,2560x1600@60,0x0,1"
         "Virtual-1,1920x1080@60,0x0,1" # VM Monitor
         ",preferred,auto,1"
       ];
 
       exec-once = [
+#        "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all"
         "[workspace 3 silent] vesktop"
-        "[workspace 7 silent] nextcloud"
+        "keepass-unlock-manual"
         "wl-paste --watch cliphist store"
-        "[workspace 7 silent] keepassxc"
         "[workspace 6 silent] spotify"
         "[workspace 1 silent] zen"
         "[workspace 2 silent] trilium"
+        "[workspace 7 silent] sleep 10;nextcloud"
       ];
       env = [
         "ELECTRON_OZONE_PLATFORM_HINT,auto"
         "XDG_CURRENT_DESKTOP,Hyprland"
         "XCURSOR_THEME,Qogir-Dark"
-        #"AQ_DRM_DEVICES,/dev/dri/card0:/dev"
         "XDG_SESSION_TYPE,wayland"
         "XDG_SESSION_DESKTOP,Hyprland"
         "QT_QPA_PLATFORM,wayland;xcb"
@@ -131,6 +131,7 @@ general = {
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "QT_AUTO_SCREEN_SCALE_FACTOR,1"
         "MOZ_ENABLE_WAYLAND,1"
+        "XWAYLAND_FORCE_SCALE,1"
         "GDK_SCALE,1"
         "XCURSOR_SIZE,24"
       ];
@@ -204,8 +205,8 @@ general = {
         "8, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
         "9, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
         "10, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
-        "5, monitor:desc:AOC U2868 0x00000656, default:true"
-        "4, monitor:desc:AOC U2868 0x00000656, default:true"
+        "5, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
+        "4, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
 
       ];
 

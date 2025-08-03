@@ -120,7 +120,11 @@ with lib;
       blueman.enable = true;
       printing.enable = true;
       openssh.enable = true; # Basic enable, no settings
+      devmon.enable = true;
+      gvfs.enable = true;
+      udisks2.enable = true;
     };
+    
 
     # Security & System Essentials
     security = {

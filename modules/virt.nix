@@ -21,10 +21,11 @@ with lib;
     };
   };
 
-  config = mkMerge [
+  config = mkIf config.virt.enable  (mkMerge [
     # Docker Configuration
     (mkIf config.virt.docker.enable {
       environment.systemPackages = with pkgs; [
+        distrobox
         docker
         docker-buildx
         docker-compose
@@ -56,5 +57,5 @@ with lib;
 
       programs.virt-manager.enable = true;
     })
-  ];
+  ]);
 }

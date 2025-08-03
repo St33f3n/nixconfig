@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs,  ... }:
 with lib;
 let
   cfg = config.services.keepass-unlock;
@@ -9,10 +9,15 @@ let
     PASSWORD="$1"
     KEYFILE="$2"
     
-        # Strong key derivation
-    SYSTEM_ID=$(sha256sum /etc/machine-id | cut -d' ' -f1)
-    SALT="$SYSTEM_ID$(whoami)"
-    
+     # NVMe Serial Number (unique pro SSD)
+    NVME_SERIAL="$(lsblk -no SERIAL /dev/disk/by-path/pci-0000:0e:00.0-nvme-1 | head -1)"
+
+    # MAC-Adresse (unique pro Netzwerkkarte)  
+    MAC="$(ip link show | grep -E "ether" | head -1 | awk '{print $2}')"
+
+    # Kombinierter Salt
+    SYSTEM_ID="''${NVME_SERIAL}''${MAC}"
+    SALT="$(echo "$SYSTEM_ID" | sha256sum | cut -d' ' -f1)$(whoami)"    
     # Use PBKDF2 instead of deprecated key derivation
     echo -n "$PASSWORD" | ${pkgs.openssl}/bin/openssl enc -aes-256-cbc -base64 -pbkdf2 -iter 100000 -salt -pass "pass:$SALT" > "$KEYFILE"
     echo "Password encrypted and stored"
@@ -28,12 +33,18 @@ let
     fi
     
     # Same salt generation
-    SYSTEM_ID=$(sha256sum /etc/machine-id | cut -d' ' -f1)
-    SALT="$SYSTEM_ID$(whoami)"
+    # NVMe Serial Number (unique pro SSD)
+    NVME_SERIAL="$(lsblk -no SERIAL /dev/disk/by-path/pci-0000:0e:00.0-nvme-1 | head -1)"
+
+    # MAC-Adresse (unique pro Netzwerkkarte)  
+    MAC="$(ip link show | grep -E "ether" | head -1 | awk '{print $2}')"
+
+    # Kombinierter Salt
+    SYSTEM_ID="''${NVME_SERIAL}''${MAC}"
+    SALT="$(echo "$SYSTEM_ID" | sha256sum | cut -d' ' -f1)$(whoami)"
     
     # Decrypt with PBKDF2
     ${pkgs.openssl}/bin/openssl enc -aes-256-cbc -d -base64 -pbkdf2 -iter 100000 -pass "pass:$SALT" -in "$KEYFILE"
- 
   '';
   
   unlockScript = pkgs.writeShellScript "kp-unlock" ''
@@ -66,8 +77,40 @@ let
     
     if [[ $? -eq 0 ]]; then
       echo "KeePassXC database successfully unlocked"
+      
+      # Secure pueue execution without password in logs
+
+      for attempt in 1 2 3 4 5; do
+        echo "Starting KeePassXC (attempt $attempt/3)..."
+      
+        TEMP_PW=$(mktemp -t kp-pw.XXXXXX)
+        chmod 600 "$TEMP_PW"
+        echo "$PASSWORD" > "$TEMP_PW"
+        ${pkgs.pueue}/bin/pueue add "${pkgs.keepassxc}/bin/keepassxc --style fusion --pw-stdin '$DB_PATH' --keyfile '$KEYFILE_PATH' < '$TEMP_PW'; sleep 1; rm '$TEMP_PW'"
+      
+        # Wait and check if it started successfully
+        sleep $((attempt * 4))  # 10s, 20s, 30s delays
+      
+        if pgrep keepassxc >/dev/null; then
+          echo "✅ KeePassXC started successfully on attempt $attempt"
+          break
+        else
+          echo "Attempt $attempt failed, retrying..."
+          if [[ $attempt -eq 3 ]]; then
+            echo "❌ All attempts failed"
+            rm -f "$TEMP_PW"
+            exit 1
+          fi
+        fi
+      done
+          
       # Re-encrypt password (password rotation)
-      echo "$PASSWORD" | ${encryptScript} "$PASSWORD" "$ENCRYPTED_PW_PATH"
+      ${encryptScript} "$PASSWORD" "$ENCRYPTED_PW_PATH"
+
+      echo "Waiting to start programm"
+      sleep 5
+      echo "Finished"
+      
     else
       echo "Failed to unlock KeePassXC database"
       exit 1
@@ -133,7 +176,7 @@ in {
     
     encryptedPasswordPath = mkOption {
       type = types.str;
-      default = "home/${cfg.user}/.var/lib/keepass-unlock/encrypted_password";
+      default = "/home/${cfg.user}/.var/lib/keepass-unlock/encrypted_password";
       description = "Path where encrypted password is stored";
     };
     
@@ -151,20 +194,6 @@ in {
   };
   
   config = mkIf cfg.enable {
-    # Create unlock service
-    systemd.services.keepass-unlock = mkIf cfg.unlockOnBoot {
-      description = "KeePassXC Auto Unlock";
-      after = [ "graphical-session.target" ];
-      wantedBy = [ "graphical-session.target" ];
-      
-      serviceConfig = {
-        Type = "oneshot";
-        User = cfg.user;
-        ExecStart = unlockScript;
-        RemainAfterExit = false;
-      };
-    };
-    
     # Setup script available system-wide
     environment.systemPackages = [
       (pkgs.writeShellScriptBin "keepass-setup" ''

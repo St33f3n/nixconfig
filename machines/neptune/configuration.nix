@@ -35,8 +35,10 @@ in
   office.enable = true;
   misc.enable = true;
   virt.enable = true;
+  virt.docker.enable = true;
+  virt.quemu.enable = false;
   creative.enable = true;
-  ai.enable = false;
+  ai.enable = true;
 
 
   services.keepass-unlock = {
@@ -116,6 +118,9 @@ in
 
   environment = {
     sessionVariables = {
+      ROCR_VISIBLE_DEVICES=0;
+      HIP_VISIBLE_DEVICES=0;
+      HSA_OVERRIDE_GFX_VERSION="11.0.1";
       WLR_NO_HARDWARE_CURSORS = "1";
       NIXOS_OZONE_WL = "1";
       COLORSCHEME = builtins.toJSON config.stylix.base16Scheme;
@@ -138,6 +143,7 @@ hardware = {
       amdvlk
       rocmPackages.clr.icd
       
+      rocmPackages.rocm-runtime
       # NVIDIA RTX 3070 Ti drivers
       nvidia-vaapi-driver
       libvdpau-va-gl
@@ -154,8 +160,12 @@ hardware = {
     
     # NO PRIME configuration - these are two separate cards
   };
-};
 
+
+  amdgpu.amdvlk.enable = true;
+  
+};
+services.gnome.gnome-keyring.enable = false;
 # GPU selection and detection tools
 environment.systemPackages = with pkgs; [
   nvidia-system-monitor-qt
@@ -182,6 +192,8 @@ environment.sessionVariables = {
     isNormalUser = true;
     description = "Stefan Simmeth";
     extraGroups = [
+      "render"
+      "video"
       "networkmanager"
       "wheel"
       "docker"
@@ -216,6 +228,7 @@ environment.sessionVariables = {
     packages = [
       "com.usebottles.bottles"
       "eu.betterbird.Betterbird"
+      "org.freecad.FreeCAD"
     ];
   };
   # List packages installed in system profile. To search, run:
@@ -228,6 +241,9 @@ environment.sessionVariables = {
   services.openssh.settings.PasswordAuthentication = true;
   services.openssh.settings.KbdInteractiveAuthentication = false;
 
+  fonts.fontDir.enable = true;
+
+  
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

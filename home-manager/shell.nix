@@ -213,4 +213,15 @@ programs.yazi = {
       };
     };
   };
+
+  services.pueue = {
+    enable = true;
+    settings = {
+      shared = {
+        default_parallel_tasks = 10;
+      };
+    };
+  };
+
+  
 }

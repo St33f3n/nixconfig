@@ -17,7 +17,6 @@ with lib;
     environment.systemPackages = with pkgs; [
       # 3D Design & CAD
       openscad
-      freecad-wayland
       blender
 
       # Electronics Design

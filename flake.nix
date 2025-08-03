@@ -59,6 +59,16 @@
         zen-browser = nixpkgs.legacyPackages.x86_64-linux.callPackage ./own_pkgs/zen_browser.nix { };
       };
 
+
+      devShells.x86_64-linux = {
+      typescript= import ./shells/typescript.nix {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        lib = nixpkgs.lib;
+        inherit inputs;
+      };
+    };
+
+      
       homeManagerModules = import ./modules/home-manager;
 
       nixosConfigurations = {

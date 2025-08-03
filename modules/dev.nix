@@ -57,6 +57,7 @@ with lib;
       arduino-ide
       godot
       vscode-fhs
+      sqlitebrowser
 
       # Automation & System Tools
       ansible
