@@ -20,6 +20,7 @@ with lib;
       starship
       atuin
       carapace
+      fzf
 
       # Terminal Multiplexer & Task Management
       zellij

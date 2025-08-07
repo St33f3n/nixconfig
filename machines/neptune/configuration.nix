@@ -223,6 +223,10 @@ environment.sessionVariables = {
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+
+  programs.appimage.enable = true;
+  programs.appimage.binfmt = true;
+  
   services.flatpak = {
     enable = true;
     packages = [

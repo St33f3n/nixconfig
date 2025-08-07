@@ -241,7 +241,7 @@
     };
     
     # Extra Environment
-    extraEnv = /*nu*/ ''
+    extraEnv = ''
       # Starship Setup (automatisch durch enableNushellIntegration)
       # Die Integration wird bereits durch programs.starship.enableNushellIntegration gehandhabt
       
@@ -258,7 +258,7 @@
     '';
     
     # Extra Config
-    extraConfig = /*nu*/ ''
+    extraConfig = ''
       # Custom Functions
       def mkcd [dir: string] {
         mkdir $dir
@@ -441,7 +441,7 @@
     };
     
     # Custom stdlib Erweiterungen
-    stdlib = /*bash*/ ''
+    stdlib = ''
       # Layout für Rust/Cargo Projekte
       layout_rust() {
         if [[ ! -f Cargo.toml ]]; then
