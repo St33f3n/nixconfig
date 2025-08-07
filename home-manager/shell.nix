@@ -141,7 +141,7 @@
         external = {
           enable = true;
           max_results = 100;
-          completer = lib.hm.nushell.mkNushellInline ''
+          completer = lib.hm.nushell.mkNushellInline  /*nu*/ ''
             {|spans|
               # Alias-Expansion
               let expanded_alias = (scope aliases | where name == $spans.0 | get -i 0.expansion)
@@ -166,17 +166,17 @@
       
       # Hooks
       hooks = {
-        pre_prompt = lib.hm.nushell.mkNushellInline ''
-          {||
+        pre_prompt = lib.hm.nushell.mkNushellInline /*nu*/ ''
+          [{||
             # Direnv integration
             if (which direnv | is-not-empty) {
               direnv export json | from json | default {} | load-env
             }
-          }
+          }]
         '';
         
         env_change = {
-          PWD = lib.hm.nushell.mkNushellInline ''
+          PWD = lib.hm.nushell.mkNushellInline /*nu*/ ''
             [{|before, after|
               # Zoxide hook
               if (which zoxide | is-not-empty) {
@@ -241,7 +241,7 @@
     };
     
     # Extra Environment
-    extraEnv = /*nu*/ ''
+    extraEnv =/*nu*/ ''
       # Starship Setup (automatisch durch enableNushellIntegration)
       # Die Integration wird bereits durch programs.starship.enableNushellIntegration gehandhabt
       
@@ -258,7 +258,7 @@
     '';
     
     # Extra Config
-    extraConfig = /*nu*/ ''
+    extraConfig =/*nu*/ ''
       # Custom Functions
       def mkcd [dir: string] {
         mkdir $dir
@@ -371,7 +371,7 @@
     enableNushellIntegration = true;
     shellWrapperName = "y";
     settings = {
-      manager = {  # Korrigiert von 'mgr'
+      mgr = {  # Korrigiert: 'mgr' statt 'manager' (neue Yazi Version)
         show_hidden = true;
         sort_by = "natural";
         sort_dir_first = true;
@@ -441,7 +441,7 @@
     };
     
     # Custom stdlib Erweiterungen
-    stdlib = /*bash*/ ''
+    stdlib = /*bash*/''
       # Layout für Rust/Cargo Projekte
       layout_rust() {
         if [[ ! -f Cargo.toml ]]; then

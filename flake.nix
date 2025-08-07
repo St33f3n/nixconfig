@@ -18,9 +18,10 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    #Stylix
-    stylix.url = "github:danth/stylix/release-25.05";
-    stylix.inputs.nixpkgs.follows = "nixpkgs";
+     stylix = {
+          url = "github:danth/stylix";
+          inputs.nixpkgs.follows = "nixpkgs";
+        };    
 
     #Flatpak
     nix-flatpak.url = "github:gmodena/nix-flatpak";
@@ -101,7 +102,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.biocirc = import ./home-manager/home.nix;
             }
-            inputs.stylix.nixosModules.stylix
+            stylix.nixosModules.stylix
             nix-flatpak.nixosModules.nix-flatpak
           ];
         };
