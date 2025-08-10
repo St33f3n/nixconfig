@@ -72,6 +72,7 @@ with lib;
       # System Monitoring
       btop
       nvtopPackages.full
+      sops
       fastfetch
 
       # Network Tools
@@ -124,7 +125,6 @@ with lib;
       gvfs.enable = true;
       udisks2.enable = true;
     };
-    
 
     # Security & System Essentials
     security = {
@@ -132,6 +132,11 @@ with lib;
       polkit.enable = true; # Essential for desktop operations
     };
 
+    services.gnome.gnome-keyring.enable = true;
+    programs.dconf.enable = true;
+    programs.seahorse.enable = true;
+
+    security.pam.services.login.enableGnomeKeyring = true;
     # Basic firewall (machines configure specific rules)
     networking.firewall.enable = true;
     networking.networkmanager.enable = true;

@@ -66,6 +66,14 @@
     # weitere XDG-Dirs nach Bedarf
   };
 
+  services.gnome-keyring = {
+    enable = true;
+    components = [
+      "secrets"
+      "pkcs11"
+    ];
+  };
+
   programs.keepassxc = {
     enable = true;
     settings = {
@@ -82,7 +90,7 @@
         Enabled = false;
       };
       FdoSecrets = {
-        Enabled = true;
+        Enabled = false;
         ConfirmAccessItem = false;
         ConfirmDeletItem = false;
         UnlockBeforeSearch = false;

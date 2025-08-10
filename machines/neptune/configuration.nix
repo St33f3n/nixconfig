@@ -40,7 +40,6 @@ in
   creative.enable = true;
   ai.enable = true;
 
-
   services.keepass-unlock = {
     enable = true;
     user = "biocirc";
@@ -48,17 +47,21 @@ in
     keyfilePath = "/home/biocirc/media/key/keepass-main";
   };
 
-  
-
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/nvme0n1";
   boot.loader.grub.useOSProber = true;
 
-
-
-  boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
-  services.xserver.videoDrivers = [ "nvidia" "amdgpu" ];
+  boot.kernelModules = [
+    "nvidia"
+    "nvidia_modeset"
+    "nvidia_uvm"
+    "nvidia_drm"
+  ];
+  services.xserver.videoDrivers = [
+    "nvidia"
+    "amdgpu"
+  ];
 
   networking.hostName = "neptune"; # Define your hostname.
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -118,9 +121,11 @@ in
 
   environment = {
     sessionVariables = {
-      ROCR_VISIBLE_DEVICES=0;
-      HIP_VISIBLE_DEVICES=0;
-      HSA_OVERRIDE_GFX_VERSION="11.0.1";
+      XDG_RUNTIME_DIR = "/run/user/$UID";
+      GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
+      ROCR_VISIBLE_DEVICES = 0;
+      HIP_VISIBLE_DEVICES = 0;
+      HSA_OVERRIDE_GFX_VERSION = "11.0.1";
       WLR_NO_HARDWARE_CURSORS = "1";
       NIXOS_OZONE_WL = "1";
       COLORSCHEME = builtins.toJSON config.stylix.base16Scheme;
@@ -133,60 +138,58 @@ in
   # Configure console keymap
   console.keyMap = "de";
 
-hardware = {
-  graphics = {
-    enable = true;
-    enable32Bit = true;
-    extraPackages = with pkgs; [
-      # AMD RX 7700 XT drivers
-      mesa
-      amdvlk
-      rocmPackages.clr.icd
-      
-      rocmPackages.rocm-runtime
-      # NVIDIA RTX 3070 Ti drivers
-      nvidia-vaapi-driver
-      libvdpau-va-gl
-    ];
+  hardware = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        # AMD RX 7700 XT drivers
+        mesa
+        amdvlk
+        rocmPackages.clr.icd
+
+        rocmPackages.rocm-runtime
+        # NVIDIA RTX 3070 Ti drivers
+        nvidia-vaapi-driver
+        libvdpau-va-gl
+      ];
+    };
+
+    # NVIDIA configuration (discrete card)
+    nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = false; # Not needed for desktop
+      open = false; # Use proprietary for RTX 3070 Ti
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+      # NO PRIME configuration - these are two separate cards
+    };
+
+    amdgpu.amdvlk.enable = true;
+
   };
+  # GPU selection and detection tools
+  environment.systemPackages = with pkgs; [
+    nvidia-system-monitor-qt
+    orca-slicer
+    fabric-ai
+    nvtopPackages.full
+    radeontop # AMD GPU monitoring
+    vulkan-tools # vulkaninfo command
+    clinfo # OpenCL info for both GPUs
+    switcheroo-control # GPU switching for apps
+  ];
 
-  # NVIDIA configuration (discrete card)
-  nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;  # Not needed for desktop
-    open = false;  # Use proprietary for RTX 3070 Ti
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-    
-    # NO PRIME configuration - these are two separate cards
+  # Environment for dual GPU setup
+  environment.sessionVariables = {
+    # Let apps choose GPU dynamically
+    __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
+    # AMD GPU support
+    AMD_VULKAN_ICD = "RADV";
+    # Keep both drivers available
+    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.json:/run/opengl-driver/share/vulkan/icd.d/radeon_icd.json";
   };
-
-
-  amdgpu.amdvlk.enable = true;
-  
-};
-services.gnome.gnome-keyring.enable = false;
-# GPU selection and detection tools
-environment.systemPackages = with pkgs; [
-  nvidia-system-monitor-qt
-  orca-slicer
-  fabric-ai
-  nvtopPackages.full
-  radeontop          # AMD GPU monitoring
-  vulkan-tools       # vulkaninfo command
-  clinfo             # OpenCL info for both GPUs
-  switcheroo-control      # GPU switching for apps
-];
-
-# Environment for dual GPU setup
-environment.sessionVariables = {
-  # Let apps choose GPU dynamically
-  __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
-  # AMD GPU support
-  AMD_VULKAN_ICD = "RADV";
-  # Keep both drivers available
-  VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.json:/run/opengl-driver/share/vulkan/icd.d/radeon_icd.json";
-};
 
   users.users.biocirc = {
     isNormalUser = true;
@@ -223,10 +226,9 @@ environment.sessionVariables = {
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-
   programs.appimage.enable = true;
   programs.appimage.binfmt = true;
-  
+
   services.flatpak = {
     enable = true;
     packages = [
@@ -247,7 +249,6 @@ environment.sessionVariables = {
 
   fonts.fontDir.enable = true;
 
-  
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
