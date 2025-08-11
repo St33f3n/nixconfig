@@ -32,10 +32,9 @@ in
   ];
 
   xdg.configFile."quickshell/${quickshellConfig}" = {
-    source = "${config.users.users.biocirc.home}/quickshell/${quickshellConfig}";
+    source = ./quickshell/${quickshellConfig}; # Relativer Pfad
     recursive = true;
   };
-
   home = {
     username = "biocirc";
     homeDirectory = "/home/biocirc";
