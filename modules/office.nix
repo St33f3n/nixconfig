@@ -64,5 +64,16 @@ with lib;
       }))
 
     ];
+
+    services.printing = {
+      enable = true;
+      drivers = [ pkgs.gutenprint ];
+    };
+
+    services.avahi = {
+      enable = true;
+      nssmdns = true;
+    };
+
   };
 }

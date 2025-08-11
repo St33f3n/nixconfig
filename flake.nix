@@ -90,7 +90,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.biocirc = import ./home-manager/home.nix;
             }
-            inputs.stylix.nixosModules.stylix
+            stylix.nixosModules.stylix
             nix-flatpak.nixosModules.nix-flatpak
           ];
         };

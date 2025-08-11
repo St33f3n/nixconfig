@@ -39,7 +39,7 @@
       "p/active/.keep".text = "";
       "p/done/.keep".text = "";
       "a/dev/.keep".text = "";
-      "a/fin/.keep".text = "";
+      "a/finance/.keep".text = "";
       "a/sys/.keep".text = "";
       "a/work/.keep".text = "";
       "r/books/.keep".text = "";
@@ -63,6 +63,9 @@
     documents = "$HOME/r/docs";
     download = "$HOME/r/dl";
     pictures = "$HOME/r/pics";
+    videos = "$HOME/r/videos";
+    music = "$HOME/r/music";
+    templates = "$HOME/r/templates";
     # weitere XDG-Dirs nach Bedarf
   };
 

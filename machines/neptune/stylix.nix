@@ -15,7 +15,7 @@ let
     base0A = "d49284"; # Classes/Yellow (coral-light dimmed)
     base0B = "6b8e6b"; # Strings/Green (sea-foam morandi green)
     base0C = "5a9a9a"; # Support/Cyan (bioluminescent morandi teal)
-    base0D = "6b8db3"; # Functions/Blue (coral-blue softer)
+    base0D = "c4b89f"; # Functions/Blue (coral-blue softer)
     base0E = "b85347"; # Keywords/Magenta (coral-deep dimmed)
     base0F = "8a9a8a"; # Deprecated (seafoam-gray)
   };
@@ -31,7 +31,6 @@ in
 {
 
   stylix.autoEnable = true;
-
   stylix.targets.gtk.enable = true;
   stylix.targets.qt.enable = true;
   stylix.base16Scheme = color_scheme;

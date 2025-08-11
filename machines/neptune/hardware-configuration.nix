@@ -40,13 +40,43 @@
   fileSystems."/home/biocirc/media/Backup" = {
     device = "/dev/disk/by-uuid/04eda5e3-ff31-4abd-9328-5f482120bf30";
     fsType = "ext4";
-    options = ["nofail" "noauto" "x-systemd.automount" "x-systemd.device-timeout=0" ];
+    options = [
+      "nofail"
+      "noauto"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=0"
+    ];
   };
-  
+
+  fileSystems."/home/biocirc/media/Drive1" = {
+    device = "/dev/disk/by-uuid/828b4002-8cb6-47d8-b854-95ea989923ab";
+    fsType = "ext4";
+    options = [
+      "nofail"
+      "noauto"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=0"
+    ];
+  };
+  fileSystems."/home/biocirc/media/Drive2" = {
+    device = "/dev/disk/by-uuid/bc0f62cb-36e5-47f5-a60d-a7f39789f13c";
+    fsType = "ext4";
+    options = [
+      "nofail"
+      "noauto"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=0"
+    ];
+  };
   fileSystems."/home/biocirc/media/nextcloud" = {
     device = "/dev/disk/by-uuid/763cade6-c094-4420-b7a4-dd5e2682cbf7";
     fsType = "btrfs";
-    options = ["nofail" "noauto" "x-systemd.automount" "x-systemd.device-timeout=0" ];
+    options = [
+      "nofail"
+      "noauto"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=0"
+    ];
   };
 
   swapDevices = [ ];

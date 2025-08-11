@@ -1,0 +1,102 @@
+# Ocean Coral Theme for Alacritty
+# Converted from Helix theme with ocean and coral color palette
+
+[colors.primary]
+foreground = "#f7f2e3"  # text_primary
+background = "#1e1e1e"  # abyss
+dim_foreground = "#c4b89f"  # text_muted
+bright_foreground = "#edf2f7"  # deep_ocean
+
+[colors.cursor]
+text = "#1e1e1e"  # abyss
+cursor = "#d4634a"  # coral_orange
+
+[colors.vi_mode_cursor]
+text = "#1e1e1e"  # abyss
+cursor = "#6b8e6b"  # sea_foam
+
+[colors.search.matches]
+foreground = "#1e1e1e"  # abyss
+background = "#c4766a"  # coral_pink
+
+[colors.search.focused_match]
+foreground = "#1e1e1e"  # abyss
+background = "#d4634a"  # coral_orange
+
+[colors.hints.start]
+foreground = "#1e1e1e"  # abyss
+background = "#f0c674"  # yellow
+
+[colors.hints.end]
+foreground = "#1e1e1e"  # abyss
+background = "#c84a2c"  # coral_red
+
+[colors.line_indicator]
+foreground = "#f7f2e3"  # text_primary
+background = "#262626"  # deep_water
+
+[colors.footer_bar]
+foreground = "#1e1e1e"  # abyss
+background = "#e5dcc8"  # text_secondary
+
+[colors.selection]
+text = "#1e1e1e"  # abyss
+background = "#6b8e6b"  # sea_foam
+
+# Standard ANSI Colors
+[colors.normal]
+black = "#1e1e1e"    # abyss
+red = "#c84a2c"      # coral_red
+green = "#6b8e6b"    # sea_foam
+yellow = "#f0c674"   # yellow
+blue = "#8cb8e8"     # arctic_blue
+magenta = "#c4766a"  # coral_pink
+cyan = "#5a9a9a"     # bioluminescent
+white = "#f7f2e3"    # text_primary
+
+# Bright Colors
+[colors.bright]
+black = "#8a9a8a"    # seafoam_gray
+red = "#d49284"      # coral_light
+green = "#4a6b4a"    # deep_teal
+yellow = "#d4c5a9"   # golden_beige
+blue = "#6b8db3"     # coral_blue
+magenta = "#d4634a"  # coral_orange
+cyan = "#8cb8e8"     # arctic_blue (brighter cyan)
+white = "#edf2f7"    # deep_ocean
+
+# Dim Colors
+[colors.dim]
+black = "#262626"    # deep_water
+red = "#b85347"      # coral_deep
+green = "#3d5a3d"    # kelp_green
+yellow = "#c4b89f"   # text_muted
+blue = "#4a5f7a"     # deep_sapphire
+magenta = "#b85347"  # coral_deep
+cyan = "#5c7ba3"     # marine_blue
+white = "#e5dcc8"    # text_secondary
+
+# Indexed colors (16-255) - Optional erweiterte Farbpalette
+[[colors.indexed_colors]]
+index = 16
+color = "#d4634a"  # coral_orange
+
+[[colors.indexed_colors]]
+index = 17
+color = "#c4766a"  # coral_pink
+
+[[colors.indexed_colors]]
+index = 18
+color = "#262626"  # deep_water
+
+[[colors.indexed_colors]]
+index = 19
+color = "#2e2e2e"  # midnight
+
+[[colors.indexed_colors]]
+index = 20
+color = "#8a9a8a"  # seafoam_gray
+
+[[colors.indexed_colors]]
+index = 21
+color = "#e6e6e6"  # ocean_current

@@ -8,42 +8,42 @@
   # Terminal Emulator
   programs.alacritty = {
     enable = true;
-    settings = lib.mkForce {
-      terminal.shell = {
-        program = "${pkgs.nushell}/bin/nu"; # Expliziter Pfad
-      };
-      window = {
-        padding = {
-          x = 15;
-          y = 15;
-        };
-        opacity = 0.95;
-      };
-      keyboard.bindings = [
+    settings = lib.mkForce (
+      lib.recursiveUpdate
+        (builtins.fromTOML (builtins.readFile ./alacritty-themes/ocean-coral-alacritty.toml))
         {
-          key = "v";
-          mods = "Control|Super";
-          mode = "AppCursor|AppKeypad|Alt|Search|Vi";
-          action = "paste";
+          terminal.shell = {
+            program = "${pkgs.nushell}/bin/nu"; # Expliziter Pfad
+          };
+          window = {
+            padding = {
+              x = 15;
+              y = 15;
+            };
+            opacity = 0.95;
+          };
+          keyboard.bindings = [
+            {
+              key = "v";
+              mods = "Control|Super";
+              mode = "AppCursor|AppKeypad|Alt|Search|Vi";
+              action = "paste";
+            }
+            {
+              key = "c";
+              mods = "Control|Super";
+              mode = "AppCursor|AppKeypad|Alt|Search|Vi";
+              action = "copy";
+            }
+            {
+              key = "Back";
+              mods = "Control";
+              chars = "\\u0017";
+            }
+          ];
         }
-        {
-          key = "c";
-          mods = "Control|Super";
-          mode = "AppCursor|AppKeypad|Alt|Search|Vi";
-          action = "copy";
-        }
-        {
-          key = "Back";
-          mods = "Control";
-          chars = "\\u0017";
-        }
-      ];
-      general = {
-        import = [ "./ocean-koral.toml" ];
-      };
-    };
+    );
   };
-
   # Carapace für universelle Completions
   programs.carapace = {
     enable = true;
@@ -423,8 +423,19 @@
         sort_by = "natural";
         sort_dir_first = true;
         linemode = "size";
+        ratio = [
+          1
+          4
+          3
+        ];
         show_symlink = true;
         scrolloff = 5;
+      };
+
+      tasks = {
+        micro_workers = 10;
+        macro_workers = 20;
+        bizarre_retry = 3;
       };
 
       preview = {
@@ -434,6 +445,11 @@
         max_height = 900;
         image_filter = "lanczos3";
         image_quality = 90;
+      };
+
+      hovered = {
+        fg = "#1e1e1e";
+        bg = "#c4766a";
       };
 
       opener = {
