@@ -3,6 +3,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
@@ -28,7 +29,14 @@ with lib;
       kdePackages.qtmultimedia
       kdePackages.qtsvg
       kdePackages.qtvirtualkeyboard
+      qt6.qtbase
+      qt6.qtdeclarative
       qt6.qtwayland
+      qt6.qtsvg
+      qt6.qtimageformats
+      qt6.qtmultimedia
+      qt6.qt5compat
+      qt6.qttools
       gtk3
       gtk4
 
@@ -57,7 +65,17 @@ with lib;
       nerd-fonts.zed-mono
       nerd-fonts.fira-code
       nerd-fonts.fira-mono
+
+      (inputs.quickshell.packages.x86_64-linux.default.override {
+        withJemalloc = true;
+        withHyprland = true; # Da du Hyprland nutzt
+        withQtSvg = true;
+        withPipewire = true;
+      })
+
     ];
+
+    qt.enable = true;
 
     # System Services
     services.displayManager.sddm = {

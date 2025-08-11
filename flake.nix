@@ -26,6 +26,11 @@
     #Flatpak
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+    quickshell = {
+      url = "github:quickshell-mirror/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     #sops-nix
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -46,6 +51,7 @@
       nix-flatpak,
       zen-browser,
       sops-nix,
+      quickshell,
       ...
     }@inputs:
     let
@@ -107,12 +113,12 @@
               home-manager.useUserPackages = true;
               home-manager.users.biocirc = import ./home-manager/home.nix;
             }
+
             stylix.nixosModules.stylix
             nix-flatpak.nixosModules.nix-flatpak
             sops-nix.nixosModules.sops
           ];
         };
       };
-
     };
 }

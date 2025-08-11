@@ -9,39 +9,37 @@
   programs.alacritty = {
     enable = true;
     settings = lib.mkForce (
-      lib.recursiveUpdate
-        (builtins.fromTOML (builtins.readFile ./alacritty-themes/ocean-coral-alacritty.toml))
-        {
-          terminal.shell = {
-            program = "${pkgs.nushell}/bin/nu"; # Expliziter Pfad
+      lib.recursiveUpdate (builtins.fromTOML (builtins.readFile ./alacritty_theme/ocean_coral.toml)) {
+        terminal.shell = {
+          program = "${pkgs.nushell}/bin/nu"; # Expliziter Pfad
+        };
+        window = {
+          padding = {
+            x = 15;
+            y = 15;
           };
-          window = {
-            padding = {
-              x = 15;
-              y = 15;
-            };
-            opacity = 0.95;
-          };
-          keyboard.bindings = [
-            {
-              key = "v";
-              mods = "Control|Super";
-              mode = "AppCursor|AppKeypad|Alt|Search|Vi";
-              action = "paste";
-            }
-            {
-              key = "c";
-              mods = "Control|Super";
-              mode = "AppCursor|AppKeypad|Alt|Search|Vi";
-              action = "copy";
-            }
-            {
-              key = "Back";
-              mods = "Control";
-              chars = "\\u0017";
-            }
-          ];
-        }
+          opacity = 0.95;
+        };
+        keyboard.bindings = [
+          {
+            key = "v";
+            mods = "Control|Super";
+            mode = "AppCursor|AppKeypad|Alt|Search|Vi";
+            action = "paste";
+          }
+          {
+            key = "c";
+            mods = "Control|Super";
+            mode = "AppCursor|AppKeypad|Alt|Search|Vi";
+            action = "copy";
+          }
+          {
+            key = "Back";
+            mods = "Control";
+            chars = "\\u0017";
+          }
+        ];
+      }
     );
   };
   # Carapace für universelle Completions

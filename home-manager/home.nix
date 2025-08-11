@@ -8,6 +8,9 @@
   pkgs,
   ...
 }:
+let
+  quickshellConfig = "default";
+in
 {
   # You can import other home-manager modules here
   imports = [
@@ -28,12 +31,20 @@
     #./theming.nix
   ];
 
+  xdg.configFile."quickshell/${quickshellConfig}" = {
+    source = "${config.users.users.biocirc.home}/quickshell/${quickshellConfig}";
+    recursive = true;
+  };
+
   home = {
     username = "biocirc";
     homeDirectory = "/home/biocirc";
     sessionVariables = {
       EDITOR = "hx";
       SHELL = "nu";
+      QML2_IMPORT_PATH = "${pkgs.qt6.qtdeclarative}/${pkgs.qt6.qtbase.qtQmlPrefix}";
+      QS_CONFIG_NAME = quickshellConfig;
+
     };
     file = {
       "p/active/.keep".text = "";
@@ -100,6 +111,7 @@
       };
     };
   };
+
   # Enable home-manager and git
   programs.home-manager.enable = true;
 
