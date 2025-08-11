@@ -18,13 +18,19 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-     stylix = {
-          url = "github:nix-community/stylix/release-25.05";
-          inputs.nixpkgs.follows = "nixpkgs";
-        };    
+    stylix = {
+      url = "github:nix-community/stylix/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     #Flatpak
     nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    #sops-nix
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Zen-browser
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
@@ -39,6 +45,7 @@
       stylix,
       nix-flatpak,
       zen-browser,
+      sops-nix,
       ...
     }@inputs:
     let
@@ -60,16 +67,14 @@
         zen-browser = nixpkgs.legacyPackages.x86_64-linux.callPackage ./own_pkgs/zen_browser.nix { };
       };
 
-
       devShells.x86_64-linux = {
-      typescript= import ./shells/typescript.nix {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        lib = nixpkgs.lib;
-        inherit inputs;
+        typescript = import ./shells/typescript.nix {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          lib = nixpkgs.lib;
+          inherit inputs;
+        };
       };
-    };
 
-      
       homeManagerModules = import ./modules/home-manager;
 
       nixosConfigurations = {
@@ -104,6 +109,7 @@
             }
             stylix.nixosModules.stylix
             nix-flatpak.nixosModules.nix-flatpak
+            sops-nix.nixosModules.sops
           ];
         };
       };

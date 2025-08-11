@@ -14,6 +14,7 @@ in
 {
   imports = [
     # Include the results of the hardware scan.
+    inputs.sops-nix.nixosModules.sops
     ./stylix.nix
     ./hardware-configuration.nix
     ../../modules/core.nix
@@ -27,6 +28,14 @@ in
     ../../modules/ai.nix
     ../../scripts/keepass-unlock.nix
   ];
+
+  sops.defaultSopsFile = ./secrets/secrets.yaml;
+  sops.defaultSopsFormat = "yaml";
+  sops.age.keyFile = "/home/biocirc/.config/sops/age/keys.txt";
+
+  sops.secrets.ip_address = {
+    owner = config.users.users.biocirc.name;
+  };
 
   core.enable = true;
   desktop.enable = true;
