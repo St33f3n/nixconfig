@@ -9,7 +9,7 @@
   ...
 }:
 let
-  quickshellConfig = "default";
+  quickshellConfig = "default.qml";
 in
 {
   # You can import other home-manager modules here
@@ -43,6 +43,7 @@ in
       SHELL = "nu";
       QML2_IMPORT_PATH = "${pkgs.qt6.qtdeclarative}/${pkgs.qt6.qtbase.qtQmlPrefix}";
       QS_CONFIG_NAME = quickshellConfig;
+      QS_CONFIG_PATH = "${config.home.homeDirectory}/nixconfig/home-manager/quickshell/${quickshellConfig}";
 
     };
     file = {
