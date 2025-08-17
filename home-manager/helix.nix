@@ -9,7 +9,7 @@
       theme = lib.mkForce "ocean-coral";
 
       editor = {
-        clipboard-provider = "termcode";
+        clipboard-provider = "wayland";
         line-number = "relative";
         cursorline = true;
         rulers = [

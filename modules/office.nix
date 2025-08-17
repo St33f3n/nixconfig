@@ -33,6 +33,7 @@ with lib;
 
       # Document Processing & LaTeX
       pandoc
+      espanso-wayland
 
       # Note Taking & Knowledge Management
       trilium-next-desktop
@@ -64,6 +65,21 @@ with lib;
       }))
 
     ];
+
+    services.espanso = {
+      enable = true;
+      package = pkgs.espanso-wayland;
+
+    };
+
+    systemd.user.services.espanso = {
+      path = [
+        pkgs.eza
+        pkgs.git
+        pkgs.coreutils
+        pkgs.bash
+      ];
+    };
 
     services.printing = {
       enable = true;

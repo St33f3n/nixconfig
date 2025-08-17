@@ -40,6 +40,8 @@
     # Zen-browser
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
+    espanso-fix.url = "github:pitkling/nixpkgs/espanso-fix-capabilities-export";
+
   };
 
   outputs =
@@ -52,6 +54,7 @@
       zen-browser,
       sops-nix,
       quickshell,
+      espanso-fix,
       ...
     }@inputs:
     let
@@ -113,7 +116,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.biocirc = import ./home-manager/home.nix;
             }
-
+            espanso-fix.nixosModules.espanso-capdacoverride
             stylix.nixosModules.stylix
             nix-flatpak.nixosModules.nix-flatpak
             sops-nix.nixosModules.sops
