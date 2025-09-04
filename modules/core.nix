@@ -65,6 +65,7 @@ with lib;
       rustup
       python3
       uv
+      scc
 
       networkmanagerapplet
       home-manager
@@ -99,6 +100,10 @@ with lib;
 
       # Print System
       cups
+
+      # usb creation
+      popsicle
+
     ];
     # Essential Hardware Support - Foundation only
     hardware = {

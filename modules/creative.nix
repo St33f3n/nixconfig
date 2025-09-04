@@ -21,10 +21,7 @@ with lib;
 
       # Electronics Design
       kicad
-
-      # 3D Printing
       orca-slicer
-
       # Video Production
       obs-studio
 

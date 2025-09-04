@@ -58,6 +58,7 @@ with lib;
       godot
       vscode-fhs
       sqlitebrowser
+      pgadmin4-desktopmode
 
       # Automation & System Tools
       ansible

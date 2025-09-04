@@ -66,6 +66,7 @@ in
     "nvidia_modeset"
     "nvidia_uvm"
     "nvidia_drm"
+    "amdgpu"
   ];
   services.xserver.videoDrivers = [
     "nvidia"
@@ -204,8 +205,12 @@ in
     isNormalUser = true;
     description = "Stefan Simmeth";
     extraGroups = [
+      "dialout"
+      "plugdev"
+      "input"
       "render"
       "video"
+      "tty"
       "networkmanager"
       "wheel"
       "docker"
@@ -241,6 +246,7 @@ in
   services.flatpak = {
     enable = true;
     packages = [
+
       "com.usebottles.bottles"
       "eu.betterbird.Betterbird"
       "org.freecad.FreeCAD"
@@ -257,6 +263,35 @@ in
   services.openssh.settings.KbdInteractiveAuthentication = false;
 
   fonts.fontDir.enable = true;
+  fonts.enableDefaultPackages = true;
+
+  fonts.packages = with pkgs; [
+    dejavu_fonts
+    liberation_ttf
+
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-emoji
+  ];
+  nixpkgs.config.packageOverrides = pkgs: {
+    # HarmonyOS Fonts aus dem System entfernen
+    ttf-harmonyos-sans = pkgs.emptyDirectory;
+  };
+
+  services.udev.packages = with pkgs; [ via ];
+
+  services.udev.extraRules = ''
+      # QMK/VIA Keyboard Support
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
+
+      # General HID device access for keyboards
+      SUBSYSTEM=="hidraw", ATTRS{idVendor}=="*", MODE="0666", TAG+="uaccess"
+
+
+      SUBSYSTEM=="usb", ATTR{idVendor}=="2341", ATTR{idProduct}=="0043", MODE="0666", GROUP="dialout"
+    SUBSYSTEM=="usb", ATTR{idVendor}=="2341", ATTR{idProduct}=="8036", MODE="0666", GROUP="dialout"
+    SUBSYSTEM=="block", ENV{ID_FS_LABEL}=="PCRUDISK", ENV{UDISKS_IGNORE}="1"
+  '';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

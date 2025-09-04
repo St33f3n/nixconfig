@@ -69,6 +69,7 @@
       wifi = "nmtui";
       disks = "sudo lsblk -fs";
       mntctrl = "sudo hx /etc/fstab";
+      config = "hx ~/nixconfig";
 
       # Modern tool replacements (eza)
       ls = "eza --icons --git --group-directories-first";
@@ -177,6 +178,13 @@
                 if (which direnv | is-not-empty) {
                   direnv export json | from json | default {} | load-env
                 }
+
+                if ("secrets/secrets.json" | path exists) {
+                  try {
+                    sops -d secrets/secrets.json | from json | load-env
+                  }
+                }
+                
               }]
             '';
 
@@ -498,13 +506,13 @@
     config = {
       # Whitelist für spezifische Directories
       whitelist.prefix = [
-        "$HOME/projects"
+        "$HOME/p/active"
         "$HOME/dev"
       ];
 
       # Performance Einstellungen
       global = {
-        warn_timeout = "30s";
+        warn_timeout = "60s";
         hide_env_diff = false;
       };
     };

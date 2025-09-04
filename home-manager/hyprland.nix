@@ -104,7 +104,7 @@ in
       monitor = [
         "desc:Samsung Electric Company C49RG9x H1AK500000,5120x1440@120,0x0,1"
         "desc:Ancor Communications Inc VE228 C7LMQS030933,preferred,-1980x0,1"
-        "desc:Samsung Electric Company LS32DG30X H8CX600213,1920x1080@60,5120x-500,1,transform,1"
+        "desc:Samsung Electric Company LS32DG30X H8CX600213,1920x1080@60,5130x-500,1,transform,1"
         "eDP-1,2560x1600@60,0x0,1"
         "Virtual-1,1920x1080@60,0x0,1" # VM Monitor
         ",preferred,auto,1"

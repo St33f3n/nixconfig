@@ -18,9 +18,21 @@ with lib;
       # Game Streaming
       moonlight-qt
       sunshine
-
+      libnfc
+      pcsc-tools
+      arduino
+      usb-modeswitch
+      usb-modeswitch-data
       # Backup Tools
       vorta
     ];
+
+    services.udev.packages = [ pkgs.usb-modeswitch-data ];
+
+    services.pcscd.enable = true;
+    services.pcscd.plugins = with pkgs; [
+      ccid
+    ];
   };
+
 }

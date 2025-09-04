@@ -16,12 +16,12 @@ with lib;
   config = mkIf config.office.enable {
     environment.systemPackages = with pkgs; [
       # Communication
-      thunderbird
       protonmail-bridge
       vesktop
       element-desktop
       zapzap
       zoom-us
+      simple-scan
 
       # Browsers
       mullvad-browser
@@ -30,6 +30,10 @@ with lib;
       libreoffice-qt6-fresh
       anki
       qalculate-gtk
+      font-manager
+      via
+      vial
+      celluloid
 
       # Document Processing & LaTeX
       pandoc
