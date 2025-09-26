@@ -40,10 +40,15 @@ with lib;
       gtk3
       gtk4
 
+      #xdg
+      xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gnome
+      xdg-desktop-portal-gtk
+
       # Desktop Tools
       waybar
       dunst
-      rofi-wayland
+      rofi
       wlogout
       swaylock-effects
       swayidle
@@ -90,10 +95,15 @@ with lib;
       wlr.enable = true;
       extraPortals = with pkgs; [
         xdg-desktop-portal-gtk
+        xdg-desktop-portal-gnome
       ];
       config.common = {
         default = "*";
         defaultFallback = "gtk";
+        "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+        "org.freedesktop.impl.portal.Settings" = [ "gnome" ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
       };
 
     };

@@ -39,6 +39,7 @@ in
     username = "biocirc";
     homeDirectory = "/home/biocirc";
     sessionVariables = {
+      BROWSER = "librewolf";
       EDITOR = "hx";
       SHELL = "nu";
       QML2_IMPORT_PATH = "${pkgs.qt6.qtdeclarative}/${pkgs.qt6.qtbase.qtQmlPrefix}";
@@ -78,6 +79,23 @@ in
     music = "$HOME/r/music";
     templates = "$HOME/r/templates";
     # weitere XDG-Dirs nach Bedarf
+  };
+
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = "librewolf.desktop";
+      "x-scheme-handler/http" = "librewolf.desktop";
+      "x-scheme-handler/https" = "librewolf.desktop";
+      "x-scheme-handler/about" = "librewolf.desktop";
+      "x-scheme-handler/unknown" = "librewolf.desktop";
+      "application/pdf" = "librewolf.desktop";
+      "application/x-pdf" = "librewolf.desktop";
+    };
+    associations.added = {
+      "application/pdf" = [ "librewolf.desktop" ];
+      "text/html" = [ "librewolf.desktop" ];
+    };
   };
 
   services.gnome-keyring = {

@@ -37,7 +37,7 @@ with lib;
       llvmPackages_20.clang-tools
       marksman
       rust-analyzer
-      python311Packages.python-lsp-server
+      python312Packages.python-lsp-server
       ruff
       black
       ruff

@@ -41,6 +41,7 @@ with lib;
       networkmanagerapplet
       iwd
       usb-modeswitch
+      librewolf
       usbutils
 
       # Terminal & CLI Tools
@@ -63,9 +64,11 @@ with lib;
       git
       lazygit
       rustup
-      python3
       uv
       scc
+      cue
+      cuelsp
+      cuetools
 
       networkmanagerapplet
       home-manager
@@ -95,6 +98,7 @@ with lib;
       filezilla
       rsync
       borgbackup
+      zip
       # Documentation
       tealdeer
 

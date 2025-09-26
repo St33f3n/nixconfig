@@ -34,6 +34,7 @@ with lib;
       via
       vial
       celluloid
+      texliveFull
 
       # Document Processing & LaTeX
       pandoc
@@ -92,7 +93,7 @@ with lib;
 
     services.avahi = {
       enable = true;
-      nssmdns = true;
+      nssmdns4 = true;
     };
 
   };

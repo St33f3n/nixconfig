@@ -50,7 +50,7 @@ in
       bind = [
         #Applications
         "$mainMod, RETURN, exec, alacritty"
-        "$mainMod, B, exec, zen"
+        "$mainMod, B, exec, librewolf"
         "$mainMod, period, exec, emote"
         "$mainMod, O, exec, trilium"
         "$mainMod, E, exec, alacritty -e yazi"
@@ -115,7 +115,7 @@ in
         "[workspace 3 silent] vesktop"
         "wl-paste --watch cliphist store"
         "[workspace 6 silent] spotify"
-        "[workspace 1 silent] zen"
+        "[workspace 1 silent] librewolf"
         "[workspace 2 silent] trilium"
         "[workspace 7 silent] sleep 10;nextcloud"
         "[workspace 8 silent] alacritty -e protonmail-bridge --cli"
@@ -182,18 +182,6 @@ in
           "specialWorkspaceIn, 1, 2.8, emphasizedDecel, slidevert"
           "specialWorkspaceOut, 1, 1.2, emphasizedAccel, slidevert"
         ];
-      };
-
-      gestures = {
-        workspace_swipe_distance = 700;
-        workspace_swipe = true;
-        workspace_swipe_fingers = 3;
-        workspace_swipe_min_fingers = true;
-        workspace_swipe_cancel_ratio = 0.2;
-        workspace_swipe_min_speed_to_force = 5;
-        workspace_swipe_direction_lock = true;
-        workspace_swipe_direction_lock_threshold = 10;
-        workspace_swipe_create_new = true;
       };
 
       workspace = [

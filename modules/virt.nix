@@ -21,7 +21,7 @@ with lib;
     };
   };
 
-  config = mkIf config.virt.enable  (mkMerge [
+  config = mkIf config.virt.enable (mkMerge [
     # Docker Configuration
     (mkIf config.virt.docker.enable {
       environment.systemPackages = with pkgs; [
@@ -29,14 +29,20 @@ with lib;
         docker
         docker-buildx
         docker-compose
-        nvidia-container-toolkit
         docker-credential-helpers
       ];
 
       virtualisation.docker = {
         enable = true;
-        enableNvidia = true; # Enable if you have NVIDIA GPU
+        enableNvidia = false; # Keep this false
+        package = pkgs.docker_25; # Use Docker 25+ for CDI support
+        daemon.settings = {
+          default-runtime = "runc";
+          features.cdi = true; # Enable CDI support
+        };
       };
+
+      hardware.nvidia-container-toolkit.enable = true;
     })
 
     # KVM/QEMU Virtualization Configuration

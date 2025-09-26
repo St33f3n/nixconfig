@@ -49,13 +49,6 @@ in
   creative.enable = true;
   ai.enable = true;
 
-  services.keepass-unlock = {
-    enable = true;
-    user = "biocirc";
-    databasePath = "/home/biocirc/a/sys/Passwörter.kdbx";
-    keyfilePath = "/home/biocirc/media/key/keepass-main";
-  };
-
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/nvme0n1";
@@ -164,8 +157,7 @@ in
         libvdpau-va-gl
       ];
     };
-
-    # NVIDIA configuration (discrete card)
+    nvidia-container-toolkit.enable = true;
     nvidia = {
       modesetting.enable = true;
       powerManagement.enable = false; # Not needed for desktop
@@ -173,31 +165,22 @@ in
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
 
-      # NO PRIME configuration - these are two separate cards
     };
 
     amdgpu.amdvlk.enable = true;
 
   };
-  # GPU selection and detection tools
   environment.systemPackages = with pkgs; [
     nvidia-system-monitor-qt
     orca-slicer
     fabric-ai
     nvtopPackages.full
-    radeontop # AMD GPU monitoring
-    vulkan-tools # vulkaninfo command
-    clinfo # OpenCL info for both GPUs
-    switcheroo-control # GPU switching for apps
   ];
 
   # Environment for dual GPU setup
   environment.sessionVariables = {
-    # Let apps choose GPU dynamically
     __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
-    # AMD GPU support
     AMD_VULKAN_ICD = "RADV";
-    # Keep both drivers available
     VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.json:/run/opengl-driver/share/vulkan/icd.d/radeon_icd.json";
   };
 
