@@ -4,43 +4,59 @@
     enable = true;
     defaultEditor = true;
 
-    # Editor settings aus config.toml
+    # ============================================================================
+    # EDITOR SETTINGS
+    # ============================================================================
     settings = {
       theme = lib.mkForce "ocean-coral";
 
       editor = {
+        # ────────────────────────────────────────────────────────────────────────
+        # System Integration
+        # ────────────────────────────────────────────────────────────────────────
         clipboard-provider = "wayland";
+
+        # ────────────────────────────────────────────────────────────────────────
+        # Visual Settings
+        # ────────────────────────────────────────────────────────────────────────
         line-number = "relative";
         cursorline = true;
         rulers = [
-          120
-          200
+          120  # Primary ruler for most code
+          200  # Secondary ruler for max line length
         ];
-        auto-save = true;
-        idle-timeout = 50;
-        completion-trigger-len = 1;
         bufferline = "always";
         color-modes = true;
+        scroll-lines = 3;
+        scrolloff = 5;
 
         cursor-shape = {
           insert = "bar";
           normal = "block";
         };
 
-        auto-completion = true;
-        auto-format = true;
-        auto-pairs = true;
-        scroll-lines = 3;
-        scrolloff = 5;
-
-        end-of-line-diagnostics = "hint";
-
+        # ────────────────────────────────────────────────────────────────────────
+        # Indent Guides
+        # ────────────────────────────────────────────────────────────────────────
         indent-guides = {
           render = true;
           character = "│";
           skip-levels = 1;
         };
 
+        # ────────────────────────────────────────────────────────────────────────
+        # Editor Behavior
+        # ────────────────────────────────────────────────────────────────────────
+        auto-save = true;
+        idle-timeout = 50;
+        auto-completion = true;
+        completion-trigger-len = 1;
+        auto-format = true;
+        auto-pairs = true;
+
+        # ────────────────────────────────────────────────────────────────────────
+        # LSP Configuration
+        # ────────────────────────────────────────────────────────────────────────
         lsp = {
           display-messages = true;
           display-inlay-hints = true;
@@ -49,11 +65,19 @@
           snippets = true;
         };
 
+        # ────────────────────────────────────────────────────────────────────────
+        # Diagnostics Display
+        # ────────────────────────────────────────────────────────────────────────
+        end-of-line-diagnostics = "hint";
+
         inline-diagnostics = {
           cursor-line = "error";
           other-lines = "disable";
         };
 
+        # ────────────────────────────────────────────────────────────────────────
+        # Status Line Configuration
+        # ────────────────────────────────────────────────────────────────────────
         statusline = {
           left = [
             "mode"
@@ -75,16 +99,22 @@
           separator = "│";
         };
 
+        # ────────────────────────────────────────────────────────────────────────
+        # File Picker Settings
+        # ────────────────────────────────────────────────────────────────────────
         file-picker = {
           hidden = true;
           parents = true;
           ignore = true;
-          git-ignore = true;
+          git-ignore = false;
           git-global = true;
           git-exclude = true;
           max-depth = 10;
         };
 
+        # ────────────────────────────────────────────────────────────────────────
+        # Gutter Configuration
+        # ────────────────────────────────────────────────────────────────────────
         gutters = {
           layout = [
             "diff"
@@ -93,28 +123,65 @@
             "spacer"
           ];
         };
-
       };
     };
 
-    # Key bindings
+    # ============================================================================
+    # KEY BINDINGS
+    # ============================================================================
     extraConfig = ''
+      # ──────────────────────────────────────────────────────────────────────────
+      # Normal Mode Keybindings
+      # ──────────────────────────────────────────────────────────────────────────
       [keys.normal]
+      # ESC behaviour: collapse selection and keep primary
       esc = ["collapse_selection", "keep_primary_selection"]
+      
+      # Window navigation: Quick switching between splits
+      C-h = "jump_view_left"    # Ctrl+h: Move to left window
+      C-j = "jump_view_down"    # Ctrl+j: Move to window below
+      C-k = "jump_view_up"      # Ctrl+k: Move to window above
+      C-l = "jump_view_right"   # Ctrl+l: Move to right window
+      
+      # Register behavior: Delete without overwriting yank register
+      # Helix Selection-First: Erst selektieren (w, miw, x, etc), dann Action
+      d = "delete_selection_noyank"  # d: Löscht OHNE zu yanken (Problem gelöst!)
+      C-x = ["yank_main_selection_to_clipboard", "delete_selection"]  # Ctrl+x: Explizites Cut
+      
+      # Buffer/Tab navigation
+      H = "goto_previous_buffer"  # Shift+h: Previous buffer
+      L = "goto_next_buffer"      # Shift+l: Next buffer
+
+      # ──────────────────────────────────────────────────────────────────────────
+      # Insert Mode Keybindings
+      # ──────────────────────────────────────────────────────────────────────────
+      [keys.insert]
+      # Quick escape alternatives
+      j.k = "normal_mode"  # Type 'jk' quickly to exit insert mode
+      
+      # ──────────────────────────────────────────────────────────────────────────
+      # Select Mode Keybindings
+      # ──────────────────────────────────────────────────────────────────────────
+      [keys.select]
+      # Same delete behavior in select mode
+      d = "delete_selection_noyank"
+      C-x = ["yank_main_selection_to_clipboard", "delete_selection"]
     '';
 
-    # Language configuration - korrigierte Syntax
+    # ============================================================================
+    # LANGUAGE CONFIGURATIONS
+    # ============================================================================
     languages = {
-      # Language server definitions
+      # ──────────────────────────────────────────────────────────────────────────
+      # Language Server Definitions
+      # ──────────────────────────────────────────────────────────────────────────
       language-server = {
-        # Rust language server
+        # Rust Language Server (rust-analyzer)
         rust-analyzer = {
           command = "rust-analyzer";
           config = {
-            # Enable clippy linting
             check.command = "clippy";
 
-            # Inlay hints configuration
             inlayHints = {
               bindingModeHints.enable = false;
               closingBraceHints.minLines = 10;
@@ -124,34 +191,27 @@
               typeHints.hideClosureInitialization = false;
             };
 
-            # File watcher configuration
             files.watcher = "server";
-
-            # Cargo features
             cargo.features = "all";
           };
         };
 
-        # Python - using pyright (Microsoft's LSP, recommended 2024/2025)
-        pyright = {
-          command = "pyright-langserver";
-          args = [ "--stdio" ];
+        # Python - Ruff LSP (2024/2025 empfohlen, alles-in-einem)
+        ruff = {
+          command = "ruff";
+          args = [ "server" ];
           config = {
-            python.analysis = {
-              typeCheckingMode = "basic";
-              autoSearchPaths = true;
-              useLibraryCodeForTypes = true;
+            settings = {
+              # Ruff configuration
+              lineLength = 88;
+              lint = {
+                select = [ "E" "F" "I" ];  # Enable specific rule categories
+              };
             };
           };
         };
 
-        # Ruff LSP for fast Python linting and formatting
-        ruff = {
-          command = "ruff";
-          args = [ "server" ];
-        };
-
-        # C++ language server
+        # C/C++ Language Server (clangd)
         clangd = {
           command = "clangd";
           args = [
@@ -165,17 +225,37 @@
           };
         };
 
-        # Nix language server - using nixd (2024/2025 recommended)
+        # Nix Language Server (nixd - 2024/2025 empfohlen)
         nixd = {
           command = "nixd";
         };
 
-        # Alternative Nix LSP (stable option)
-        nil = {
-          command = "nil";
+        # CUE Language Server
+        cue-lsp = {
+          command = "cue";
+          args = [ "lsp" ];
+        };
+
+        # Additional Language Servers
+        marksman = {
+          command = "marksman";
+          args = [ "server" ];
+        };
+
+        yaml-language-server = {
+          command = "yaml-language-server";
+          args = [ "--stdio" ];
+        };
+
+        taplo = {
+          command = "taplo";
+          args = [ "lsp" "stdio" ];
         };
       };
 
+      # ──────────────────────────────────────────────────────────────────────────
+      # Debugger Configuration
+      # ──────────────────────────────────────────────────────────────────────────
       debugger = [
         {
           name = "lldb-dap";
@@ -208,16 +288,15 @@
         }
       ];
 
-      # Language configurations
+      # ──────────────────────────────────────────────────────────────────────────
+      # Language-Specific Settings
+      # ──────────────────────────────────────────────────────────────────────────
       language = [
-        # Python configuration with modern tooling
+        # Python - Modern setup with Ruff only
         {
           name = "python";
           auto-format = true;
-          language-servers = [
-            "pyright"
-            "ruff"
-          ];
+          language-servers = [ "ruff" ];  # Nur Ruff für Linting + Formatting
           formatter = {
             command = "ruff";
             args = [
@@ -232,13 +311,14 @@
           rulers = [ 88 ];
         }
 
+        # Rust
         {
           name = "rust";
           auto-format = true;
           language-servers = [ "rust-analyzer" ];
         }
 
-        # C++ - same debugger reference
+        # C++
         {
           name = "cpp";
           auto-format = true;
@@ -249,7 +329,7 @@
           };
         }
 
-        # C configuration (same as C++)
+        # C
         {
           name = "c";
           auto-format = true;
@@ -264,20 +344,31 @@
           };
         }
 
-        # Nix configuration
+        # Nix
         {
           name = "nix";
           auto-format = true;
-          language-servers = [ "nil" ]; # Change to "nil" if preferred
+          language-servers = [ "nixd" ];
           formatter = {
-            command = "nixfmt"; # Use "alejandra" as alternative
+            command = "nixfmt";
           };
         }
 
-        # Nu shell configuration (limited LSP support)
+        # CUE Configuration Language
+        {
+          name = "cue";
+          auto-format = true;
+          language-servers = [ "cue-lsp" ];
+          formatter = {
+            command = "cue";
+            args = [ "fmt" "-" ];
+          };
+        }
+
+        # Nu Shell
         {
           name = "nu";
-          auto-format = false; # No stable formatter yet
+          auto-format = true; 
           comment-token = "#";
           file-types = [ "nu" ];
           roots = [ ];
@@ -285,19 +376,21 @@
           shebangs = [ "nu" ];
         }
 
-        # Additional language configurations
+        # Markdown
         {
           name = "markdown";
           auto-format = true;
           language-servers = [ "marksman" ];
         }
 
+        # YAML
         {
           name = "yaml";
           auto-format = true;
           language-servers = [ "yaml-language-server" ];
         }
 
+        # TOML
         {
           name = "toml";
           auto-format = true;
@@ -305,6 +398,10 @@
         }
       ];
     };
+
+    # ============================================================================
+    # THEME CONFIGURATION
+    # ============================================================================
     themes = {
       ocean-coral = builtins.fromTOML (builtins.readFile ./helix-themes/ocean-coral.toml);
     };

@@ -78,7 +78,6 @@ in
     videos = "$HOME/r/videos";
     music = "$HOME/r/music";
     templates = "$HOME/r/templates";
-    # weitere XDG-Dirs nach Bedarf
   };
 
   xdg.mimeApps = {
@@ -106,34 +105,9 @@ in
     ];
   };
 
-  programs.keepassxc = {
-    enable = true;
-    settings = {
-      General.SingleInstance = true;
-      General.MinimizeAfterUnlock = false;
-
-      GUI = {
-        LaunchAtStartup = true;
-        ShowTrayIcon = true;
-        ApplicationTheme = "dark";
-      };
-      Browser.Enabled = false;
-      SSHAgent = {
-        Enabled = false;
-      };
-      FdoSecrets = {
-        Enabled = false;
-        ConfirmAccessItem = false;
-        ConfirmDeletItem = false;
-        UnlockBeforeSearch = false;
-      };
-    };
-  };
-
+  
   # Enable home-manager and git
   programs.home-manager.enable = true;
-
-  programs.zen-browser.enable = true;
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
