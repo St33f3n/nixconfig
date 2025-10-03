@@ -71,7 +71,7 @@ in
   misc.enable = true;
   virt.enable = true;
   virt.container.enable = true;
-  virt.quemu.enable = true;
+  virt.quemu.enable = false;
   creative.enable = true;
   ai.enable = true;
   orchestration.enable = true;

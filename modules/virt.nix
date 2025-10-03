@@ -18,12 +18,6 @@ with lib;
     quemu = {
       enable = mkEnableOption "KVM/QEMU virtualization with virt-manager";
     };
-    nixpkgs.config.packageOverrides = pkgs: {
-      qemu_full = pkgs.qemu_full.override {
-        python3 = pkgs.python312;
-      };
-    };
-
   };
 
   config = mkIf config.virt.enable (mkMerge [
