@@ -1,6 +1,11 @@
 # shell.nix - Terminal & CLI Tools
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 

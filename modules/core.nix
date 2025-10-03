@@ -1,6 +1,11 @@
 # core.nix - Basis-System, das auf jeder Maschine läuft
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 

@@ -1,6 +1,11 @@
 # creative.nix - Creative Tools
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 

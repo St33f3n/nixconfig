@@ -1,6 +1,11 @@
 # security.nix - Security & Privacy
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -32,11 +37,11 @@ with lib;
       zip
     ];
 
-      # SSH Konfiguration
-  services.openssh.settings = {
-    PasswordAuthentication = true;
-    KbdInteractiveAuthentication = false;
-  };
+    # SSH Konfiguration
+    services.openssh.settings = {
+      PasswordAuthentication = true;
+      KbdInteractiveAuthentication = false;
+    };
 
   };
 }

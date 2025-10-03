@@ -1,6 +1,11 @@
 # ai.nix - AI and Machine Learning Tools
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 

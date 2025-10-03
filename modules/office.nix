@@ -1,6 +1,11 @@
 # office.nix - Office & Productivity
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 

@@ -1,6 +1,11 @@
 # font.nix - Fonts
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -11,25 +16,25 @@ with lib;
 
   config = mkIf config.misc.enable {
 
-  # ============================================================================
-  # SCHRIFTARTEN
-  # ============================================================================
-  
-  fonts = {
-    fontDir.enable = true;
-    enableDefaultPackages = true;
-    packages = with pkgs; [
-      dejavu_fonts
-      liberation_ttf
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-    ];
-  };
+    # ============================================================================
+    # SCHRIFTARTEN
+    # ============================================================================
 
-  # HarmonyOS Fonts deaktivieren
-  nixpkgs.config.packageOverrides = pkgs: {
-    ttf-harmonyos-sans = pkgs.emptyDirectory;
-  };
+    fonts = {
+      fontDir.enable = true;
+      enableDefaultPackages = true;
+      packages = with pkgs; [
+        dejavu_fonts
+        liberation_ttf
+        noto-fonts
+        noto-fonts-cjk-sans
+        noto-fonts-emoji
+      ];
+    };
+
+    # HarmonyOS Fonts deaktivieren
+    nixpkgs.config.packageOverrides = pkgs: {
+      ttf-harmonyos-sans = pkgs.emptyDirectory;
+    };
   };
 }

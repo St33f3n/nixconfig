@@ -10,7 +10,7 @@
     enable = true;
     settings = lib.mkForce {
       terminal.shell = {
-        program = "${pkgs.nushell}/bin/nu";  # Expliziter Pfad
+        program = "${pkgs.nushell}/bin/nu"; # Expliziter Pfad
       };
       window = {
         padding = {
@@ -53,7 +53,7 @@
   # Moderne Nushell Konfiguration
   programs.nushell = {
     enable = true;
-    
+
     # Environment Variablen
     environmentVariables = {
       EDITOR = "hx";
@@ -62,7 +62,7 @@
       '';
       CARAPACE_BRIDGES = "zsh,fish,bash,inshellisense";
     };
-    
+
     # Shell Aliases
     shellAliases = {
       # System Utils
@@ -71,23 +71,23 @@
       wifi = "nmtui";
       disks = "sudo lsblk -fs";
       mntctrl = "sudo hx /etc/fstab";
-      
+
       # Modern tool replacements (eza)
       ls = "eza --icons --git --group-directories-first";
       ll = "eza --icons --git --group-directories-first -l";
       la = "eza --icons --git --group-directories-first -la";
       tree = "eza --icons --git --tree";
-      
+
       # Yazi shortcut (zusätzlich zum shell wrapper)
       lf = "yazi";
     };
-    
+
     # Moderne Settings Struktur
     settings = {
       # Banner & Editor
       show_banner = false;
       buffer_editor = "hx";
-      
+
       # History (kompatibel mit Atuin)
       history = {
         max_size = 100000;
@@ -95,41 +95,44 @@
         isolation = true;
         sync_on_enter = true;
       };
-      
+
       # LS/Table Darstellung
       ls = {
         use_ls_colors = true;
         clickable_links = true;
       };
-      
+
       table = {
         mode = "rounded";
         index_mode = "auto";
-        padding = { left = 2; right = 2; };
+        padding = {
+          left = 2;
+          right = 2;
+        };
         header_on_separator = false;
         trim = {
           methodology = "wrapping";
           wrapping_try_keep_words = true;
         };
       };
-      
+
       # Error Display
       display_errors = {
         exit_code = false;
         termination_signal = false;
       };
-      
+
       # File Operations
       rm = {
         always_trash = false;
       };
-      
+
       # Datetime Format (deutsches Format)
       datetime_format = {
         normal = "%d.%m.%Y %H:%M";
         table = "%d.%m.%y %H:%M";
       };
-      
+
       # Completions mit Carapace
       completions = {
         case_sensitive = false;
@@ -137,7 +140,7 @@
         partial = true;
         algorithm = "fuzzy";
         use_ls_colors = true;
-        
+
         external = {
           enable = true;
           max_results = 100;
@@ -163,7 +166,7 @@
           '';
         };
       };
-      
+
       # Hooks
       hooks = {
         pre_prompt = lib.hm.nushell.mkNushellInline ''
@@ -174,7 +177,7 @@
             }
           }
         '';
-        
+
         env_change = {
           PWD = lib.hm.nushell.mkNushellInline ''
             [{|before, after|
@@ -186,17 +189,24 @@
           '';
         };
       };
-      
+
       # Keybindings für bessere Navigation
       keybindings = [
         {
           name = "completion_menu";
           modifier = "none";
           keycode = "tab";
-          mode = ["emacs" "vi_normal" "vi_insert"];
+          mode = [
+            "emacs"
+            "vi_normal"
+            "vi_insert"
+          ];
           event = {
             until = [
-              { send = "menu"; name = "completion_menu"; }
+              {
+                send = "menu";
+                name = "completion_menu";
+              }
               { send = "menunext"; }
               { edit = "complete"; }
             ];
@@ -206,19 +216,32 @@
           name = "completion_previous";
           modifier = "shift";
           keycode = "backtab";
-          mode = ["emacs" "vi_normal" "vi_insert"];
-          event = { send = "menuprevious"; };
+          mode = [
+            "emacs"
+            "vi_normal"
+            "vi_insert"
+          ];
+          event = {
+            send = "menuprevious";
+          };
         }
         # Atuin integration (Ctrl+R für History)
         {
           name = "atuin_history";
           modifier = "control";
           keycode = "char_r";
-          mode = ["emacs" "vi_normal" "vi_insert"];
-          event = { send = "executehostcommand"; cmd = "atuin search -i"; };
+          mode = [
+            "emacs"
+            "vi_normal"
+            "vi_insert"
+          ];
+          event = {
+            send = "executehostcommand";
+            cmd = "atuin search -i";
+          };
         }
       ];
-      
+
       # Menu Konfiguration
       menus = [
         {
@@ -239,24 +262,24 @@
         }
       ];
     };
-    
+
     # Extra Environment
     extraEnv = ''
       # Starship Setup (automatisch durch enableNushellIntegration)
       # Die Integration wird bereits durch programs.starship.enableNushellIntegration gehandhabt
-      
+
       # Path Setup
       $env.PATH = ($env.PATH | split row (char esep) | append $"($env.HOME)/.local/bin")
-      
+
       # Pager Setup
       $env.PAGER = "less -R"
-      
+
       # Man Pages mit Farben (wenn bat installiert)
       if (which bat | is-not-empty) {
         $env.MANPAGER = "sh -c 'col -bx | bat -l man -p'"
       }
     '';
-    
+
     # Extra Config
     extraConfig = ''
       # Custom Functions
@@ -264,20 +287,20 @@
         mkdir $dir
         cd $dir
       }
-      
+
       # Pueue shortcuts
       def ps [] { pueue status }
       def pa [...args] { pueue add ...$args }
       def pr [] { pueue restart }
       def pc [] { pueue clean }
-      
+
       # Git shortcuts als Funktionen
       def gst [] { git status }
       def gco [branch: string] { git checkout $branch }
       def gcm [message: string] { git commit -m $message }
       def gp [] { git push }
       def gpl [] { git pull }
-      
+
       # FZF Integration
       if (which fzf | is-not-empty) {
         # Fuzzy file finder mit Preview
@@ -302,7 +325,7 @@
           }
         }
       }
-      
+
       # Zeige Fastfetch beim Start (nur in interaktiven Sessions)
       if $nu.is-interactive and $env.TERM? != "dumb" {
         fastfetch
@@ -332,16 +355,31 @@
       max_preview_height = 4;
       keymap_mode = "auto";
       enter_accept = true;
-      
+
       # UI-Einstellungen
       show_help = true;
       show_tabs = true;
-      
-      # Stats-Optimierungen  
-      common_prefix = [ "sudo" "bundle exec" "docker" "docker-compose" "git" ];
+
+      # Stats-Optimierungen
+      common_prefix = [
+        "sudo"
+        "bundle exec"
+        "docker"
+        "docker-compose"
+        "git"
+      ];
       common_subcommands = [
-        "cargo" "git" "npm" "yarn" "docker" "kubectl" "systemctl"
-        "sudo" "nix" "nixos-rebuild" "home-manager"
+        "cargo"
+        "git"
+        "npm"
+        "yarn"
+        "docker"
+        "kubectl"
+        "systemctl"
+        "sudo"
+        "nix"
+        "nixos-rebuild"
+        "home-manager"
       ];
     };
   };
@@ -371,7 +409,8 @@
     enableNushellIntegration = true;
     shellWrapperName = "y";
     settings = {
-      manager = {  # Korrigiert von 'mgr'
+      manager = {
+        # Korrigiert von 'mgr'
         show_hidden = true;
         sort_by = "natural";
         sort_dir_first = true;
@@ -388,13 +427,21 @@
         image_filter = "lanczos3";
         image_quality = 90;
       };
-      
+
       opener = {
         edit = [
-          { run = "hx \"$@\""; block = true; desc = "helix"; }
+          {
+            run = "hx \"$@\"";
+            block = true;
+            desc = "helix";
+          }
         ];
         play = [
-          { run = "mpv \"$@\""; orphan = true; desc = "mpv"; }
+          {
+            run = "mpv \"$@\"";
+            orphan = true;
+            desc = "mpv";
+          }
         ];
       };
     };
@@ -418,13 +465,13 @@
   programs.direnv = {
     enable = true;
     enableNushellIntegration = true;
-    
+
     # Nix-direnv für bessere Nix-Shell Performance
     nix-direnv.enable = true;
-    
+
     # Optional: Stille Modus (weniger Output)
     # silent = true;
-    
+
     # Optional: Custom Config
     config = {
       # Whitelist für spezifische Directories
@@ -432,14 +479,14 @@
         "$HOME/projects"
         "$HOME/dev"
       ];
-      
+
       # Performance Einstellungen
       global = {
         warn_timeout = "30s";
         hide_env_diff = false;
       };
     };
-    
+
     # Custom stdlib Erweiterungen
     stdlib = ''
       # Layout für Rust/Cargo Projekte
@@ -468,7 +515,7 @@
           cargo watch -x "$@"
         }
       }
-      
+
       # Layout für Python mit uv (modern & schnell)
       layout_uv() {
         if [[ ! -f pyproject.toml ]] && [[ ! -f requirements.txt ]]; then
@@ -501,7 +548,7 @@
           uv sync
         fi
       }
-      
+
       # Layout für C++ Projekte
       layout_cpp() {
         # CMake Projekt
@@ -555,7 +602,7 @@
           fi
         fi
       }
-      
+
       # Layout für Meson Projekte (C/C++/Rust)
       layout_meson() {
         if [[ ! -f meson.build ]]; then
@@ -573,7 +620,7 @@
         PATH_add "$BUILD_DIR"
         export MESON_BUILD_DIR="$BUILD_DIR"
       }
-      
+
       # Universal layout detector
       use_auto() {
         if [[ -f Cargo.toml ]]; then
@@ -608,7 +655,7 @@
           exit 1
         fi
       }
-      
+
       # Layout für Poetry Projekte (behalten für Kompatibilität)
       layout_poetry() {
         if [[ ! -f pyproject.toml ]]; then
@@ -623,7 +670,7 @@
           PATH_add "$VENV/bin"
         fi
       }
-      
+
       # Layout für Node Projekte mit pnpm
       layout_pnpm() {
         if [[ -f pnpm-lock.yaml ]]; then
@@ -633,7 +680,7 @@
       }
     '';
   };
-  
+
   # Pueue Task Manager
   services.pueue = {
     enable = true;

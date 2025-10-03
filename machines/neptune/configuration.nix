@@ -22,15 +22,15 @@ in
   # ============================================================================
   # IMPORTS - Module und Hardware-Konfiguration
   # ============================================================================
-  
+
   imports = [
     # Secrets Management
     inputs.sops-nix.nixosModules.sops
-    
+
     # Machine-specific
     ./stylix.nix
     ./hardware-configuration.nix
-    
+
     # Feature Modules
     ../../modules/core.nix
     ../../modules/desktop.nix
@@ -49,7 +49,7 @@ in
   # ============================================================================
   # SECRETS MANAGEMENT (SOPS)
   # ============================================================================
-  
+
   sops.defaultSopsFile = ./secrets/secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/biocirc/.config/sops/age/keys.txt";
@@ -61,7 +61,7 @@ in
   # ============================================================================
   # MODULE AKTIVIERUNG
   # ============================================================================
-  
+
   core.enable = true;
   desktop.enable = true;
   shell.enable = true;
@@ -80,11 +80,11 @@ in
   # ============================================================================
   # BOOT KONFIGURATION
   # ============================================================================
-  
+
   boot.loader.grub = {
     enable = true;
     device = "/dev/nvme0n1";
-    useOSProber = true;  # Dual-Boot Support
+    useOSProber = true; # Dual-Boot Support
   };
 
   # GPU Kernel Module (Dual-GPU Setup)
@@ -99,11 +99,14 @@ in
   # ============================================================================
   # NETZWERK KONFIGURATION
   # ============================================================================
-  
+
   networking.hostName = "neptune";
 
   # Video Treiber für beide GPUs
-  services.xserver.videoDrivers = [ "nvidia" "amdgpu" ];
+  services.xserver.videoDrivers = [
+    "nvidia"
+    "amdgpu"
+  ];
 
   # Statische IP-Konfiguration für lokales Netzwerk
   networking.networkmanager = {
@@ -127,23 +130,23 @@ in
   # Firewall-Regeln
   networking.firewall = {
     allowedTCPPorts = [
-      22    # SSH
-      80    # HTTP
-      443   # HTTPS
+      22 # SSH
+      80 # HTTP
+      443 # HTTPS
       53317 # LocalSend
     ];
     allowedUDPPorts = [
       53317 # LocalSend
-      22    # SSH
+      22 # SSH
     ];
   };
 
   # ============================================================================
   # LOKALISIERUNG
   # ============================================================================
-  
+
   time.timeZone = "Europe/Berlin";
-  
+
   i18n.defaultLocale = "de_DE.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "de_DE.UTF-8";
@@ -156,13 +159,13 @@ in
     LC_TELEPHONE = "de_DE.UTF-8";
     LC_TIME = "de_DE.UTF-8";
   };
-  
+
   console.keyMap = "de";
 
   # ============================================================================
   # DESKTOP ENVIRONMENT - Hyprland Spezifisch
   # ============================================================================
-  
+
   # Hyprland aus Flake Input
   programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
 
@@ -173,7 +176,6 @@ in
     ROCR_VISIBLE_DEVICES = 0;
     HIP_VISIBLE_DEVICES = 0;
     HSA_OVERRIDE_GFX_VERSION = "11.0.1";
-    
 
   };
 
@@ -186,7 +188,7 @@ in
   # ============================================================================
   # HARDWARE KONFIGURATION - Dual GPU Setup
   # ============================================================================
-  
+
   hardware = {
     # Graphics/OpenGL Support
     graphics = {
@@ -198,7 +200,7 @@ in
         amdvlk
         rocmPackages.clr.icd
         rocmPackages.rocm-runtime
-        
+
         # NVIDIA RTX 3070 Ti Treiber
         nvidia-vaapi-driver
         libvdpau-va-gl
@@ -207,12 +209,12 @@ in
 
     # NVIDIA Container Support für AI/ML Workloads
     nvidia-container-toolkit.enable = true;
-    
+
     # NVIDIA GPU Konfiguration
     nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = false;  # Nicht nötig für Desktop
-      open = false;  # Proprietäre Treiber für RTX 3070 Ti
+      powerManagement.enable = false; # Nicht nötig für Desktop
+      open = false; # Proprietäre Treiber für RTX 3070 Ti
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
@@ -239,19 +241,19 @@ in
   # ============================================================================
   # BENUTZER KONFIGURATION
   # ============================================================================
-  
+
   users.users.biocirc = {
     isNormalUser = true;
     description = "Stefan Simmeth";
     extraGroups = [
-      "dialout"      # Serielle Geräte
-      "plugdev"      # USB-Geräte
-      "input"        # Input-Geräte
-      "render"       # GPU-Zugriff
-      "video"        # Video-Geräte
-      "tty"          # TTY-Zugriff
+      "dialout" # Serielle Geräte
+      "plugdev" # USB-Geräte
+      "input" # Input-Geräte
+      "render" # GPU-Zugriff
+      "video" # Video-Geräte
+      "tty" # TTY-Zugriff
       "networkmanager"
-      "wheel"        # sudo
+      "wheel" # sudo
       "docker"
       "podman"
     ];
@@ -273,16 +275,19 @@ in
   # ============================================================================
   # NIX KONFIGURATION
   # ============================================================================
-  
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-  
+
   nixpkgs.config.allowUnfree = true;
 
   # ============================================================================
   # SYSTEM PROGRAMME & DIENSTE
   # ============================================================================
-  
+
   # Browser
   programs.firefox.enable = true;
 
@@ -306,13 +311,10 @@ in
   services.dbus.packages = with pkgs; [ dconf ];
   programs.dconf.enable = true;
 
-
-
-  
   # ============================================================================
   # HARDWARE-SPEZIFISCHE UDEV REGELN
   # ============================================================================
-  
+
   services.udev.packages = with pkgs; [ via ];
 
   services.udev.extraRules = ''
@@ -325,7 +327,7 @@ in
     # Arduino Support
     SUBSYSTEM=="usb", ATTR{idVendor}=="2341", ATTR{idProduct}=="0043", MODE="0666", GROUP="dialout"
     SUBSYSTEM=="usb", ATTR{idVendor}=="2341", ATTR{idProduct}=="8036", MODE="0666", GROUP="dialout"
-    
+
     # PCR USB Disk ignorieren
     SUBSYSTEM=="block", ENV{ID_FS_LABEL}=="PCRUDISK", ENV{UDISKS_IGNORE}="1"
   '';
@@ -333,7 +335,7 @@ in
   # ============================================================================
   # CONTAINER SERVICES (Podman Compose)
   # ============================================================================
-  
+
   # Windmill Workflow Engine
   systemd.services.windmill-compose = {
     wantedBy = [ "multi-user.target" ];
@@ -383,7 +385,7 @@ in
   # ============================================================================
   # SYSTEM VERSION
   # ============================================================================
-  
+
   # NixOS Release Version - NICHT ÄNDERN nach der ersten Installation!
   system.stateVersion = "24.05";
 }

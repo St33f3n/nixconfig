@@ -37,25 +37,25 @@
         position x=0 y=0
         scale 1.066
     }
-    
+
     output "Ancor Communications Inc VE228 C7LMQS030933" {
         position x=-1980 y=0
         scale 1.0
     }
-    
+
     output "PNP(AOC) U2868 0x00000656" {
         mode "3840x2160@60"
         position x=4178 y=-500
         scale 2.0
         transform "90"
     }
-    
+
     output "eDP-1" {
         mode "2560x1600@60"
         position x=0 y=0
         scale 1.0
     }
-    
+
     output "Virtual-1" {
         mode "1920x1080@60"
         position x=0 y=0
@@ -111,41 +111,41 @@
         open-on-workspace "1"
         default-column-width { proportion 0.8; }
     }
-    
+
     window-rule {
         match app-id="org.keepassxc.KeePassXC"
         open-on-workspace "2"
         default-column-width { proportion 0.6; }
     }
-    
+
     window-rule {
         match app-id="vesktop"
         open-on-workspace "3"
         default-column-width { proportion 0.7; }
     }
-    
+
     window-rule {
         match app-id="Spotify"
         open-on-workspace "6"
         default-column-width { proportion 0.8; }
     }
-    
+
     window-rule {
         match app-id="nextcloud"
         open-on-workspace "7"
         default-column-width { proportion 0.6; }
     }
-    
+
     window-rule {
         match title="Picture-in-Picture"
         default-column-width { fixed 400; }
     }
-    
+
     window-rule {
         match app-id="org.pulseaudio.pavucontrol"
         default-column-width { fixed 500; }
     }
-    
+
     window-rule {
         match app-id="blueman-manager"
         default-column-width { fixed 600; }
@@ -239,7 +239,7 @@
     }
 
     screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
-    
+
     cursor {
         xcursor-theme "Qogir-Dark"
         xcursor-size 24
@@ -252,7 +252,7 @@
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
     WAYLAND_DISPLAY = "wayland-0";
-    
+
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
     MOZ_ENABLE_WAYLAND = "1";
     QT_QPA_PLATFORM = "wayland;xcb";
@@ -260,7 +260,7 @@
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
     GDK_SCALE = "1";
-    
+
     XCURSOR_THEME = "Qogir-Dark";
     XCURSOR_SIZE = "24";
   };

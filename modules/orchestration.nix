@@ -1,6 +1,11 @@
 # orchestration.nix - Network Tools & Infrastructure Management
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
