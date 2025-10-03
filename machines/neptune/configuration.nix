@@ -1,27 +1,43 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# ============================================================================
+# Neptune Workstation Configuration
+# ============================================================================
+# High-performance development workstation with dual GPU setup:
+# - AMD RX 7700 XT (primary display/compute)
+# - NVIDIA RTX 3070 Ti (CUDA/AI workloads)
+# ============================================================================
+
 {
   config,
   pkgs,
   inputs,
   ...
 }:
-let
-  ip_address = "192.168.2.56";
 
+let
+  # Netzwerk-Konfiguration
+  ip_address = "192.168.2.56";
 in
+
 {
+  # ============================================================================
+  # IMPORTS - Module und Hardware-Konfiguration
+  # ============================================================================
+  
   imports = [
-    # Include the results of the hardware scan.
+    # Secrets Management
     inputs.sops-nix.nixosModules.sops
+    
+    # Machine-specific
     ./stylix.nix
     ./hardware-configuration.nix
+    
+    # Feature Modules
     ../../modules/core.nix
     ../../modules/desktop.nix
     ../../modules/shell.nix
     ../../modules/dev.nix
     ../../modules/office.nix
+    ../../modules/font.nix
     ../../modules/orchestration.nix
     ../../modules/security.nix
     ../../modules/misc.nix
@@ -30,6 +46,10 @@ in
     ../../modules/ai.nix
   ];
 
+  # ============================================================================
+  # SECRETS MANAGEMENT (SOPS)
+  # ============================================================================
+  
   sops.defaultSopsFile = ./secrets/secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/biocirc/.config/sops/age/keys.txt";
@@ -38,6 +58,10 @@ in
     owner = config.users.users.biocirc.name;
   };
 
+  # ============================================================================
+  # MODULE AKTIVIERUNG
+  # ============================================================================
+  
   core.enable = true;
   desktop.enable = true;
   shell.enable = true;
@@ -46,17 +70,23 @@ in
   misc.enable = true;
   virt.enable = true;
   virt.container.enable = true;
-  virt.quemu.enable = false;
+  virt.quemu.enable = true;
   creative.enable = true;
   ai.enable = true;
   orchestration.enable = true;
-  security.enable = true; 
+  security.enable = true;
 
-  # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/nvme0n1";
-  boot.loader.grub.useOSProber = true;
+  # ============================================================================
+  # BOOT KONFIGURATION
+  # ============================================================================
+  
+  boot.loader.grub = {
+    enable = true;
+    device = "/dev/nvme0n1";
+    useOSProber = true;  # Dual-Boot Support
+  };
 
+  # GPU Kernel Module (Dual-GPU Setup)
   boot.kernelModules = [
     "nvidia"
     "nvidia_modeset"
@@ -64,15 +94,17 @@ in
     "nvidia_drm"
     "amdgpu"
   ];
-  services.xserver.videoDrivers = [
-    "nvidia"
-    "amdgpu"
-  ];
 
-  networking.hostName = "neptune"; # Define your hostname.
-  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  #
+  # ============================================================================
+  # NETZWERK KONFIGURATION
+  # ============================================================================
+  
+  networking.hostName = "neptune";
 
+  # Video Treiber für beide GPUs
+  services.xserver.videoDrivers = [ "nvidia" "amdgpu" ];
+
+  # Statische IP-Konfiguration für lokales Netzwerk
   networking.networkmanager = {
     ensureProfiles.profiles = {
       "usb-ethernet" = {
@@ -91,25 +123,27 @@ in
     };
   };
 
+  # Firewall-Regeln
   networking.firewall = {
     allowedTCPPorts = [
-      22
-      80
-      443
-      53317
+      22    # SSH
+      80    # HTTP
+      443   # HTTPS
+      53317 # LocalSend
     ];
     allowedUDPPorts = [
-      53317
-      22
+      53317 # LocalSend
+      22    # SSH
     ];
   };
 
-  # Set your time zone.
+  # ============================================================================
+  # LOKALISIERUNG
+  # ============================================================================
+  
   time.timeZone = "Europe/Berlin";
-
-  # Select internationalisation properties.
+  
   i18n.defaultLocale = "de_DE.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "de_DE.UTF-8";
     LC_IDENTIFICATION = "de_DE.UTF-8";
@@ -121,58 +155,72 @@ in
     LC_TELEPHONE = "de_DE.UTF-8";
     LC_TIME = "de_DE.UTF-8";
   };
-
-  #Hyprland
-  programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
-
-  environment = {
-    sessionVariables = {
-      XDG_RUNTIME_DIR = "/run/user/$UID";
-      GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
-      ROCR_VISIBLE_DEVICES = 0;
-      HIP_VISIBLE_DEVICES = 0;
-      HSA_OVERRIDE_GFX_VERSION = "11.0.1";
-      WLR_NO_HARDWARE_CURSORS = "1";
-      NIXOS_OZONE_WL = "1";
-      COLORSCHEME = builtins.toJSON config.stylix.base16Scheme;
-    };
-  };
-  stylix.enable = true;
-
-  home-manager.backupFileExtension = "../backup";
-
-  # Configure console keymap
+  
   console.keyMap = "de";
 
+  # ============================================================================
+  # DESKTOP ENVIRONMENT - Hyprland Spezifisch
+  # ============================================================================
+  
+  # Hyprland aus Flake Input
+  programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+
+  # Umgebungsvariablen für Wayland/Hyprland
+
+  environment.sessionVariables = {
+    # AMD GPU Konfiguration
+    ROCR_VISIBLE_DEVICES = 0;
+    HIP_VISIBLE_DEVICES = 0;
+    HSA_OVERRIDE_GFX_VERSION = "11.0.1";
+    
+
+  };
+
+  # Stylix Theming System
+  stylix.enable = true;
+
+  # Home-Manager Backup-Konfiguration
+  home-manager.backupFileExtension = "../backup";
+
+  # ============================================================================
+  # HARDWARE KONFIGURATION - Dual GPU Setup
+  # ============================================================================
+  
   hardware = {
+    # Graphics/OpenGL Support
     graphics = {
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        # AMD RX 7700 XT drivers
+        # AMD RX 7700 XT Treiber
         mesa
         amdvlk
         rocmPackages.clr.icd
-
         rocmPackages.rocm-runtime
-        # NVIDIA RTX 3070 Ti drivers
+        
+        # NVIDIA RTX 3070 Ti Treiber
         nvidia-vaapi-driver
         libvdpau-va-gl
       ];
     };
+
+    # NVIDIA Container Support für AI/ML Workloads
     nvidia-container-toolkit.enable = true;
+    
+    # NVIDIA GPU Konfiguration
     nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = false; # Not needed for desktop
-      open = false; # Use proprietary for RTX 3070 Ti
+      powerManagement.enable = false;  # Nicht nötig für Desktop
+      open = false;  # Proprietäre Treiber für RTX 3070 Ti
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
-
     };
 
+    # AMD GPU Konfiguration
     amdgpu.amdvlk.enable = true;
-
   };
+
+  # GPU-spezifische Tools
   environment.systemPackages = with pkgs; [
     nvidia-system-monitor-qt
     orca-slicer
@@ -180,30 +228,35 @@ in
     nvtopPackages.full
   ];
 
-  # Environment for dual GPU setup
+  # Umgebungsvariablen für Dual-GPU Setup
   environment.sessionVariables = {
     __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
     AMD_VULKAN_ICD = "RADV";
     VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.json:/run/opengl-driver/share/vulkan/icd.d/radeon_icd.json";
   };
 
+  # ============================================================================
+  # BENUTZER KONFIGURATION
+  # ============================================================================
+  
   users.users.biocirc = {
     isNormalUser = true;
     description = "Stefan Simmeth";
     extraGroups = [
-      "dialout"
-      "plugdev"
-      "input"
-      "render"
-      "video"
-      "tty"
+      "dialout"      # Serielle Geräte
+      "plugdev"      # USB-Geräte
+      "input"        # Input-Geräte
+      "render"       # GPU-Zugriff
+      "video"        # Video-Geräte
+      "tty"          # TTY-Zugriff
       "networkmanager"
-      "wheel"
+      "wheel"        # sudo
       "docker"
       "podman"
     ];
   };
 
+  # Passwortloses sudo für Hauptbenutzer
   security.sudo.extraRules = [
     {
       users = [ "biocirc" ];
@@ -215,71 +268,72 @@ in
       ];
     }
   ];
-  # Experimental Feature
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-  # Install firefox.
-  programs.firefox.enable = true;
 
-  # Allow unfree packages
+  # ============================================================================
+  # NIX KONFIGURATION
+  # ============================================================================
+  
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+  
   nixpkgs.config.allowUnfree = true;
 
-  programs.appimage.enable = true;
-  programs.appimage.binfmt = true;
+  # ============================================================================
+  # SYSTEM PROGRAMME & DIENSTE
+  # ============================================================================
+  
+  # Browser
+  programs.firefox.enable = true;
 
+  # AppImage Support
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
+
+  # Flatpak Pakete
   services.flatpak = {
     enable = true;
     packages = [
-
       "com.usebottles.bottles"
       "eu.betterbird.Betterbird"
       "org.freecad.FreeCAD"
     ];
   };
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
 
+  # D-Bus & DConf
   services.dbus.packages = with pkgs; [ dconf ];
   programs.dconf.enable = true;
 
-  # Enable the OpenSSH daemon.
-  services.openssh.settings.PasswordAuthentication = true;
-  services.openssh.settings.KbdInteractiveAuthentication = false;
 
-  fonts.fontDir.enable = true;
-  fonts.enableDefaultPackages = true;
 
-  fonts.packages = with pkgs; [
-    dejavu_fonts
-    liberation_ttf
-
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-emoji
-  ];
-  nixpkgs.config.packageOverrides = pkgs: {
-    # HarmonyOS Fonts aus dem System entfernen
-    ttf-harmonyos-sans = pkgs.emptyDirectory;
-  };
-
+  
+  # ============================================================================
+  # HARDWARE-SPEZIFISCHE UDEV REGELN
+  # ============================================================================
+  
   services.udev.packages = with pkgs; [ via ];
 
   services.udev.extraRules = ''
-      # QMK/VIA Keyboard Support
-      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
+    # QMK/VIA Keyboard Support
+    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
 
-      # General HID device access for keyboards
-      SUBSYSTEM=="hidraw", ATTRS{idVendor}=="*", MODE="0666", TAG+="uaccess"
+    # General HID device access for keyboards
+    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="*", MODE="0666", TAG+="uaccess"
 
-
-      SUBSYSTEM=="usb", ATTR{idVendor}=="2341", ATTR{idProduct}=="0043", MODE="0666", GROUP="dialout"
+    # Arduino Support
+    SUBSYSTEM=="usb", ATTR{idVendor}=="2341", ATTR{idProduct}=="0043", MODE="0666", GROUP="dialout"
     SUBSYSTEM=="usb", ATTR{idVendor}=="2341", ATTR{idProduct}=="8036", MODE="0666", GROUP="dialout"
+    
+    # PCR USB Disk ignorieren
     SUBSYSTEM=="block", ENV{ID_FS_LABEL}=="PCRUDISK", ENV{UDISKS_IGNORE}="1"
   '';
 
+  # ============================================================================
+  # CONTAINER SERVICES (Podman Compose)
+  # ============================================================================
+  
+  # Windmill Workflow Engine
   systemd.services.windmill-compose = {
     wantedBy = [ "multi-user.target" ];
     after = [
@@ -302,6 +356,7 @@ in
     };
   };
 
+  # Karakeeper Service
   systemd.services.karakeeper-compose = {
     wantedBy = [ "multi-user.target" ];
     after = [
@@ -323,11 +378,11 @@ in
       ExecStop = "${pkgs.podman-compose}/bin/podman-compose down";
     };
   };
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.05"; # Did you read the comment?
+
+  # ============================================================================
+  # SYSTEM VERSION
+  # ============================================================================
+  
+  # NixOS Release Version - NICHT ÄNDERN nach der ersten Installation!
+  system.stateVersion = "24.05";
 }

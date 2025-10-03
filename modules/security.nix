@@ -31,5 +31,12 @@ with lib;
       vorta
       zip
     ];
+
+      # SSH Konfiguration
+  services.openssh.settings = {
+    PasswordAuthentication = true;
+    KbdInteractiveAuthentication = false;
+  };
+
   };
 }

@@ -90,6 +90,20 @@ with lib;
       theme = "sddm-astronaut-theme";
     };
 
+      # Umgebungsvariablen für Wayland/Hyprland
+    environment.sessionVariables = {
+    XDG_RUNTIME_DIR = "/run/user/$UID";
+    GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
+    
+
+    # Wayland/Hyprland
+    WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
+    
+    # Stylix Theme
+    COLORSCHEME = builtins.toJSON config.stylix.base16Scheme;
+  };
+
     services.xserver.enable = true;
 
     # Compositor Programs
