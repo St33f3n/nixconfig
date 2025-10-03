@@ -67,6 +67,7 @@ in
   shell.enable = true;
   dev.enable = true;
   office.enable = true;
+  fonts-options.enable = true;
   misc.enable = true;
   virt.enable = true;
   virt.container.enable = true;
