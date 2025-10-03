@@ -1,11 +1,6 @@
-# modules/desktop.nix
-{
-  config,
-  lib,
-  pkgs,
-  inputs,
-  ...
-}:
+# desktop.nix - Desktop Environment & UI
+
+{ config, lib, pkgs, inputs, ... }:
 
 with lib;
 
@@ -20,9 +15,12 @@ with lib;
       hyprland
       xwayland
       niri
-      # Display Manager & UI Toolkits
+
+      # Display Manager
       kdePackages.sddm
       (sddm-astronaut.override { embeddedTheme = "astronaut"; })
+
+      # Qt Libraries
       libsForQt5.qt5.qtwayland
       libsForQt5.qt5.qtquickcontrols2
       libsForQt5.qt5.qtgraphicaleffects
@@ -37,10 +35,12 @@ with lib;
       qt6.qtmultimedia
       qt6.qt5compat
       qt6.qttools
+
+      # GTK
       gtk3
       gtk4
 
-      #xdg
+      # XDG Portal
       xdg-desktop-portal-hyprland
       xdg-desktop-portal-gnome
       xdg-desktop-portal-gtk
@@ -55,31 +55,33 @@ with lib;
       cliphist
       wl-clipboard
       wtype
-      ffmpegthumbnailer
       ags
       udiskie
-
       kdePackages.polkit-kde-agent-1
+      (inputs.quickshell.packages.x86_64-linux.default.override {
+        withJemalloc = true;
+        withHyprland = true;
+        withQtSvg = true;
+        withPipewire = true;
+      })
 
+      # Screenshot & Recording
       grim
       slurp
       wf-recorder
       grimblast
 
+      # Fonts
       nerd-fonts.monofur
       nerd-fonts.zed-mono
       nerd-fonts.fira-code
       nerd-fonts.fira-mono
 
-      (inputs.quickshell.packages.x86_64-linux.default.override {
-        withJemalloc = true;
-        withHyprland = true; # Da du Hyprland nutzt
-        withQtSvg = true;
-        withPipewire = true;
-      })
-
+      # Theme
+      qogir-icon-theme
     ];
 
+    # Qt Configuration
     qt.enable = true;
 
     # System Services
@@ -87,9 +89,14 @@ with lib;
       enable = true;
       theme = "sddm-astronaut-theme";
     };
+
     services.xserver.enable = true;
+
+    # Compositor Programs
     programs.hyprland.enable = true;
     programs.niri.enable = true;
+
+    # XDG Portal Configuration
     xdg.portal = {
       enable = true;
       wlr.enable = true;
@@ -105,8 +112,8 @@ with lib;
         "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
         "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
       };
-
     };
+
     # Hardware drivers
     boot.extraModulePackages = [ config.boot.kernelPackages.xpadneo ];
   };

@@ -1,10 +1,6 @@
-# modules/dev.nix
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+# dev.nix - Development Tools
+
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -15,6 +11,10 @@ with lib;
 
   config = mkIf config.dev.enable {
     environment.systemPackages = with pkgs; [
+      # Version Control
+      git
+      lazygit
+
       # Nix Development Tools
       nix-tree
       nix-du
@@ -26,6 +26,7 @@ with lib;
       nix-prefetch-hg
       nix-ld
       nixfmt-rfc-style
+      home-manager
 
       # Language Servers
       nixd
@@ -42,19 +43,32 @@ with lib;
       pyright
       gopls
       bash-language-server
+      ruff
+      cuelsp
 
-      # Programming Language Runtimes & Package Managers
+      # Programming Languages & Runtimes
+      rustup
+      uv
       nodejs_24
       julia-lts
-      uv
       bun
       dart
       alire
+
+      # Development Tools
+      bacon
+      lldb
+      scc
+      cue
+      cuetools
+      docker-credential-helpers
 
       # Development Environments & IDEs
       arduino-ide
       godot
       vscode-fhs
+
+      # Database Administration Tools
       sqlitebrowser
       pgadmin4-desktopmode
 
@@ -63,10 +77,19 @@ with lib;
       scrcpy
       keymapp
 
-      # Language-Specific Tools
-      bacon # Rust background compiler
-      lldb # Debug adapter
-      ruff # Python linter/formatter
+      # Hardware Development
+      arduino
+      libnfc
+      pcsc-tools
+      usb-modeswitch
+      usb-modeswitch-data
     ];
+
+    # Hardware Services
+    services.udev.packages = [ pkgs.usb-modeswitch-data ];
+    services.pcscd = {
+      enable = true;
+      plugins = with pkgs; [ ccid ];
+    };
   };
 }

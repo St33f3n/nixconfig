@@ -1,10 +1,6 @@
-# modules/misc.nix
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+# misc.nix - Miscellaneous Applications
+
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -15,24 +11,24 @@ with lib;
 
   config = mkIf config.misc.enable {
     environment.systemPackages = with pkgs; [
-      # Game Streaming
-      moonlight-qt
-      sunshine
-      libnfc
-      pcsc-tools
-      arduino
-      usb-modeswitch
-      usb-modeswitch-data
-      # Backup Tools
-      vorta
-    ];
+      # Audio & Bluetooth
+      noisetorch
+      pavucontrol
+      bluez
+      bluez-tools
+      bluez-alsa
 
-    services.udev.packages = [ pkgs.usb-modeswitch-data ];
+      # Browsers
+      mullvad-browser
 
-    services.pcscd.enable = true;
-    services.pcscd.plugins = with pkgs; [
-      ccid
+      # Media & Entertainment
+      calibre
+      spotify
+      libation
+      celluloid
+
+      # Hardware Tools
+      via
     ];
   };
-
 }

@@ -1,28 +1,22 @@
-# modules/virtualization.nix
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+# virt.nix - Virtualization & Containers
+
+{ config, lib, pkgs, ... }:
 
 with lib;
 
 {
   options.virt = {
     enable = mkEnableOption "trigger virtualisation";
-
     container = {
       enable = mkEnableOption "Container platform";
     };
-
     quemu = {
       enable = mkEnableOption "KVM/QEMU virtualization with virt-manager";
     };
   };
 
   config = mkIf config.virt.enable (mkMerge [
-    # Docker Configuration
+    # Container Configuration
     (mkIf config.virt.container.enable {
       environment.systemPackages = with pkgs; [
         distrobox
@@ -36,24 +30,24 @@ with lib;
         compose2nix
       ];
 
-      virtualisation.podman = {
-        enable = true;
-        dockerCompat = true;
-        defaultNetwork.settings = {
-          dns_enabled = true;
-          ipv6_enabled = false;
-        };
-        autoPrune = {
+      virtualisation = {
+        podman = {
           enable = true;
-          dates = "weekly";
-          flags = [
-            "--all"
-            "--volumes"
-          ];
+          dockerCompat = true;
+          defaultNetwork.settings = {
+            dns_enabled = true;
+            ipv6_enabled = false;
+          };
+          autoPrune = {
+            enable = true;
+            dates = "weekly";
+            flags = [
+              "--all"
+              "--volumes"
+            ];
+          };
         };
 
-      };
-      virtualisation = {
         containers = {
           enable = true;
           containersConf.settings = {
@@ -64,8 +58,9 @@ with lib;
             };
           };
         };
+
+        oci-containers.backend = "podman";
       };
-      virtualisation.oci-containers.backend = "podman";
 
       hardware.nvidia-container-toolkit.enable = true;
 
@@ -104,5 +99,13 @@ with lib;
 
       programs.virt-manager.enable = true;
     })
+
+    # Game Streaming
+    {
+      environment.systemPackages = with pkgs; [
+        moonlight-qt
+        sunshine
+      ];
+    }
   ]);
 }

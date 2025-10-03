@@ -1,10 +1,6 @@
-# modules/office.nix
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+# office.nix - Office & Productivity
+
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -21,41 +17,8 @@ with lib;
       element-desktop
       zapzap
       zoom-us
-      simple-scan
-
-      # Browsers
-      mullvad-browser
-
-      # Office & Productivity
-      libreoffice-qt6-fresh
-      anki
-      qalculate-gtk
-      font-manager
-      via
-      vial
-      celluloid
-      texliveFull
-
-      # Document Processing & LaTeX
-      pandoc
-      espanso-wayland
-
-      # Note Taking & Knowledge Management
-      trilium-next-desktop
-
-      # Security & Encryption
-      rustdesk
-      picocrypt
-      veracrypt
-
-      # Media & Books
-      calibre
-      spotify
-      libation
-
       (nextcloud-talk-desktop.overrideAttrs (oldAttrs: {
         nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [ makeWrapper ];
-
         postFixup = ''
           wrapProgram $out/bin/nextcloud-talk-desktop \
             --set GSETTINGS_SCHEMA_DIR "${glib.getSchemaPath gsettings-desktop-schemas}:${glib.getSchemaPath gtk3}" \
@@ -69,12 +32,27 @@ with lib;
         '';
       }))
 
+      # Office & Productivity
+      libreoffice-qt6-fresh
+      anki
+      qalculate-gtk
+      font-manager
+      simple-scan
+
+      # Document Processing & LaTeX
+      pandoc
+      haskellPackages.pandoc-crossref
+      texliveFull
+      espanso-wayland
+
+      # Note Taking
+      trilium-next-desktop
     ];
 
+    # Espanso Configuration
     services.espanso = {
       enable = true;
       package = pkgs.espanso-wayland;
-
     };
 
     systemd.user.services.espanso = {
@@ -86,6 +64,7 @@ with lib;
       ];
     };
 
+    # Print System
     services.printing = {
       enable = true;
       drivers = [ pkgs.gutenprint ];
@@ -95,6 +74,5 @@ with lib;
       enable = true;
       nssmdns4 = true;
     };
-
   };
 }

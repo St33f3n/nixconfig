@@ -22,11 +22,12 @@ in
     ../../modules/shell.nix
     ../../modules/dev.nix
     ../../modules/office.nix
+    ../../modules/orchestration.nix
+    ../../modules/security.nix
     ../../modules/misc.nix
     ../../modules/virt.nix
     ../../modules/creative.nix
     ../../modules/ai.nix
-    ../../scripts/keepass-unlock.nix
   ];
 
   sops.defaultSopsFile = ./secrets/secrets.yaml;
@@ -48,6 +49,8 @@ in
   virt.quemu.enable = false;
   creative.enable = true;
   ai.enable = true;
+  orchestration.enable = true;
+  security.enable = true; 
 
   # Bootloader.
   boot.loader.grub.enable = true;

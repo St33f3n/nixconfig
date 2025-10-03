@@ -1,10 +1,6 @@
-# modules/creative.nix
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+# creative.nix - Creative Tools
+
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -22,6 +18,7 @@ with lib;
       # Electronics Design
       kicad
       orca-slicer
+
       # Video Production
       obs-studio
 

@@ -1,10 +1,6 @@
-# modules/shell.nix
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+# shell.nix - Terminal & CLI Tools
+
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -15,6 +11,9 @@ with lib;
 
   config = mkIf config.shell.enable {
     environment.systemPackages = with pkgs; [
+      # Terminal Emulator
+      alacritty
+
       # Modern Shell Stack
       nushell
       starship
@@ -22,16 +21,44 @@ with lib;
       carapace
       fzf
 
-      # Terminal Multiplexer & Task Management
+      # CLI Tools
+      yazi
+      eza
+      fd
+      zoxide
+      dust
+      direnv
+      ripgrep
+      bat
+      jq
+
+      # Terminal Multiplexer
       zellij
+
+      # Task Scheduler
       pueue
+
+      # Editors
+      helix
+      nano
+
+      # System Monitoring
+      btop
+      nvtopPackages.full
+
+      # System Info & Documentation
+      fastfetch
+      tealdeer
+
+      # Media Tools
+      yt-dlp
+      ffmpegthumbnailer
 
       # Document Processing
       pandoc
       haskellPackages.pandoc-crossref
 
-      # Media & File Tools
-      yt-dlp
+      # File Tools
       exfatprogs
     ];
   };
