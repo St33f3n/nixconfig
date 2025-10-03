@@ -38,10 +38,8 @@ with lib;
       marksman
       rust-analyzer
       python312Packages.python-lsp-server
-      ruff
-      black
-      ruff
       hyprls
+      pyright
       gopls
       bash-language-server
 

@@ -21,7 +21,7 @@ in
         resize_on_border = true;
         extend_border_grab_area = 15;
         no_focus_fallback = true;
-        allow_tearing = true;
+        allow_tearing = false;
 
         # Layout & Spacing - Reduced gaps
         gaps_in = 3; # Back to your original, compact spacing
@@ -41,6 +41,28 @@ in
 
         # Layout behavior
         layout = "dwindle";
+      };
+      dwindle = {
+        pseudotile = false;
+        preserve_split = true; # Behält Split-Richtungen bei
+        smart_split = false;
+        smart_resizing = true;
+
+        # Ultrawide-spezifische Optimierungen
+        force_split = 2; # Neue Fenster immer rechts/unten
+        split_width_multiplier = 1.6; # Angepasst für 32:9 Verhältnis
+        use_active_for_splits = true; # Nutzt aktives Fenster statt Maus
+
+        # Verhältnisse und Größen
+        default_split_ratio = 1.0; # Gleichmäßige 50/50 Splits
+        split_bias = 0; # Split-Bias auf direktional
+
+        # Spezielle Workspace-Skalierung
+        special_scale_factor = 0.8;
+
+        # Einzelfenster-Optimierung für Ultrawide
+        single_window_aspect_ratio = "16 9"; # 16:9 für einzelne Fenster
+        single_window_aspect_ratio_tolerance = 0.1;
       };
       cursor = {
         zoom_factor = 1;
@@ -81,6 +103,11 @@ in
         "$mainMod, 8, workspace, 8"
         "$mainMod, 9, workspace, 9"
         "$mainMod, 0, workspace, 10"
+        "$mainMod, code:87, workspace, 11"
+        "$mainMod, code:88, workspace, 12"
+        "$mainMod, code:89, workspace, 13"
+        "$mainMod, code:83, workspace, 14"
+        "$mainMod, code:84, workspace, 15"
         "$mainMod SHIFT, 1, movetoworkspace, 1"
         "$mainMod SHIFT, 2, movetoworkspace, 2"
         "$mainMod SHIFT, 3, movetoworkspace, 3"
@@ -104,7 +131,7 @@ in
       monitor = [
         "desc:Samsung Electric Company C49RG9x H1AK500000,5120x1440@120,0x0,1"
         "desc:Ancor Communications Inc VE228 C7LMQS030933,preferred,-1980x0,1"
-        "desc:Samsung Electric Company LS32DG30X H8CX600213,1920x1080@60,5130x-500,1,transform,1"
+        "desc:Samsung Electric Company LS32DG30X H8CX600213,1920x1080@60,5120x0,1"
         "eDP-1,2560x1600@60,0x0,1"
         "Virtual-1,1920x1080@60,0x0,1" # VM Monitor
         ",preferred,auto,1"
@@ -112,15 +139,21 @@ in
 
       exec-once = [
         #        "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all"
-        "[workspace 3 silent] vesktop"
-        "wl-paste --watch cliphist store"
-        "[workspace 6 silent] spotify"
         "[workspace 1 silent] librewolf"
         "[workspace 2 silent] trilium"
-        "[workspace 7 silent] sleep 10;nextcloud"
-        "[workspace 8 silent] alacritty -e protonmail-bridge --cli"
-        "[workspace 9 silent] eu.betterbird.Betterbird"
-        "[workspace 10 silent] localsend_app"
+        "[workspace 3 silent] vesktop"
+        "[workspace 4 silent] "
+        "[workspace 5 silent] "
+        "wl-paste --watch cliphist store"
+        "[workspace 6 silent] spotify"
+        "[workspace 7 silent] podman-desktop"
+        "[workspace 12 silent] nextcloud-talk-desktop"
+        "[workspace 13 silent] vorta"
+        "[workspace 15 silent] sleep 10;nextcloud"
+        "[workspace 15 silent] alacritty -e protonmail-bridge --cli"
+        "[workspace 11 silent] eu.betterbird.Betterbird"
+        "[workspace 14 silent] localsend_app"
+        "[workspace 14 silent] distrobox enter python_box"
       ];
       env = [
         "ELECTRON_OZONE_PLATFORM_HINT,auto"
@@ -188,14 +221,19 @@ in
         "1, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
         "2, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
         "3, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
+        "4, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
+        "5, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
+        "6, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
+        "7, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
+        "8, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
+        "9, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
+        "10, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
 
-        "6, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
-        "7, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
-        "8, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
-        "9, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
-        "10, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
-        "5, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
-        "4, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
+        "11, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
+        "12, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
+        "13, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
+        "14, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
+        "15, monitor:desc:Ancor Communications Inc VE228 C7LMQS030933, default:true"
 
       ];
 
@@ -239,12 +277,14 @@ in
       misc = {
         vrr = 0;
         vfr = 0;
+        anr_missed_pings = 15;
         mouse_move_enables_dpms = true;
         key_press_enables_dpms = true;
         allow_session_lock_restore = true;
         focus_on_activate = true;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
+        enable_swallow = false;
         force_default_wallpaper = 0;
       };
       decoration = {

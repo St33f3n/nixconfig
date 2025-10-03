@@ -12,8 +12,8 @@ with lib;
   options.virt = {
     enable = mkEnableOption "trigger virtualisation";
 
-    docker = {
-      enable = mkEnableOption "Docker container platform";
+    container = {
+      enable = mkEnableOption "Container platform";
     };
 
     quemu = {
@@ -23,26 +23,67 @@ with lib;
 
   config = mkIf config.virt.enable (mkMerge [
     # Docker Configuration
-    (mkIf config.virt.docker.enable {
+    (mkIf config.virt.container.enable {
       environment.systemPackages = with pkgs; [
         distrobox
-        docker
-        docker-buildx
-        docker-compose
-        docker-credential-helpers
+        podman-compose
+        podman-desktop
+        podman-tui
+        skopeo
+        buildah
+        dive
+        nethogs
+        compose2nix
       ];
 
-      virtualisation.docker = {
+      virtualisation.podman = {
         enable = true;
-        enableNvidia = false; # Keep this false
-        package = pkgs.docker_25; # Use Docker 25+ for CDI support
-        daemon.settings = {
-          default-runtime = "runc";
-          features.cdi = true; # Enable CDI support
+        dockerCompat = true;
+        defaultNetwork.settings = {
+          dns_enabled = true;
+          ipv6_enabled = false;
+        };
+        autoPrune = {
+          enable = true;
+          dates = "weekly";
+          flags = [
+            "--all"
+            "--volumes"
+          ];
+        };
+
+      };
+      virtualisation = {
+        containers = {
+          enable = true;
+          containersConf.settings = {
+            containers = {
+              log_driver = "journald";
+              events_logger = "journald";
+              runtime = "crun";
+            };
+          };
         };
       };
+      virtualisation.oci-containers.backend = "podman";
 
       hardware.nvidia-container-toolkit.enable = true;
+
+      networking.firewall = {
+        enable = true;
+        allowedTCPPorts = [
+          80
+          443
+          8080
+          9000
+        ];
+        allowedTCPPortRanges = [
+          {
+            from = 1024;
+            to = 65535;
+          }
+        ];
+      };
     })
 
     # KVM/QEMU Virtualization Configuration

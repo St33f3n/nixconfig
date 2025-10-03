@@ -44,7 +44,7 @@ in
   office.enable = true;
   misc.enable = true;
   virt.enable = true;
-  virt.docker.enable = true;
+  virt.container.enable = true;
   virt.quemu.enable = false;
   creative.enable = true;
   ai.enable = true;
@@ -197,6 +197,7 @@ in
       "networkmanager"
       "wheel"
       "docker"
+      "podman"
     ];
   };
 
@@ -276,6 +277,49 @@ in
     SUBSYSTEM=="block", ENV{ID_FS_LABEL}=="PCRUDISK", ENV{UDISKS_IGNORE}="1"
   '';
 
+  systemd.services.windmill-compose = {
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "podman.service"
+      "network-online.target"
+    ];
+    wants = [ "network-online.target" ];
+    path = with pkgs; [
+      podman
+      iptables
+      gawk
+      util-linux
+    ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      WorkingDirectory = "/etc/containers/windmill";
+      ExecStart = "${pkgs.podman-compose}/bin/podman-compose up -d";
+      ExecStop = "${pkgs.podman-compose}/bin/podman-compose down";
+    };
+  };
+
+  systemd.services.karakeeper-compose = {
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "podman.service"
+      "network-online.target"
+    ];
+    wants = [ "network-online.target" ];
+    path = with pkgs; [
+      podman
+      iptables
+      gawk
+      util-linux
+    ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      WorkingDirectory = "/etc/containers/karakeeper";
+      ExecStart = "${pkgs.podman-compose}/bin/podman-compose up -d";
+      ExecStop = "${pkgs.podman-compose}/bin/podman-compose down";
+    };
+  };
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
