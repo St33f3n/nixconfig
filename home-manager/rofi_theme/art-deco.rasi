@@ -4,22 +4,6 @@
  * Color Scheme: Abyss/Coral/Sea-foam
  */
 
-configuration {
-    modi: "drun,run,window";
-    show-icons: true;
-    icon-theme: "Papirus";
-    display-drun: "  Applications";
-    display-run: "  Command";
-    display-window: "  Windows";
-    drun-display-format: "{name}";
-    font: "JetBrains Mono 11";
-    
-    /* Automatischer Fokus auf Suchleiste */
-    kb-row-up: "Up,Control+k";
-    kb-row-down: "Down,Control+j";
-    kb-accept-entry: "Return,KP_Enter";
-}
-
 * {
     /* Farbpalette aus dem Schema */
     abyss: #1e1e1e;
@@ -38,15 +22,18 @@ configuration {
     /* Art Deco Gold-Akzent */
     art-deco-gold: #d4af37;
     
+    /* Transparente Varianten - Hex mit Alpha */
+    deep-water-transparent: #2626264D;
+    
     background-color: transparent;
     text-color: @text-primary;
-    font: "JetBrains Mono 11";
+    font: "JetBrains Mono 13";
 }
 
 window {
     transparency: "real";
     background-color: @abyss;
-    width: 750px;
+    width: 1100px;
     border: 3px solid;
     border-color: @text-muted;
     border-radius: 0px;
@@ -93,8 +80,8 @@ inputbar {
     children: [ textbox-prompt-icon, entry, num-filtered-rows ];
     background-color: @deep-water;
     text-color: @text-primary;
-    padding: 15px 20px;
-    spacing: 15px;
+    padding: 20px 30px;
+    spacing: 20px;
     border: 0px 0px 1px 0px solid;
     border-color: @coral-light;
 }
@@ -105,8 +92,8 @@ textbox-prompt-icon {
     text-color: @coral-light;
     background-color: inherit;
     vertical-align: 0.5;
-    padding: 0px 5px 0px 0px;
-    font: "JetBrains Mono Bold 14";
+    padding: 0px 8px 0px 0px;
+    font: "JetBrains Mono Bold 16";
 }
 
 entry {
@@ -123,21 +110,21 @@ num-filtered-rows {
     expand: false;
     background-color: @seafoam;
     text-color: @text-primary;
-    padding: 2px 10px;
+    padding: 4px 14px;
     border-radius: 3px;
     vertical-align: 0.5;
-    font: "JetBrains Mono Bold 10";
+    font: "JetBrains Mono Bold 11";
 }
 
 listview {
     background-color: @abyss;
     columns: 1;
-    lines: 10;
+    lines: 8;
     spacing: 0px;
-    padding: 10px 0px;
+    padding: 15px 0px;
     cycle: true;
     dynamic: true;
-    scrollbar: true;
+    scrollbar: false;
     fixed-height: false;
 }
 
@@ -159,8 +146,8 @@ element {
     background-color: transparent;
     text-color: @text-primary;
     orientation: horizontal;
-    padding: 10px 20px;
-    spacing: 15px;
+    padding: 15px 30px;
+    spacing: 20px;
     border: 0px 0px 1px 0px solid;
     border-color: @normal-black;
 }
@@ -200,7 +187,7 @@ element selected.active {
 }
 
 element alternate.normal {
-    background-color: rgba(38, 38, 38, 0.3);
+    background-color: transparent;
     text-color: @text-primary;
 }
 
@@ -215,7 +202,7 @@ element alternate.active {
 }
 
 element-icon {
-    size: 1.8em;
+    size: 2.2em;
     vertical-align: 0.5;
     background-color: transparent;
 }
@@ -224,7 +211,7 @@ element-text {
     background-color: transparent;
     text-color: inherit;
     vertical-align: 0.5;
-    highlight: bold @coral-light;
+    highlight: bold #d49284;
 }
 
 /* Mode Switcher - Art Deco Stil */
@@ -232,25 +219,25 @@ mode-switcher {
     background-color: @deep-water;
     border: 2px 0px 0px 0px solid;
     border-color: @text-muted;
-    padding: 10px;
-    spacing: 10px;
+    padding: 15px;
+    spacing: 12px;
 }
 
 button {
     background-color: @normal-black;
     text-color: @text-muted;
-    padding: 8px 15px;
+    padding: 10px 20px;
     border: 1px solid;
     border-color: @seafoam-gray;
     border-radius: 0px;
-    font: "JetBrains Mono 10";
+    font: "JetBrains Mono 11";
 }
 
 button selected {
     background-color: @seafoam;
     text-color: @abyss;
     border-color: @coral-light;
-    font: "JetBrains Mono Bold 10";
+    font: "JetBrains Mono Bold 11";
 }
 
 /* Message Box */
