@@ -37,8 +37,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Zen-browser
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     espanso-fix.url = "github:pitkling/nixpkgs/espanso-fix-capabilities-export";
 
@@ -72,17 +70,6 @@
 
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
-      packages.x86_64-linux = {
-        zen-browser = nixpkgs.legacyPackages.x86_64-linux.callPackage ./own_pkgs/zen_browser.nix { };
-      };
-
-      devShells.x86_64-linux = {
-        typescript = import ./shells/typescript.nix {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          lib = nixpkgs.lib;
-          inherit inputs;
-        };
-      };
 
       homeManagerModules = import ./modules/home-manager;
 
@@ -97,7 +84,7 @@
               home-manager.extraSpecialArgs = { inherit inputs outputs; };
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.biocirc = import ./home-manager/home.nix;
+              home-manager.users.biocirc = import ./home-manager/hosts/triton.nix;
             }
             stylix.nixosModules.stylix
             nix-flatpak.nixosModules.nix-flatpak
@@ -114,7 +101,7 @@
               home-manager.extraSpecialArgs = { inherit inputs outputs; };
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.biocirc = import ./home-manager/home.nix;
+              home-manager.users.biocirc = import ./home-manager/hosts/neptune.nix;
             }
             espanso-fix.nixosModules.espanso-capdacoverride
             stylix.nixosModules.stylix
