@@ -23,8 +23,8 @@ in
     
     masterAddress = mkOption {
       type = types.str;
-      example = "master.k8s.local";
-      description = "IP-Adresse des Master Nodes (muss resolveable und routeable sein)";
+      example = "192.168.2.33";
+      description = "IP-Adresse des Master Nodes";
     };
 
     clusterName = mkOption {

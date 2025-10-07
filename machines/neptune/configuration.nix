@@ -102,8 +102,10 @@ in
   # ============================================================================
 
   networking.hostName = "neptune";
-  networking.extraHosts = "192.168.2.56 master.k8s.local etcd.local";
-
+networking.extraHosts = ''
+  192.168.2.56 master.k8s.local master
+  192.168.2.56 etcd.local etcd
+'';
 
   # Video Treiber für beide GPUs
   services.xserver.videoDrivers = [
@@ -390,7 +392,7 @@ in
   # ════════════════════════════════════════════════════════════════════════
   services.k8s-cluster = {
     # Shared config 
-    masterAddress = "master.k8s.local";
+    masterAddress = "192.168.2.56";
     clusterName = "homelab";
     clusterCidr = "10.244.0.0/16";
     serviceCidr = "10.96.0.0/12";
@@ -399,7 +401,7 @@ in
     # Master aktivieren 
     master = {
       enable = true;
-      nodeAddress = "master.k8s.local";
+      nodeAddress = "192.168.2.56";
 
       nfs = {
         enable = true;
