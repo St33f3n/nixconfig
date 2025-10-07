@@ -388,7 +388,7 @@ in
   # ════════════════════════════════════════════════════════════════════════
   services.k8s-cluster = {
     # Shared config 
-    masterAddress = "192.168.2.33";
+    masterAddress = "192.168.2.56";
     clusterName = "homelab";
     clusterCidr = "10.244.0.0/16";
     serviceCidr = "10.96.0.0/12";
@@ -397,11 +397,11 @@ in
     # Master aktivieren 
     master = {
       enable = true;
-      nodeAddress = "192.168.2.33";
+      nodeAddress = "192.168.2.56";
 
       nfs = {
         enable = true;
-        storageDir = "/mnt/k8s-storage";
+        storageDir = "/mnt/test";
         allowedNetworks = [ "192.168.2.0/24" ];
       };
     };

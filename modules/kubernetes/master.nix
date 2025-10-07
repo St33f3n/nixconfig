@@ -12,6 +12,7 @@ with lib;
 let
   cfg = config.services.k8s-cluster.master;
   baseCfg = config.services.k8s-cluster;
+  
 in
 {
   options.services.k8s-cluster.master = {
@@ -63,37 +64,28 @@ in
     # KUBERNETES MASTER ROLE
     # ════════════════════════════════════════════════════════════════════════
     services.kubernetes = {
+      # KORREKTUR: Rolle nutzen statt manueller Component-Aktivierung
       roles = [ "master" ];
 
-      # API Server
+      # KORREKTUR: addonManager wird automatisch durch "master" role aktiviert,
+      # aber explizite Aktivierung für Klarheit
+      addonManager.enable = true;
+
+      # API Server Konfiguration
       apiserver = {
-        enable = true;
         advertiseAddress = cfg.nodeAddress;
-        securePort = 6443;
         serviceClusterIpRange = baseCfg.serviceCidr;
+        securePort = 6443;
       };
 
       # Controller Manager
       controllerManager = {
-        enable = true;
         extraOpts = "--cluster-cidr=${baseCfg.clusterCidr}";
       };
 
-      # Scheduler
-      scheduler.enable = true;
 
-      # etcd (Cluster State Store)
-      etcd = {
-        enable = true;
-        listenClientUrls = [ "http://127.0.0.1:2379" ];
-      };
-
-      # Proxy (auch Master braucht kube-proxy)
-      proxy.enable = true;
-
-      # Kubelet (Master kann auch Pods hosten, optional)
+      # Kubelet für Master (kann auch Pods hosten)
       kubelet = {
-        enable = true;
         nodeIp = cfg.nodeAddress;
       };
     };
@@ -125,28 +117,43 @@ in
     networking.firewall = {
       allowedTCPPorts = [
         # Kubernetes Control Plane
-        6443 # API Server
-        2379
-        2380 # etcd
-        10250 # kubelet API
-        10251 # kube-scheduler
-        10252 # kube-controller-manager
+        6443      # API Server (secure port)
+        2379 2380 # etcd
+        10250     # kubelet API
+        10251     # kube-scheduler (wird durch role automatisch konfiguriert)
+        10252     # kube-controller-manager (wird durch role automatisch konfiguriert)
       ] ++ optionals cfg.nfs.enable [
         # NFS
-        111
-        2049
-        4000
-        4001
+        111   # portmapper
+        2049  # nfs
+        4000  # statd
+        4001  # lockd
       ];
+      
       allowedUDPPorts = optionals cfg.nfs.enable [
-        111
-        2049
+        111   # portmapper
+        2049  # nfs
       ];
     };
 
     # ════════════════════════════════════════════════════════════════════════
     # ZUSÄTZLICHE PACKAGES
     # ════════════════════════════════════════════════════════════════════════
-    environment.systemPackages = with pkgs; [ ] ++ optionals cfg.nfs.enable [ nfs-utils ];
+    environment.systemPackages = with pkgs; [
+      # Standard kubectl/helm sind bereits in base.nix
+    ] ++ optionals cfg.nfs.enable [ 
+      nfs-utils 
+    ] ++ optionals baseCfg.easyCerts [
+       cfssl
+    ];
+
+    # ════════════════════════════════════════════════════════════════════════
+    # WICHTIGE HINWEISE FÜR DEN BENUTZER
+    # ════════════════════════════════════════════════════════════════════════
+    warnings = [
+      "RBAC Authorization ist aktiviert. Für Admin-Zugriff: export KUBECONFIG=/etc/kubernetes/cluster-admin.kubeconfig"
+    ] ++ optionals (!baseCfg.easyCerts) [
+      "easyCerts ist deaktiviert. Zertifikate müssen manuell konfiguriert werden für TLS-Kommunikation."
+    ];
   };
 }

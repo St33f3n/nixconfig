@@ -72,6 +72,13 @@ in
         description = "Zusätzliche Custom Labels für Scheduling";
       };
     };
+
+    # KORREKTUR: Join-Token Support für easyCerts
+    joinToken = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = "Token für automatisches Cluster-Joining (mit easyCerts)";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -87,17 +94,21 @@ in
         assertion = cfg.nfs.enable -> cfg.nfs.serverAddress != "";
         message = "services.k8s-cluster.worker.nfs.serverAddress muss gesetzt sein wenn NFS aktiviert";
       }
+      {
+        assertion = baseCfg.easyCerts -> cfg.joinToken != null;
+        message = "Wenn easyCerts aktiviert ist, muss joinToken für Worker-Nodes gesetzt werden";
+      }
     ];
 
     # ════════════════════════════════════════════════════════════════════════
     # KUBERNETES WORKER ROLE
     # ════════════════════════════════════════════════════════════════════════
     services.kubernetes = {
+      # KORREKTUR: "node" role nutzen statt manueller Component-Aktivierung
       roles = [ "node" ];
 
-      # Kubelet (Worker-Agent)
+      # Kubelet Konfiguration
       kubelet = {
-        enable = true;
         nodeIp = cfg.nodeAddress;
 
         # Node Labels für Scheduling
@@ -111,8 +122,28 @@ in
           "--node-labels=${labelString}";
       };
 
-      # Kube-Proxy
+      # KORREKTUR: proxy wird automatisch durch "node" role aktiviert
+      # aber explizite Konfiguration für Klarheit
       proxy.enable = true;
+    };
+
+    # ════════════════════════════════════════════════════════════════════════
+    # EASY CERTS SETUP (für automatisches Cluster-Joining)
+    # ════════════════════════════════════════════════════════════════════════
+    systemd.services.kubernetes-node-join = mkIf (baseCfg.easyCerts && cfg.joinToken != null) {
+      description = "Kubernetes Node Join mit easyCerts";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = pkgs.writeScript "k8s-node-join" ''
+          #!${pkgs.bash}/bin/bash
+          set -euo pipefail
+          
+          echo "${cfg.joinToken}" | ${pkgs.kubernetes}/bin/nixos-kubernetes-node-join
+        '';
+      };
     };
 
     # ════════════════════════════════════════════════════════════════════════
@@ -131,12 +162,12 @@ in
       fsType = "nfs4";
       options = [
         "rw"
-        "soft" # Soft mount für bessere Recovery
-        "intr" # Interruptible
-        "timeo=30" # 3s timeout
+        "soft"      # Soft mount für bessere Recovery
+        "intr"      # Interruptible
+        "timeo=30"  # 3s timeout
         "retrans=2" # 2 retry attempts
-        "rsize=32768" # Read size 32KB
-        "wsize=32768" # Write size 32KB
+        "rsize=32768"  # Read size 32KB
+        "wsize=32768"  # Write size 32KB
       ];
     };
 
@@ -145,15 +176,31 @@ in
     # ════════════════════════════════════════════════════════════════════════
     networking.firewall = {
       allowedTCPPorts = [
-        10250 # kubelet API
-        30000
-        32767 # NodePort Services Range
+        10250             # kubelet API
+        "3000-32767"       # KORREKTUR: NodePort Services Range als Range
+      ];
+      # KORREKTUR: NodePort Range korrekt definieren
+      allowedTCPPortRanges = [
+        { from = 30000; to = 32767; }  # NodePort Services Range
       ];
     };
 
     # ════════════════════════════════════════════════════════════════════════
     # ZUSÄTZLICHE PACKAGES
     # ════════════════════════════════════════════════════════════════════════
-    environment.systemPackages = with pkgs; [ ] ++ optionals cfg.nfs.enable [ nfs-utils ];
+    environment.systemPackages = with pkgs; [
+      # Standard kubectl/helm sind bereits in base.nix
+    ] ++ optionals cfg.nfs.enable [ 
+      nfs-utils 
+    ];
+
+    # ════════════════════════════════════════════════════════════════════════
+    # WICHTIGE HINWEISE FÜR DEN BENUTZER
+    # ════════════════════════════════════════════════════════════════════════
+    warnings = [] ++ optionals (baseCfg.easyCerts && cfg.joinToken == null) [
+      "easyCerts ist aktiviert aber kein joinToken gesetzt. Worker kann nicht automatisch joinen."
+    ] ++ optionals (!baseCfg.easyCerts) [
+      "easyCerts ist deaktiviert. Zertifikate müssen manuell auf Worker-Nodes installiert werden."
+    ];
   };
 }

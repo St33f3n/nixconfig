@@ -13,7 +13,7 @@ let
   cfg = config.services.k8s-cluster;
   
   # Aktiviert wenn Master ODER Worker enabled ist
-  isEnabled = cfg.master.enable || cfg.worker.enable;
+  isEnabled = cfg.master.enable or false || cfg.worker.enable or false;
 in
 {
   options.services.k8s-cluster = {
@@ -23,8 +23,8 @@ in
     
     masterAddress = mkOption {
       type = types.str;
-      example = "192.168.2.33";
-      description = "IP-Adresse des Master Nodes";
+      example = "master.k8s.local";
+      description = "IP-Adresse des Master Nodes (muss resolveable und routeable sein)";
     };
 
     clusterName = mkOption {
@@ -50,18 +50,10 @@ in
       default = "10.96.0.10";
       description = "DNS Service IP (muss in serviceCidr liegen)";
     };
-
-    # Placeholder-Optionen für Master/Worker (werden in Submodulen definiert)
-    master = mkOption {
-      type = types.attrsOf types.anything;
-      default = { };
-      description = "Master-spezifische Konfiguration";
-    };
-
-    worker = mkOption {
-      type = types.attrsOf types.anything;
-      default = { };
-      description = "Worker-spezifische Konfiguration";
+    easyCerts = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Automatisches Certificate Bootstrapping aktivieren";
     };
   };
 
@@ -70,25 +62,42 @@ in
     # KUBERNETES BASE CONFIGURATION
     # ════════════════════════════════════════════════════════════════════════
     services.kubernetes = {
-      # Cluster-Identifikation
+      # Cluster-Identifikation (MANDATORY seit NixOS 19.03)
       masterAddress = cfg.masterAddress;
       clusterCidr = cfg.clusterCidr;
+
+      # KORREKTUR: easyCerts für automatisches Zertifikat-Management
+      easyCerts = cfg.easyCerts;
 
       # Flannel CNI (VXLAN Overlay Network)
       flannel.enable = true;
 
-      # PKI-Pfade (NixOS-Standard)
-      pki = {
+      # KORREKTUR: PKI mit easyCerts
+      pki = mkIf cfg.easyCerts {
         enable = true;
         etcClusterAdminKubeconfig = "kubernetes/cluster-admin.kubeconfig";
       };
 
-      # Addon: CoreDNS (nur auf Master, aber Option hier für Konsistenz)
-      addons.dns = {
-        enable = cfg.master.enable;
+      # KORREKTUR: DNS Addon nur auf Master, korrekter Path
+      addons.dns = mkIf cfg.master.enable {
+        enable = true;
         clusterIp = cfg.clusterDns;
       };
     };
+
+    # ════════════════════════════════════════════════════════════════════════
+    # ASSERTIONS & VALIDATIONS
+    # ════════════════════════════════════════════════════════════════════════
+    assertions = [
+      {
+        assertion = cfg.masterAddress != "";
+        message = "services.k8s-cluster.masterAddress ist mandatory seit NixOS 19.03";
+      }
+      {
+        assertion = cfg.clusterDns != "" && hasPrefix "10.96." cfg.clusterDns;
+        message = "clusterDns muss in serviceCidr (${cfg.serviceCidr}) liegen";
+      }
+    ];
 
     # ════════════════════════════════════════════════════════════════════════
     # NETZWERK & FIREWALL (Basis für alle Nodes)
@@ -110,10 +119,15 @@ in
     ];
 
     # ════════════════════════════════════════════════════════════════════════
-    # KUBECONFIG Environment Variable
+    # KUBECONFIG Environment Variable (nur mit easyCerts)
     # ════════════════════════════════════════════════════════════════════════
-    environment.variables = {
+    environment.variables = mkIf cfg.easyCerts {
       KUBECONFIG = "/etc/${config.services.kubernetes.pki.etcClusterAdminKubeconfig}";
     };
+
+    # KORREKTUR: Warning für Multi-Master HA
+    warnings = mkIf (cfg.easyCerts && cfg.master.enable) [
+      "easyCerts unterstützt keine Multi-Master (HA) Clusters. Für Production sollten externe Zertifikate verwendet werden."
+    ];
   };
 }
