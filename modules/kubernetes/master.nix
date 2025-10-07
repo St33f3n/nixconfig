@@ -64,11 +64,8 @@ in
     # KUBERNETES MASTER ROLE
     # ════════════════════════════════════════════════════════════════════════
     services.kubernetes = {
-      # KORREKTUR: Rolle nutzen statt manueller Component-Aktivierung
       roles = [ "master" ];
 
-      # KORREKTUR: addonManager wird automatisch durch "master" role aktiviert,
-      # aber explizite Aktivierung für Klarheit
       addonManager.enable = true;
 
       # API Server Konfiguration
