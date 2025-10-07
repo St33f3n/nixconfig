@@ -112,18 +112,31 @@ in
     nvidia.modesetting.enable = true;
   };
 
-  users.users.steefen = {
+  # ============================================================================
+  # BENUTZER KONFIGURATION
+  # ============================================================================
+
+  users.users.biocirc = {
     isNormalUser = true;
     description = "Stefan Simmeth";
     extraGroups = [
+      "dialout" # Serielle Geräte
+      "plugdev" # USB-Geräte
+      "input" # Input-Geräte
+      "render" # GPU-Zugriff
+      "video" # Video-Geräte
+      "tty" # TTY-Zugriff
       "networkmanager"
-      "wheel"
+      "wheel" # sudo
+      "docker"
+      "podman"
     ];
   };
 
+  # Passwortloses sudo für Hauptbenutzer
   security.sudo.extraRules = [
     {
-      users = [ "steefen" ];
+      users = [ "biocirc" ];
       commands = [
         {
           command = "ALL";
@@ -132,6 +145,7 @@ in
       ];
     }
   ];
+
   # Experimental Feature
   nix.settings.experimental-features = [
     "nix-command"
