@@ -44,6 +44,7 @@ in
     ../../modules/virt.nix
     ../../modules/creative.nix
     ../../modules/ai.nix
+    ../../modules/kubernetes
   ];
 
   # ============================================================================
@@ -381,6 +382,36 @@ in
       ExecStop = "${pkgs.podman-compose}/bin/podman-compose down";
     };
   };
+
+  # ════════════════════════════════════════════════════════════════════════
+  # KUBERNETES MASTER
+  # ════════════════════════════════════════════════════════════════════════
+  services.k8s-cluster = {
+    # Shared config 
+    masterAddress = "192.168.2.33";
+    clusterName = "homelab";
+    clusterCidr = "10.244.0.0/16";
+    serviceCidr = "10.96.0.0/12";
+    clusterDns = "10.96.0.10";
+
+    # Master aktivieren 
+    master = {
+      enable = true;
+      nodeAddress = "192.168.2.33";
+
+      nfs = {
+        enable = true;
+        storageDir = "/mnt/k8s-storage";
+        allowedNetworks = [ "192.168.2.0/24" ];
+      };
+    };
+
+    # Worker deaktivieren 
+    worker.enable = false;
+  };
+
+
+
 
   # ============================================================================
   # SYSTEM VERSION

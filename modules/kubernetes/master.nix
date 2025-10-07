@@ -1,4 +1,5 @@
-# kubernetes/master.nix - Master Node Configuration
+# modules/kubernetes/master.nix
+# Kubernetes Master Node (Control Plane + NFS Server)
 {
   config,
   lib,
@@ -9,151 +10,143 @@
 with lib;
 
 let
-  cfg = config.services.k8s-cluster;
+  cfg = config.services.k8s-cluster.master;
+  baseCfg = config.services.k8s-cluster;
 in
 {
-  config = mkIf (cfg.enable && cfg.role == "master") {
+  options.services.k8s-cluster.master = {
+    enable = mkEnableOption "Kubernetes Master Node mit NFS Server";
 
-    # ══════════════════════════════════════════════════════════════════════
-    # KUBERNETES MASTER COMPONENTS
-    # ══════════════════════════════════════════════════════════════════════
+    nodeAddress = mkOption {
+      type = types.str;
+      example = "192.168.2.33";
+      description = "IP-Adresse dieses Master Nodes";
+    };
+
+    nfs = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = "NFS Server für Cluster-Storage aktivieren";
+      };
+
+      storageDir = mkOption {
+        type = types.str;
+        default = "/mnt/k8s-storage";
+        description = "Root-Verzeichnis für K8s-Storage (NFS-Export)";
+      };
+
+      allowedNetworks = mkOption {
+        type = types.listOf types.str;
+        default = [ "192.168.2.0/24" ];
+        description = "Netzwerke mit NFS-Zugriff";
+      };
+    };
+  };
+
+  config = mkIf cfg.enable {
+    # ════════════════════════════════════════════════════════════════════════
+    # ASSERTIONS & VALIDATIONS
+    # ════════════════════════════════════════════════════════════════════════
+    assertions = [
+      {
+        assertion = baseCfg.masterAddress == cfg.nodeAddress;
+        message = "services.k8s-cluster.masterAddress muss gleich services.k8s-cluster.master.nodeAddress sein";
+      }
+      {
+        assertion = !config.services.k8s-cluster.worker.enable;
+        message = "Master und Worker können nicht auf demselben Node aktiviert sein (aktuell)";
+      }
+    ];
+
+    # ════════════════════════════════════════════════════════════════════════
+    # KUBERNETES MASTER ROLE
+    # ════════════════════════════════════════════════════════════════════════
     services.kubernetes = {
       roles = [ "master" ];
 
-      # ────────────────────────────────────────────────────────────────────
       # API Server
-      # ────────────────────────────────────────────────────────────────────
       apiserver = {
-        # Externe Erreichbarkeit
-        advertiseAddress = cfg.masterAddress;
-        bindAddress = "0.0.0.0";
-        
-        # Secure Port
+        enable = true;
+        advertiseAddress = cfg.nodeAddress;
         securePort = 6443;
-        
-        # Service Account Key (automatisch via easyCerts)
-        serviceAccountKeyFile = mkDefault null;
-        
-        # Additional API Server Options
-        extraOpts = "--allow-privileged=true";
+        serviceClusterIpRange = baseCfg.serviceCidr;
       };
 
-      # ────────────────────────────────────────────────────────────────────
       # Controller Manager
-      # ────────────────────────────────────────────────────────────────────
       controllerManager = {
         enable = true;
-        # Cluster CIDR für Pod IPs
-        clusterCidr = cfg.clusterCidr;
+        extraOpts = "--cluster-cidr=${baseCfg.clusterCidr}";
       };
 
-      # ────────────────────────────────────────────────────────────────────
       # Scheduler
-      # ────────────────────────────────────────────────────────────────────
-      scheduler = {
-        enable = true;
-      };
+      scheduler.enable = true;
 
-      # ────────────────────────────────────────────────────────────────────
-      # etcd
-      # ────────────────────────────────────────────────────────────────────
+      # etcd (Cluster State Store)
       etcd = {
         enable = true;
-        # Listen auf allen Interfaces für Cluster-Members
-        listenClientUrls = [ "https://0.0.0.0:2379" ];
-        advertiseClientUrls = [ "https://${cfg.masterAddress}:2379" ];
-        
-        # Peer communication (für Multi-Master später)
-        listenPeerUrls = [ "https://0.0.0.0:2380" ];
-        initialAdvertisePeerUrls = [ "https://${cfg.masterAddress}:2380" ];
+        listenClientUrls = [ "http://127.0.0.1:2379" ];
       };
 
-      # ────────────────────────────────────────────────────────────────────
-      # Kubelet (auch auf Master für System-Pods)
-      # ────────────────────────────────────────────────────────────────────
+      # Proxy (auch Master braucht kube-proxy)
+      proxy.enable = true;
+
+      # Kubelet (Master kann auch Pods hosten, optional)
       kubelet = {
         enable = true;
-        # Master soll auch Pods schedulen können (für kleine Cluster)
-        # Für Produktion: Master sollte nur Control Plane Pods haben
-        taints = {
-          # Kommentiere diese Zeile aus, wenn Master keine Workload-Pods haben soll:
-          # "node-role.kubernetes.io/master" = "NoSchedule";
-        };
-      };
-
-      # ────────────────────────────────────────────────────────────────────
-      # Proxy
-      # ────────────────────────────────────────────────────────────────────
-      proxy = {
-        enable = true;
+        nodeIp = cfg.nodeAddress;
       };
     };
 
-    # ══════════════════════════════════════════════════════════════════════
-    # ADDON DEPLOYMENTS (via static manifests)
-    # ══════════════════════════════════════════════════════════════════════
-    
-    # CoreDNS manifest (wird automatisch geladen)
-    services.kubernetes.addonManager.enable = true;
-    
-    # ──────────────────────────────────────────────────────────────────────
-    # Metrics Server (für kubectl top)
-    # ──────────────────────────────────────────────────────────────────────
-    environment.etc."kubernetes/addons/metrics-server.yaml" = mkIf cfg.enable {
-      text = ''
-        apiVersion: v1
-        kind: ServiceAccount
-        metadata:
-          name: metrics-server
-          namespace: kube-system
-        ---
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: metrics-server
-          namespace: kube-system
-        spec:
-          selector:
-            matchLabels:
-              k8s-app: metrics-server
-          template:
-            metadata:
-              labels:
-                k8s-app: metrics-server
-            spec:
-              serviceAccountName: metrics-server
-              containers:
-              - name: metrics-server
-                image: registry.k8s.io/metrics-server/metrics-server:v0.7.0
-                args:
-                - --kubelet-insecure-tls
-                - --kubelet-preferred-address-types=InternalIP
+    # ════════════════════════════════════════════════════════════════════════
+    # NFS SERVER
+    # ════════════════════════════════════════════════════════════════════════
+    services.nfs.server = mkIf cfg.nfs.enable {
+      enable = true;
+      statdPort = 4000;
+      lockdPort = 4001;
+      exports = ''
+        ${cfg.nfs.storageDir} ${
+          concatStringsSep " " (
+            map (net: "${net}(rw,sync,no_subtree_check,no_root_squash)") cfg.nfs.allowedNetworks
+          )
+        }
       '';
     };
 
-    # ══════════════════════════════════════════════════════════════════════
-    # HELPER SCRIPTS
-    # ══════════════════════════════════════════════════════════════════════
-    
-    # Script zum Generieren des Worker-Join-Tokens
-    environment.systemPackages = with pkgs; [
-      (writeScriptBin "k8s-generate-worker-token" ''
-        #!${pkgs.bash}/bin/bash
-        # Generiert ein Bootstrap-Token für neue Worker-Nodes
-        
-        TOKEN=$(${kubectl}/bin/kubectl -n kube-system create token default)
-        CA_HASH=$(openssl x509 -pubkey -in /var/lib/kubernetes/secrets/ca.pem | \
-                  openssl rsa -pubin -outform der 2>/dev/null | \
-                  openssl dgst -sha256 -hex | sed 's/^.* //')
-        
-        echo "=== Worker Join Command ==="
-        echo "Use this in your worker node secrets/k8s.yaml:"
-        echo ""
-        echo "k8s_token: $TOKEN"
-        echo "k8s_ca_hash: sha256:$CA_HASH"
-        echo ""
-        echo "Master: ${cfg.masterAddress}:6443"
-      '')
+    # Storage-Verzeichnis erstellen
+    systemd.tmpfiles.rules = mkIf cfg.nfs.enable [
+      "d ${cfg.nfs.storageDir} 0755 root root -"
     ];
+
+    # ════════════════════════════════════════════════════════════════════════
+    # FIREWALL (Master-spezifische Ports)
+    # ════════════════════════════════════════════════════════════════════════
+    networking.firewall = {
+      allowedTCPPorts = [
+        # Kubernetes Control Plane
+        6443 # API Server
+        2379
+        2380 # etcd
+        10250 # kubelet API
+        10251 # kube-scheduler
+        10252 # kube-controller-manager
+      ] ++ optionals cfg.nfs.enable [
+        # NFS
+        111
+        2049
+        4000
+        4001
+      ];
+      allowedUDPPorts = optionals cfg.nfs.enable [
+        111
+        2049
+      ];
+    };
+
+    # ════════════════════════════════════════════════════════════════════════
+    # ZUSÄTZLICHE PACKAGES
+    # ════════════════════════════════════════════════════════════════════════
+    environment.systemPackages = with pkgs; [ ] ++ optionals cfg.nfs.enable [ nfs-utils ];
   };
 }
