@@ -64,4 +64,12 @@ in
     WAYLAND_DISPLAY = "wayland-0"; # Or whatever your Wayland display is named
     COLORSCHEME = builtins.toJSON color_scheme; # Export the color scheme
   };
+
+    home-manager.sharedModules = [
+  {
+    stylix.targets.rofi.enable = false;
+  }
+];
+
+
 }
