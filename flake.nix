@@ -49,9 +49,7 @@
       home-manager,
       stylix,
       nix-flatpak,
-      zen-browser,
       sops-nix,
-      quickshell,
       espanso-fix,
       ...
     }@inputs:

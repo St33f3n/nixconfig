@@ -84,7 +84,7 @@ in
   boot.loader.grub = {
     enable = true;
     device = "/dev/nvme0n1";
-    useOSProber = true; # Dual-Boot Support
+    useOSProber = true; 
   };
 
   # GPU Kernel Module (Dual-GPU Setup)

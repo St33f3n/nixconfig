@@ -157,10 +157,8 @@ in
     [
       orca-slicer
       fabric-ai
-    ]
-    ++ [
-      inputs.self.packages.x86_64-linux.zen-browser
     ];
+    
 
   services.dbus.packages = with pkgs; [ dconf ];
   programs.dconf.enable = true;
