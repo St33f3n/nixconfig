@@ -261,6 +261,7 @@ networking.extraHosts = ''
       "wheel" # sudo
       "docker"
       "podman"
+      "kubernetes"
     ];
   };
 
@@ -414,9 +415,7 @@ networking.extraHosts = ''
     worker.enable = false;
   };
 
-  environment.sessionVariables = {
-     KUBECONFIG = "/etc/kubernetes/cluster-admin.kubeconfig";
-  };
+
 
 
   # ============================================================================
