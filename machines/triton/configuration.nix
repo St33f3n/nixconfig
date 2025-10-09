@@ -16,12 +16,14 @@ in
     # Include the results of the hardware scan.
     ./stylix.nix
     ./hardware-configuration.nix
+    ./secrets.nix
     ../../modules/core.nix
     ../../modules/desktop.nix
     ../../modules/shell.nix
     ../../modules/dev.nix
     ../../modules/office.nix
     ../../modules/misc.nix
+    ../../modules/kubernetes
   ];
 
   core.enable = true;
