@@ -11,5 +11,10 @@
       owner = config.users.users.biocirc.name;
       mode = "0600";
     };
+    nfs_ssh_key = {
+      sopsFile = ./secrets/nfs.yaml;
+      owner = "root";
+      mode = "0600";
+    };
   };
 }

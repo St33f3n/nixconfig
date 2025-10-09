@@ -390,12 +390,16 @@ in
       kubeconfigPath = "/home/biocirc/.config/k3s/kubeconfig";
     };
 
-    nfs.server = {
-      enable = true;
-      storageDir = "/mnt/test";
-      allowedNetworks = [ "192.168.2.0/24" ];
-    };
+    storage.server = {
+       enable = true;
+  storageDir = "/mnt/test";
+    dedicatedUser = "k3s-storage";
+    authorizedKeys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL2KmHyTXh7p/lC6UbsJ605X4XuRcf7d/olIadBgJQnm nfs-client-triton"
+    ];
   };
+    };
+
 
   # ============================================================================
   # SYSTEM VERSION

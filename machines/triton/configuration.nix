@@ -199,11 +199,13 @@ services.k3s-cluster = {
     nodeAddress = ip_address;
   };
 
-  nfs.client = {
+  storage.client = {
     enable = true;
     serverAddress = "neptune.local";
+    serverUser = "k3s-storage";
     remoteDir = "/mnt/test";
-    mountPoint = "/mnt/test";
+    mountPoint = "mnt/test";
+    sshKeyFile = config.sops.secrets."nfs_ssh_key".path;
   };
 };
   # This value determines the NixOS release from which the default

@@ -6,80 +6,118 @@
 }:
 with lib;
 let
-  cfg = config.services.k3s-cluster.nfs;
+  cfg = config.services.k3s-cluster.storage;
 in
 {
-  options.services.k3s-cluster.nfs = {
+  options.services.k3s-cluster.storage = {
     server = {
-      enable = mkEnableOption "NFS server for K3s storage";
+      enable = mkEnableOption "K3s storage server (SFTP)";
+      
       storageDir = mkOption {
         type = types.str;
         default = "/mnt/k3s-storage";
-        description = "Root directory for K3s NFS exports";
+        description = "Root directory for K3s storage";
       };
-      allowedNetworks = mkOption {
+      
+      sshUser = mkOption {
+        type = types.str;
+        default = "k3s-storage";
+        description = "Dedicated SSH user for storage access";
+      };
+      
+      authorizedKeys = mkOption {
         type = types.listOf types.str;
-        default = [ "192.168.2.0/24" ];
-        description = "Networks allowed to mount NFS shares";
+        default = [ ];
+        description = "SSH public keys authorized for storage access";
       };
     };
+    
     client = {
-      enable = mkEnableOption "NFS client for K3s storage";
+      enable = mkEnableOption "K3s storage client (SSHFS mount)";
+      
       serverAddress = mkOption {
         type = types.str;
-        example = "192.168.2.56";
-        description = "NFS server IP address";
+        example = "neptune.local";
+        description = "Storage server hostname or IP";
+      };
+      
+      serverUser = mkOption {
+        type = types.str;
+        default = "k3s-storage";
+        description = "SSH user on storage server";
       };
       
       remoteDir = mkOption {
         type = types.str;
         default = "/mnt/k3s-storage";
-        example = "/mnt/test";
-        description = "Remote directory path on NFS server to mount";
+        description = "Remote directory path on storage server";
       };
-    
+      
       mountPoint = mkOption {
         type = types.str;
         default = "/mnt/k3s-storage";
-        description = "Local mount point for NFS share";
+        description = "Local mount point";
+      };
+      
+      sshKeyFile = mkOption {
+        type = types.path;
+        description = "Path to SSH private key (managed by sops)";
       };
     };
   };
+  
   config = mkMerge [
     (mkIf cfg.server.enable {
-      services.nfs.server = {
-        enable = true;
-        exports = ''
-          ${cfg.server.storageDir} ${
-            concatStringsSep " " (
-              map (net: "${net}(rw,sync,no_subtree_check,no_root_squash)") cfg.server.allowedNetworks
-            )
-          }
-        '';
+      users.users.${cfg.server.sshUser} = {
+        isNormalUser = true;
+        home = cfg.server.storageDir;
+        createHome = false;
+        group = cfg.server.sshUser;
+        shell = pkgs.bashInteractive;
+        openssh.authorizedKeys.keys = cfg.server.authorizedKeys;
       };
+      
+      users.groups.${cfg.server.sshUser} = { };
+      
       systemd.tmpfiles.rules = [
-        "d ${cfg.server.storageDir} 0755 root root -"
+        "d ${cfg.server.storageDir} 0755 ${cfg.server.sshUser} ${cfg.server.sshUser} -"
       ];
-      networking.firewall.allowedTCPPorts = [ 2049 ];
-      environment.systemPackages = [ pkgs.nfs-utils ];
+      
+      services.openssh = {
+        enable = true;
+        settings = {
+          PasswordAuthentication = true;
+          PermitRootLogin = "yes";
+        };
+      };
+      
+      environment.systemPackages = [ pkgs.openssh ];
     })
+    
     (mkIf cfg.client.enable {
-      services.rpcbind.enable = true;
+      environment.systemPackages = [ pkgs.sshfs ];
+      
       systemd.tmpfiles.rules = [
         "d ${cfg.client.mountPoint} 0755 root root -"
       ];
+      
       fileSystems."${cfg.client.mountPoint}" = {
-        device = "${cfg.client.serverAddress}:${cfg.client.remoteDir}";
-        fsType = "nfs4";
+        device = "${cfg.client.serverUser}@${cfg.client.serverAddress}:${cfg.client.remoteDir}";
+        fsType = "sshfs";
         options = [
-          "rw"
-          "soft"
-          "intr"
-          "timeo=30"
-          "retrans=2"
+          "nodev"
+          "noatime"
+          "allow_other"
+          "IdentityFile=${cfg.client.sshKeyFile}"
+          "StrictHostKeyChecking=accept-new"
+          "ServerAliveInterval=60"
+          "ServerAliveCountMax=3"
+          "reconnect"
+          "x-systemd.automount"
+          "_netdev"
+          "x-systemd.mount-timeout=30s"
         ];
       };
-      environment.systemPackages = [ pkgs.nfs-utils ];
     })
   ];
 }
