@@ -200,6 +200,7 @@ services.k3s-cluster = {
       nodeLabels = [
     "node-role=worker"
     "workload=general"
+    "node-role.kubernetes.io/worker=true"
   ];
   
   nodeTaints = [ ];
