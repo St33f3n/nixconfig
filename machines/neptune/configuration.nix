@@ -85,7 +85,7 @@ in
   boot.loader.grub = {
     enable = true;
     device = "/dev/nvme0n1";
-    useOSProber = true; 
+    useOSProber = true;
   };
 
   # GPU Kernel Module (Dual-GPU Setup)
@@ -102,10 +102,10 @@ in
   # ============================================================================
 
   networking.hostName = "neptune";
-networking.extraHosts = ''
-  192.168.2.56 master.k8s.local master
-  192.168.2.56 etcd.local etcd
-'';
+  networking.extraHosts = ''
+    192.168.2.56 master.k8s.local master
+    192.168.2.56 etcd.local etcd
+  '';
 
   # Video Treiber für beide GPUs
   services.xserver.videoDrivers = [
@@ -393,21 +393,19 @@ networking.extraHosts = ''
   # ════════════════════════════════════════════════════════════════════════
 
   services.k3s-cluster = {
-  server = {
-    enable = true;
-    nodeAddress = "192.168.2.56";
-    tokenFile = config.sops.secrets."k3s-token".path;
-    kubeconfigPath = "/home/biocirc/.config/k3s/kubeconfig";
+    server = {
+      enable = true;
+      nodeAddress = "192.168.2.56";
+      tokenFile = config.sops.secrets."k3s-token".path;
+      kubeconfigPath = "/home/biocirc/.config/k3s/kubeconfig";
+    };
+
+    nfs.server = {
+      enable = true;
+      storageDir = "/mnt/test";
+      allowedNetworks = [ "192.168.2.0/24" ];
+    };
   };
-
-  nfs.server = {
-    enable = true;
-    storageDir = "/mnt/test";
-    allowedNetworks = [ "192.168.2.0/24" ];
-  };
-};
-
-
 
   # ============================================================================
   # SYSTEM VERSION

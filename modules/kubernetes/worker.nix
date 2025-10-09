@@ -33,7 +33,7 @@ in
 
     extraFlags = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = "Additional K3s agent flags";
     };
   };
@@ -56,9 +56,12 @@ in
       serverAddr = cfg.serverAddress;
       inherit (cfg) tokenFile;
 
-      extraFlags = lib.concatStringsSep " " ([
-        "--node-ip=${cfg.nodeAddress}"
-      ] ++ cfg.extraFlags);
+      extraFlags = lib.concatStringsSep " " (
+        [
+          "--node-ip=${cfg.nodeAddress}"
+        ]
+        ++ cfg.extraFlags
+      );
     };
 
     environment.systemPackages = with pkgs; [

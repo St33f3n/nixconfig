@@ -65,11 +65,10 @@ in
     COLORSCHEME = builtins.toJSON color_scheme; # Export the color scheme
   };
 
-    home-manager.sharedModules = [
-  {
-    stylix.targets.rofi.enable = false;
-  }
-];
-
+  home-manager.sharedModules = [
+    {
+      stylix.targets.rofi.enable = false;
+    }
+  ];
 
 }

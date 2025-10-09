@@ -31,6 +31,7 @@ with lib;
       nix-prefetch-hg
       nix-ld
       nixfmt-rfc-style
+      nixfmt-tree
       home-manager
 
       # Language Servers

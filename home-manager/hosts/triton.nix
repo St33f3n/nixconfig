@@ -1,5 +1,10 @@
 # Laptop-spezifische Konfiguration
-{ pkgs, lib, inputs, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 {
   imports = [
     ../profiles/base.nix

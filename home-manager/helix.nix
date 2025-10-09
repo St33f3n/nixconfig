@@ -22,8 +22,8 @@
         line-number = "relative";
         cursorline = true;
         rulers = [
-          120  # Primary ruler for most code
-          200  # Secondary ruler for max line length
+          120 # Primary ruler for most code
+          200 # Secondary ruler for max line length
         ];
         bufferline = "always";
         color-modes = true;
@@ -136,18 +136,18 @@
       [keys.normal]
       # ESC behaviour: collapse selection and keep primary
       esc = ["collapse_selection", "keep_primary_selection"]
-      
+
       # Window navigation: Quick switching between splits
       C-h = "jump_view_left"    # Ctrl+h: Move to left window
       C-j = "jump_view_down"    # Ctrl+j: Move to window below
       C-k = "jump_view_up"      # Ctrl+k: Move to window above
       C-l = "jump_view_right"   # Ctrl+l: Move to right window
-      
+
       # Register behavior: Delete without overwriting yank register
       # Helix Selection-First: Erst selektieren (w, miw, x, etc), dann Action
       d = "delete_selection_noyank"  # d: Löscht OHNE zu yanken (Problem gelöst!)
       C-x = ["yank_main_selection_to_clipboard", "delete_selection"]  # Ctrl+x: Explizites Cut
-      
+
       # Buffer/Tab navigation
       H = "goto_previous_buffer"  # Shift+h: Previous buffer
       L = "goto_next_buffer"      # Shift+l: Next buffer
@@ -158,7 +158,7 @@
       [keys.insert]
       # Quick escape alternatives
       j.k = "normal_mode"  # Type 'jk' quickly to exit insert mode
-      
+
       # ──────────────────────────────────────────────────────────────────────────
       # Select Mode Keybindings
       # ──────────────────────────────────────────────────────────────────────────
@@ -205,7 +205,11 @@
               # Ruff configuration
               lineLength = 88;
               lint = {
-                select = [ "E" "F" "I" ];  # Enable specific rule categories
+                select = [
+                  "E"
+                  "F"
+                  "I"
+                ]; # Enable specific rule categories
               };
             };
           };
@@ -249,7 +253,10 @@
 
         taplo = {
           command = "taplo";
-          args = [ "lsp" "stdio" ];
+          args = [
+            "lsp"
+            "stdio"
+          ];
         };
       };
 
@@ -296,7 +303,7 @@
         {
           name = "python";
           auto-format = true;
-          language-servers = [ "ruff" ];  # Nur Ruff für Linting + Formatting
+          language-servers = [ "ruff" ]; # Nur Ruff für Linting + Formatting
           formatter = {
             command = "ruff";
             args = [
@@ -361,14 +368,17 @@
           language-servers = [ "cue-lsp" ];
           formatter = {
             command = "cue";
-            args = [ "fmt" "-" ];
+            args = [
+              "fmt"
+              "-"
+            ];
           };
         }
 
         # Nu Shell
         {
           name = "nu";
-          auto-format = true; 
+          auto-format = true;
           comment-token = "#";
           file-types = [ "nu" ];
           roots = [ ];

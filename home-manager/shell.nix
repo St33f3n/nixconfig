@@ -16,7 +16,7 @@
   # TERMINAL EMULATOR - Alacritty
   # ==========================================================================
   # GPU-beschleunigter Terminal-Emulator mit Nushell als Standard-Shell
-  
+
   programs.alacritty = {
     enable = true;
     settings = lib.mkForce (
@@ -25,7 +25,7 @@
         terminal.shell = {
           program = "${pkgs.nushell}/bin/nu";
         };
-        
+
         # Fenster-Einstellungen
         window = {
           padding = {
@@ -34,7 +34,7 @@
           };
           opacity = 0.95;
         };
-        
+
         # Tastenkombinationen
         keyboard.bindings = [
           # Copy/Paste mit Ctrl+Super (für Wayland/Hyprland Kompatibilität)
@@ -65,7 +65,7 @@
   # SHELL COMPLETIONS - Carapace
   # ==========================================================================
   # Universelles Completion-System mit Multi-Shell-Bridge-Support
-  
+
   programs.carapace = {
     enable = true;
     enableNushellIntegration = true;
@@ -75,7 +75,7 @@
   # HAUPTSHELL - Nushell
   # ==========================================================================
   # Moderne, strukturierte Shell mit Pipeline-basierter Datenverarbeitung
-  
+
   programs.nushell = {
     enable = true;
 
@@ -240,10 +240,17 @@
           name = "completion_menu";
           modifier = "none";
           keycode = "tab";
-          mode = [ "emacs" "vi_normal" "vi_insert" ];
+          mode = [
+            "emacs"
+            "vi_normal"
+            "vi_insert"
+          ];
           event = {
             until = [
-              { send = "menu"; name = "completion_menu"; }
+              {
+                send = "menu";
+                name = "completion_menu";
+              }
               { send = "menunext"; }
               { edit = "complete"; }
             ];
@@ -254,7 +261,11 @@
           name = "completion_previous";
           modifier = "shift";
           keycode = "backtab";
-          mode = [ "emacs" "vi_normal" "vi_insert" ];
+          mode = [
+            "emacs"
+            "vi_normal"
+            "vi_insert"
+          ];
           event = {
             send = "menuprevious";
           };
@@ -264,7 +275,11 @@
           name = "atuin_history";
           modifier = "control";
           keycode = "char_r";
-          mode = [ "emacs" "vi_normal" "vi_insert" ];
+          mode = [
+            "emacs"
+            "vi_normal"
+            "vi_insert"
+          ];
           event = {
             send = "executehostcommand";
             cmd = "atuin search -i";
@@ -339,7 +354,7 @@
       # ======================================================================
       # FZF INTEGRATION
       # ======================================================================
-      
+
       if (which fzf | is-not-empty) {
         # Fuzzy File Finder mit Preview
         def fzp [] {
@@ -367,7 +382,7 @@
       # ======================================================================
       # STARTUP
       # ======================================================================
-      
+
       # Fastfetch beim Start (nur in interaktiven Sessions)
       if $nu.is-interactive and $env.TERM? != "dumb" {
         fastfetch
@@ -379,7 +394,7 @@
   # PROMPT - Starship
   # ==========================================================================
   # Minimalistischer, schneller und informativer Shell-Prompt
-  
+
   programs.starship = {
     enable = true;
     enableNushellIntegration = true;
@@ -390,7 +405,7 @@
   # HISTORY - Atuin
   # ==========================================================================
   # Intelligente Shell-History mit Sync, Search und Stats
-  
+
   programs.atuin = {
     enable = true;
     enableNushellIntegration = true;
@@ -400,7 +415,7 @@
       filter_mode_shell_up_key_binding = "host";
       search_mode = "fuzzy";
       search_mode_shell_up_key_binding = "prefix";
-      
+
       # UI-Einstellungen
       style = "compact";
       inline_height = 20;
@@ -408,7 +423,7 @@
       max_preview_height = 4;
       show_help = true;
       show_tabs = true;
-      
+
       # Keybindings
       keymap_mode = "auto";
       enter_accept = true;
@@ -421,7 +436,7 @@
         "docker-compose"
         "git"
       ];
-      
+
       # Stats-Optimierungen (häufige Subcommands)
       common_subcommands = [
         "cargo"
@@ -443,7 +458,7 @@
   # FILE LISTING - Eza
   # ==========================================================================
   # Moderner ls-Ersatz mit Git-Integration und Icons
-  
+
   programs.eza = {
     enable = true;
     enableNushellIntegration = true;
@@ -460,7 +475,7 @@
   # DIRECTORY NAVIGATION - Zoxide
   # ==========================================================================
   # Intelligentes cd mit Frecency-Algorithmus (Frequency + Recency)
-  
+
   programs.zoxide = {
     enable = true;
     enableNushellIntegration = true;
@@ -470,12 +485,12 @@
   # FILE MANAGER - Yazi
   # ==========================================================================
   # Terminal-basierter File Manager mit Vi-Keybindings
-  
+
   programs.yazi = {
     enable = true;
     enableNushellIntegration = true;
     shellWrapperName = "y";
-    
+
     settings = {
       # Manager-Einstellungen
       mgr = {
@@ -483,7 +498,11 @@
         sort_by = "natural";
         sort_dir_first = true;
         linemode = "size";
-        ratio = [ 1 4 3 ];
+        ratio = [
+          1
+          4
+          3
+        ];
         show_symlink = true;
         scrolloff = 5;
       };
@@ -535,7 +554,7 @@
   # DOCUMENTATION - Tealdeer
   # ==========================================================================
   # Schnelle tldr-pages für Command-Line Tools
-  
+
   programs.tealdeer = {
     enable = true;
     settings = {
@@ -553,7 +572,7 @@
   # ENVIRONMENT SWITCHER - Direnv
   # ==========================================================================
   # Automatisches Laden von projektspezifischen Umgebungen
-  
+
   programs.direnv = {
     enable = true;
     enableNushellIntegration = true;
@@ -780,7 +799,7 @@
   # TASK MANAGER - Pueue
   # ==========================================================================
   # Daemon für parallele Task-Ausführung im Hintergrund
-  
+
   services.pueue = {
     enable = true;
     settings = {

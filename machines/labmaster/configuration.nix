@@ -56,7 +56,7 @@ in
         {
           address = "0.0.0.0";
           prefixLength = 0;
-          via = "192.168.2.1"; 
+          via = "192.168.2.1";
         }
       ];
     };
@@ -149,7 +149,7 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-   
+
     jack.enable = true;
 
   };

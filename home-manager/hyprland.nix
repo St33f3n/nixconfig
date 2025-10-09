@@ -9,7 +9,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
-    
+
     settings = {
       # ════════════════════════════════════════════════════════════════════════
       # VARIABLES
@@ -38,7 +38,7 @@
         "3, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
         "4, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
         "5, monitor:desc:Samsung Electric Company C49RG9x H1AK500000, default:true"
-        
+
         # Secondary Monitor (LS32DG30X) - Workspaces 6-10
         "6, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
         "7, monitor:desc:Samsung Electric Company LS32DG30X H8CX600213, default:true"
@@ -62,11 +62,11 @@
         numlock_by_default = true;
         mouse_refocus = false;
         follow_mouse = 1;
-        
+
         touchpad = {
           middle_button_emulation = true;
         };
-        
+
         sensitivity = 0;
       };
 
@@ -146,7 +146,7 @@
       # ════════════════════════════════════════════════════════════════════════
       decoration = {
         rounding = 10;
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # Blur Settings
         # ────────────────────────────────────────────────────────────────────────
@@ -158,7 +158,7 @@
           ignore_opacity = true;
           xray = true;
         };
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # Shadow Settings
         # ────────────────────────────────────────────────────────────────────────
@@ -167,7 +167,7 @@
           range = 30;
           render_power = 3;
         };
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # Opacity Settings
         # ────────────────────────────────────────────────────────────────────────
@@ -207,18 +207,18 @@
           "windowsOut, 1, 2, emphasizedDecel, popin 90%"
           "windowsMove, 1, 3, emphasizedDecel, slide"
           "border, 1, 10, emphasizedDecel"
-          
+
           # Layers
           "layersIn, 1, 2.7, emphasizedDecel, popin 93%"
           "layersOut, 1, 2.4, menu_accel, popin 94%"
-          
+
           # Fade
           "fadeLayersIn, 1, 0.5, menu_decel"
           "fadeLayersOut, 1, 2.7, menu_accel"
-          
+
           # Workspaces
           "workspaces, 1, 7, menu_decel, slide"
-          
+
           # Special Workspace
           "specialWorkspaceIn, 1, 2.8, emphasizedDecel, slidevert"
           "specialWorkspaceOut, 1, 1.2, emphasizedAccel, slidevert"
@@ -229,7 +229,7 @@
       # MISCELLANEOUS
       # ════════════════════════════════════════════════════════════════════════
       misc = {
-        vrr = 1;  # Variable Refresh Rate aktiviert
+        vrr = 1; # Variable Refresh Rate aktiviert
         vfr = 0;
         anr_missed_pings = 15;
         mouse_move_enables_dpms = true;
@@ -283,14 +283,14 @@
         "$mainMod, T, fullscreen"
         "$mainMod, F, togglefloating"
         "$mainMod, J, togglesplit"
-        "$mainMod, P, pin"  # Pin window to all workspaces
-        
+        "$mainMod, P, pin" # Pin window to all workspaces
+
         # Window Focus
         "$mainMod, left, movefocus, l"
         "$mainMod, right, movefocus, r"
         "$mainMod, up, movefocus, u"
         "$mainMod, down, movefocus, d"
-        
+
         # Window Resize
         "$mainMod SHIFT, right, resizeactive, 100 0"
         "$mainMod SHIFT, left, resizeactive, -100 0"
@@ -310,15 +310,15 @@
         "$mainMod, 8, workspace, 8"
         "$mainMod, 9, workspace, 9"
         "$mainMod, 0, workspace, 10"
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # Workspace Navigation (11-15) - Numpad
         # ────────────────────────────────────────────────────────────────────────
-        "$mainMod, code:87, workspace, 11"  # KP_1
-        "$mainMod, code:88, workspace, 12"  # KP_2
-        "$mainMod, code:89, workspace, 13"  # KP_3
-        "$mainMod, code:83, workspace, 14"  # KP_4
-        "$mainMod, code:84, workspace, 15"  # KP_5
+        "$mainMod, code:87, workspace, 11" # KP_1
+        "$mainMod, code:88, workspace, 12" # KP_2
+        "$mainMod, code:89, workspace, 13" # KP_3
+        "$mainMod, code:83, workspace, 14" # KP_4
+        "$mainMod, code:84, workspace, 15" # KP_5
 
         # ────────────────────────────────────────────────────────────────────────
         # Move Window to Workspace
@@ -333,14 +333,14 @@
         "$mainMod SHIFT, 8, movetoworkspace, 8"
         "$mainMod SHIFT, 9, movetoworkspace, 9"
         "$mainMod SHIFT, 0, movetoworkspace, 10"
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # Workspace Scrolling & Special
         # ────────────────────────────────────────────────────────────────────────
         "$mainMod, mouse_down, workspace, e+1"
         "$mainMod, mouse_up, workspace, e-1"
         "$mainMod CTRL, down, workspace, empty"
-        
+
         # Scratchpad (Yakuake-style)
         "$mainMod, S, togglespecialworkspace, magic"
         "$mainMod SHIFT, S, movetoworkspace, special:magic"
@@ -383,12 +383,12 @@
         "size 100% 50%,class:^(scratchpad)$"
         "move 0 0,class:^(scratchpad)$"
         "animation slide,class:^(scratchpad)$"
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # Workspace Assignment
         # ────────────────────────────────────────────────────────────────────────
         "workspace 7,class:^(vesktop)$"
-        "workspace 7,class:^(com.github.IsmaelMartinez.teams_for_linux)$"  # Nextcloud Talk
+        "workspace 7,class:^(com.github.IsmaelMartinez.teams_for_linux)$" # Nextcloud Talk
         "workspace 13 silent,class:^(com.borgbase.Vorta)$"
 
         # ────────────────────────────────────────────────────────────────────────
@@ -397,53 +397,53 @@
         "float,title:^(About LibreWolf)$"
         "float,class:^(librewolf)$,title:^(Picture-in-Picture)$"
         "float,class:^(librewolf)$,title:^(Library)$"
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # Floating Windows - Terminal Apps
         # ────────────────────────────────────────────────────────────────────────
         "float,class:^(Alacritty)$,title:^(btop)$"
         "float,class:^(Alacritty)$,title:^(fastfetch)$"
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # Floating Windows - System Tools (Fixed Sizes)
         # ────────────────────────────────────────────────────────────────────────
         "float,class:^(qt5ct)$"
         "float,class:^(qt6ct)$"
         "float,class:^(kvantummanager)$"
-        
+
         "float,class:^(org.pulseaudio.pavucontrol)$"
         "size 1000 700,class:^(org.pulseaudio.pavucontrol)$"
         "center,class:^(org.pulseaudio.pavucontrol)$"
-        
+
         "float,class:^(blueman-manager)$"
         "size 900 650,class:^(blueman-manager)$"
         "center,class:^(blueman-manager)$"
-        
+
         "float,class:^(nm-connection-editor)$"
         "size 900 650,class:^(nm-connection-editor)$"
         "center,class:^(nm-connection-editor)$"
-        
+
         "float,class:^(org.kde.polkit-kde-authentication-agent-1)$"
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # File Dialogs (Fixed Sizes - optimized for side monitors)
         # ────────────────────────────────────────────────────────────────────────
         "float,title:^(Open)$"
         "size 1200 800,title:^(Open)$"
         "center,title:^(Open)$"
-        
+
         "float,title:^(Choose Files)$"
         "size 1200 800,title:^(Choose Files)$"
         "center,title:^(Choose Files)$"
-        
+
         "float,title:^(Save As)$"
         "size 1200 800,title:^(Save As)$"
         "center,title:^(Save As)$"
-        
+
         "float,title:^(Confirm to replace files)$"
         "size 600 400,title:^(Confirm to replace files)$"
         "center,title:^(Confirm to replace files)$"
-        
+
         "float,title:^(File Operation Progress)$"
         "size 600 400,title:^(File Operation Progress)$"
         "center,title:^(File Operation Progress)$"
@@ -467,7 +467,7 @@
         # Scratchpad Terminal (Yakuake-style)
         # ────────────────────────────────────────────────────────────────────────
         "[workspace special:magic silent] alacritty --class scratchpad"
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # Main Monitor (C49RG9x) - Workspaces 1-5
         # ────────────────────────────────────────────────────────────────────────
@@ -476,14 +476,14 @@
         "[workspace 3 silent] vesktop"
         "[workspace 4 silent] "
         "[workspace 5 silent] "
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # Secondary Monitor (LS32DG30X) - Workspaces 6-10
         # ────────────────────────────────────────────────────────────────────────
         "[workspace 6 silent] spotify"
         "[workspace 7 silent] "
-        "[workspace 8 silent] podman-desktop & sleep 2 && podman-desktop"  # Workaround: Doppelstart wegen Bug
-        
+        "[workspace 8 silent] podman-desktop & sleep 2 && podman-desktop" # Workaround: Doppelstart wegen Bug
+
         # ────────────────────────────────────────────────────────────────────────
         # Vertical Monitor (VE228) - Workspaces 11-15
         # ────────────────────────────────────────────────────────────────────────
@@ -494,7 +494,7 @@
         "[workspace 14 silent] distrobox enter python_box"
         "[workspace 15 silent] sleep 10;nextcloud"
         "[workspace 15 silent] alacritty -e protonmail-bridge --cli"
-        
+
         # ────────────────────────────────────────────────────────────────────────
         # System Services
         # ────────────────────────────────────────────────────────────────────────

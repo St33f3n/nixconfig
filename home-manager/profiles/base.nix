@@ -60,7 +60,6 @@ in
     templates = "$HOME/r/templates";
   };
 
-
   services.gnome-keyring = {
     enable = true;
     components = [
@@ -69,7 +68,6 @@ in
     ];
   };
 
-  
   # Enable home-manager and git
   programs.home-manager.enable = true;
 

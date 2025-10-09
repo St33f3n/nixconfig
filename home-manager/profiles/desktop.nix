@@ -1,12 +1,16 @@
 # Desktop-Environment-Features (NUR für triton + neptune)
-{ pkgs, lib, inputs, config, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  config,
+  ...
+}:
 {
   imports = [
     ../hyprland.nix
     ../rofi.nix
   ];
-
-
 
   home.sessionVariables = {
     # Desktop-spezifische Variablen

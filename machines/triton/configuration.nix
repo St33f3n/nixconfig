@@ -166,13 +166,10 @@ in
   };
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages =
-    with pkgs;
-    [
-      orca-slicer
-      fabric-ai
-    ];
-    
+  environment.systemPackages = with pkgs; [
+    orca-slicer
+    fabric-ai
+  ];
 
   services.dbus.packages = with pkgs; [ dconf ];
   programs.dconf.enable = true;

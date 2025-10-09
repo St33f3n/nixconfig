@@ -45,7 +45,7 @@ in
 
     extraFlags = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = "Additional K3s server flags";
     };
   };
@@ -63,15 +63,18 @@ in
       role = "server";
       inherit (cfg) tokenFile;
 
-      extraFlags = lib.concatStringsSep " " ([
-        "--node-ip=${cfg.nodeAddress}"
-        "--cluster-cidr=${cfg.clusterCidr}"
-        "--service-cidr=${cfg.serviceCidr}"
-        "--write-kubeconfig=${cfg.kubeconfigPath}"
-        "--write-kubeconfig-mode=644"
-        "--flannel-backend=vxlan"
-        "--disable=traefik"
-      ] ++ cfg.extraFlags);
+      extraFlags = lib.concatStringsSep " " (
+        [
+          "--node-ip=${cfg.nodeAddress}"
+          "--cluster-cidr=${cfg.clusterCidr}"
+          "--service-cidr=${cfg.serviceCidr}"
+          "--write-kubeconfig=${cfg.kubeconfigPath}"
+          "--write-kubeconfig-mode=644"
+          "--flannel-backend=vxlan"
+          "--disable=traefik"
+        ]
+        ++ cfg.extraFlags
+      );
     };
 
     systemd.tmpfiles.rules = [

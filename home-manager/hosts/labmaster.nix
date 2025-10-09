@@ -1,11 +1,14 @@
 # Server-Konfiguration (KEIN Desktop!)
-{ pkgs, lib, inputs, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 {
   imports = [
     ../profiles/base.nix
 
   ];
-
-
 
 }

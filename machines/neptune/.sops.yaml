@@ -2,7 +2,7 @@
 keys:
   - &primary age12fzw8fwd3fvxeycx9fqvrh3438ej3dmwy3tkqt93cnj3h2ary43q7cylgk
 creation_rules:
-  - path_regex: secrets/.*\.ya?ml$
-    key_groups:
-      - age:
-        - *primary
+ - path_regex: secrets/.*\.(ya?ml|env|json)$
+   key_groups:
+    - age:
+      - *primary

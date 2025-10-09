@@ -37,7 +37,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-
     espanso-fix.url = "github:pitkling/nixpkgs/espanso-fix-capabilities-export";
 
   };
@@ -67,7 +66,6 @@
     {
 
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
-
 
       homeManagerModules = import ./modules/home-manager;
 
