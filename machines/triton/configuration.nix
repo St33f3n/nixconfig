@@ -198,7 +198,6 @@ services.k3s-cluster = {
     tokenFile = config.sops.secrets."k3s_token".path;
     nodeAddress = ip_address;
       nodeLabels = [
-"node-role.kubernetes.io/worker="
   ];
   
   nodeTaints = [ ];
