@@ -393,7 +393,7 @@ in
         "storage=local"
       ];
       nodeTaints = [
-        "node-role=master:GPUWorkloads"
+       
       ];
     };
 
