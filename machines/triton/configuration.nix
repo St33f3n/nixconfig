@@ -195,13 +195,14 @@ services.k3s-cluster = {
   agent = {
     enable = true;
     serverAddress = "https://neptune.local:6443";
-    tokenFile = "/path/to/k3s-token";
+    tokenFile = config.sops.secrets."k3s_token".path;
     nodeAddress = ip_address;
   };
 
   nfs.client = {
     enable = true;
     serverAddress = "neptune.local";
+    remoteDir = "/mnt/test";
     mountPoint = "/mnt/test";
   };
 };
