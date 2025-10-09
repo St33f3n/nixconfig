@@ -85,7 +85,6 @@ in
           "--write-kubeconfig=${cfg.kubeconfigPath}"
           "--write-kubeconfig-mode=644"
           "--flannel-backend=vxlan"
-          "--disable=traefik"
         ]
         ++ (map (label: "--node-label=${label}") cfg.nodeLabels)
         ++ (map (taint: "--node-taint=${taint}") cfg.nodeTaints)
