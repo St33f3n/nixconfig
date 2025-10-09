@@ -43,6 +43,20 @@ in
       description = "Service network CIDR";
     };
 
+    nodeLabels = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "node-role=master" "gpu=true" ];
+      description = "Node labels in key=value format";
+    };
+
+    nodeTaints = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "node-role=master:NoSchedule" ];
+      description = "Node taints in key=value:effect format";
+    };
+
     extraFlags = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -73,6 +87,8 @@ in
           "--flannel-backend=vxlan"
           "--disable=traefik"
         ]
+        ++ (map (label: "--node-label=${label}") cfg.nodeLabels)
+        ++ (map (taint: "--node-taint=${taint}") cfg.nodeTaints)
         ++ cfg.extraFlags
       );
     };

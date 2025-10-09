@@ -388,6 +388,13 @@ in
       nodeAddress = "192.168.2.56";
       tokenFile = config.sops.secrets."k3s_token".path;
       kubeconfigPath = "/home/biocirc/.config/k3s/kubeconfig";
+      nodeLabels = [
+        "node-role=master"
+        "storage=local"
+      ];
+      nodeTaints = [
+        "node-role=master:GPUWorkloads"
+      ];
     };
 
     storage.server = {

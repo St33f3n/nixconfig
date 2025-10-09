@@ -197,11 +197,17 @@ services.k3s-cluster = {
     serverAddress = "https://neptune.local:6443";
     tokenFile = config.sops.secrets."k3s_token".path;
     nodeAddress = ip_address;
+      nodeLabels = [
+    "node-role=worker"
+    "workload=general"
+  ];
+  
+  nodeTaints = [ ];
   };
 
   storage.client = {
     enable = true;
-    serverAddress = "192.168.2.56";
+    serverAddress = "neptune.local";
     serverUser = "k3s-storage";
     remoteDir = "/mnt/test";
     mountPoint = "mnt/test";

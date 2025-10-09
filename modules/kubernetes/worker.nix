@@ -31,6 +31,20 @@ in
       description = "IP address of this agent node";
     };
 
+    nodeLabels = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "node-role=worker" "workload=compute" ];
+      description = "Node labels in key=value format";
+    };
+
+    nodeTaints = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "dedicated=gpu:NoSchedule" ];
+      description = "Node taints in key=value:effect format";
+    };
+
     extraFlags = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -60,6 +74,8 @@ in
         [
           "--node-ip=${cfg.nodeAddress}"
         ]
+        ++ (map (label: "--node-label=${label}") cfg.nodeLabels)
+        ++ (map (taint: "--node-taint=${taint}") cfg.nodeTaints)
         ++ cfg.extraFlags
       );
     };
