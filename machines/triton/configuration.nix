@@ -201,7 +201,7 @@ services.k3s-cluster = {
 
   storage.client = {
     enable = true;
-    serverAddress = "neptune.local";
+    serverAddress = "192.168.2.56";
     serverUser = "k3s-storage";
     remoteDir = "/mnt/test";
     mountPoint = "mnt/test";
