@@ -393,7 +393,7 @@ in
     storage.server = {
        enable = true;
   storageDir = "/mnt/test";
-    dedicatedUser = "k3s-storage";
+    sshUser = "k3s-storage";
     authorizedKeys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL2KmHyTXh7p/lC6UbsJ605X4XuRcf7d/olIadBgJQnm nfs-client-triton"
     ];
