@@ -30,7 +30,6 @@ with lib;
       nix-prefetch-git
       nix-prefetch-hg
       nix-ld
-      nixfmt-rfc-style
       nixfmt-tree
       home-manager
 

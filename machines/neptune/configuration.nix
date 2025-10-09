@@ -387,7 +387,7 @@ in
     server = {
       enable = true;
       nodeAddress = "192.168.2.56";
-      tokenFile = config.sops.secrets."k3s-token".path;
+      tokenFile = config.sops.secrets."k3s_token".path;
       kubeconfigPath = "/home/biocirc/.config/k3s/kubeconfig";
     };
 
@@ -401,7 +401,16 @@ in
   # ============================================================================
   # SYSTEM VERSION
   # ============================================================================
+    nix.gc = {
+  automatic = true;
+  dates = "weekly";
+  options = "--delete-older-than 7d";
+};
 
+nix.optimise = {
+  automatic = true;
+  dates = [ "weekly" ];
+};
   # NixOS Release Version - NICHT ÄNDERN nach der ersten Installation!
   system.stateVersion = "24.05";
 }

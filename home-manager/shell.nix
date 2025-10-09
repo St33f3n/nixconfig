@@ -317,7 +317,7 @@
 
       # Pager-Konfiguration
       $env.PAGER = "less -R"
-      $env.KUBECONFIG = "$env.HOME/.config/k3s/kubeconfig"
+      $env.KUBECONFIG = $"($env.HOME)/.config/k3s/kubeconfig"
       # Man-Pages mit Syntax-Highlighting (via bat)
       if (which bat | is-not-empty) {
         $env.MANPAGER = "sh -c 'col -bx | bat -l man -p'"
