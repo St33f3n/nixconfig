@@ -94,8 +94,7 @@ in
 
   networking.hostName = "neptune";
   networking.extraHosts = ''
-    192.168.2.56 master.k8s.local master
-    192.168.2.56 etcd.local etcd
+    192.168.2.56 neptune.local
   '';
 
   # Video Treiber für beide GPUs

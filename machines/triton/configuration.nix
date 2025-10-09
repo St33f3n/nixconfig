@@ -188,7 +188,20 @@ nix.optimise = {
   automatic = true;
   dates = [ "weekly" ];
 };
+services.k3s-cluster = {
+  agent = {
+    enable = true;
+    serverAddress = "https://neptune.local:6443";
+    tokenFile = "/path/to/k3s-token";
+    nodeAddress = ip_address;
+  };
 
+  nfs.client = {
+    enable = true;
+    serverAddress = "neptune.local";
+    mountPoint = "/mnt/test";
+  };
+};
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
