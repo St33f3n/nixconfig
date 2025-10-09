@@ -14,6 +14,7 @@ in
 {
   imports = [
     # Include the results of the hardware scan.
+    inputs.sops-nix.nixosModules.sops
     ./stylix.nix
     ./hardware-configuration.nix
     ./secrets.nix

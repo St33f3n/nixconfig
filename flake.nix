@@ -84,6 +84,7 @@
             }
             stylix.nixosModules.stylix
             nix-flatpak.nixosModules.nix-flatpak
+            sops-nix.nixosModules.sops
           ];
         };
 
