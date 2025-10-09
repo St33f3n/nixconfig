@@ -25,6 +25,7 @@ with lib;
       glibc
       glibtool
       gsettings-desktop-schemas
+      openssl
 
       # Network Management
       networkmanagerapplet

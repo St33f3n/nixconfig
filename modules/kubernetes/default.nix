@@ -1,7 +1,7 @@
 # modules/kubernetes/default.nix
 {
   imports = [
-    ./base.nix
+    ./nfs.nix
     ./master.nix
     ./worker.nix
   ];

@@ -391,30 +391,21 @@ networking.extraHosts = ''
   # ════════════════════════════════════════════════════════════════════════
   # KUBERNETES MASTER
   # ════════════════════════════════════════════════════════════════════════
-  services.k8s-cluster = {
-    # Shared config 
-    masterAddress = "192.168.2.56";
-    clusterName = "homelab";
-    clusterCidr = "10.244.0.0/16";
-    serviceCidr = "10.96.0.0/12";
-    clusterDns = "10.96.0.10";
 
-    # Master aktivieren 
-    master = {
-      enable = true;
-      nodeAddress = "192.168.2.56";
-
-      nfs = {
-        enable = true;
-        storageDir = "/mnt/test";
-        allowedNetworks = [ "192.168.2.0/24" ];
-      };
-    };
-
-    # Worker deaktivieren 
-    worker.enable = false;
+  services.k3s-cluster = {
+  server = {
+    enable = true;
+    nodeAddress = "192.168.2.56";
+    tokenFile = config.sops.secrets."k3s-token".path;
+    kubeconfigPath = "/home/biocirc/.config/k3s/kubeconfig";
   };
 
+  nfs.server = {
+    enable = true;
+    storageDir = "/mnt/test";
+    allowedNetworks = [ "192.168.2.0/24" ];
+  };
+};
 
 
 
