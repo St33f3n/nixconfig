@@ -30,6 +30,7 @@ in
     # Machine-specific
     ./stylix.nix
     ./hardware-configuration.nix
+    ./secrets.nix
 
     # Feature Modules
     ../../modules/core.nix
@@ -47,17 +48,7 @@ in
     ../../modules/kubernetes
   ];
 
-  # ============================================================================
-  # SECRETS MANAGEMENT (SOPS)
-  # ============================================================================
 
-  sops.defaultSopsFile = ./secrets/secrets.yaml;
-  sops.defaultSopsFormat = "yaml";
-  sops.age.keyFile = "/home/biocirc/.config/sops/age/keys.txt";
-
-  sops.secrets.ip_address = {
-    owner = config.users.users.biocirc.name;
-  };
 
   # ============================================================================
   # MODULE AKTIVIERUNG
