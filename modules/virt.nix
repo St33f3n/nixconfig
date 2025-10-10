@@ -18,6 +18,9 @@ with lib;
     quemu = {
       enable = mkEnableOption "KVM/QEMU virtualization with virt-manager";
     };
+    kubernetes = {
+      enable = mkEnableOption "Observation & Kontroll over Kubernetes";
+    };
   };
 
   config = mkIf config.virt.enable (mkMerge [
@@ -85,7 +88,19 @@ with lib;
         ];
       };
     })
+    # Kubernetes Observation Kit
+    (mkIf config.virt.kubernetes.enable {
+      environment.systemPackages = with pkgs; [
+        k9s
+        fluxcd
+        helm
+        kustomize
+        stern
+        kubectx
+      ];
+    })
 
+    
     # KVM/QEMU Virtualization Configuration
     (mkIf config.virt.quemu.enable {
       environment.systemPackages = with pkgs; [

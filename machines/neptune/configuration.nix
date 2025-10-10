@@ -62,6 +62,7 @@ in
   fonts-options.enable = true;
   misc.enable = true;
   virt.enable = true;
+  virt.kubernetes.enable = true;
   virt.container.enable = true;
   virt.quemu.enable = false;
   creative.enable = true;
