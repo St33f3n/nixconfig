@@ -104,6 +104,8 @@ in
     "amdgpu"
   ];
 
+  networking.interfaces."enp9s0".wakeOnLan.enable = true;
+
   # Statische IP-Konfiguration für lokales Netzwerk
   networking.networkmanager = {
     ensureProfiles.profiles = {

@@ -38,8 +38,43 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "triton"; # Define your hostname.
-  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.hostName = "triton";
+  networking.networkmanager.enable = true;  # Make sure this is explicitly set
+
+  networking.interfaces."enp0s13f0u3u2".wakeOnLan.enable = true;
+
+  sops.secrets.wifi_password = {
+    sopsFile = ./secrets/secrets.yaml;
+    mode = "0400";
+    owner = "root";
+  };
+
+  # Use a systemd service to set up the connection with the secret
+  systemd.services.setup-wifi = {
+    description = "Setup WiFi with secret";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-pre.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      ${pkgs.networkmanager}/bin/nmcli connection show "WiFi Fallback" &> /dev/null || \
+      ${pkgs.networkmanager}/bin/nmcli connection add \
+        type wifi \
+        con-name "WiFi Fallback" \
+        ifname '*' \
+        ssid "Dahoam3" \
+        wifi-sec.key-mgmt wpa-psk \
+        wifi-sec.psk "$(cat ${config.sops.secrets.wifi_password.path})" \
+        ipv4.method manual \
+        ipv4.addresses "${ip_address}/24" \
+        ipv4.gateway "192.168.2.1" \
+        ipv4.dns "192.168.2.32 192.168.2.1" \
+        connection.autoconnect yes \
+        connection.autoconnect-priority 50
+    '';
+  };
 
   networking.networkmanager = {
     ensureProfiles.profiles = {
@@ -49,6 +84,7 @@ in
           "type" = "ethernet";
           "interface-name" = "enp0s13f0u1u2";
           "autoconnect" = true;
+          "autoconnect-priority" = 100;  # Higher priority
         };
         "ipv4" = {
           "method" = "manual";
@@ -56,9 +92,9 @@ in
           "dns" = "192.168.2.32;192.168.2.1";
         };
       };
+    
     };
   };
-
   networking.nameservers = [
     "192.168.2.32"
     "192.168.2.1"
