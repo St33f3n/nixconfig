@@ -31,6 +31,7 @@ with lib;
       networkmanagerapplet
       iwd
       usb-modeswitch
+      iperf
 
       # Browsers
       librewolf
@@ -41,6 +42,7 @@ with lib;
       filezilla
       rsync
       exfatprogs
+      bzip2
 
       # USB Tools
       usbutils

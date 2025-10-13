@@ -107,7 +107,7 @@ in
   # Statische IP-Konfiguration für lokales Netzwerk
   networking.networkmanager = {
     ensureProfiles.profiles = {
-      "usb-ethernet" = {
+      "ethernet" = {
         "connection" = {
           "id" = "Local";
           "type" = "ethernet";

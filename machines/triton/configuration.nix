@@ -212,6 +212,16 @@ services.k3s-cluster = {
     sshKeyFile = config.sops.secrets."nfs_ssh_key".path;
   };
 };
+
+ 
+  services.logind = {
+    lidSwitch = "suspend";
+    lidSwitchDocked = "ignore";  # When docked/external monitor connected
+    lidSwitchExternalPower = "ignore";  # When on AC power
+  };
+
+  
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
