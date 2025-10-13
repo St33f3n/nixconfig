@@ -11,5 +11,34 @@
       owner = config.users.users.biocirc.name;
       mode = "0600";
     };
+
+    local_tls_cert = {
+      sopsFile = ./secrets/k3s.yml;
+      owner = config.users.users.biocirc.name;
+      mode = "0600";
+    };
+
+    local_tls_key = {
+      sopsFile = ./secrets/k3s.yml;
+      owner = config.users.users.biocirc.name;
+      mode = "0600";
+    };
+
+    public_tls_cert = {
+      sopsFile = ./secrets/k3s.yml;
+      owner = config.users.users.biocirc.name;
+      mode = "0600";
+    };
+    public_tls_key = {
+      sopsFile = ./secrets/k3s.yml;
+      owner = config.users.users.biocirc.name;
+      mode = "0600";
+    };
+
+    traefik_dashboard_pw = {
+      sopsFile = ./secrets/k3s.yml;
+      owner = config.users.users.biocirc.name;
+      mode = "0600";
+    };
   };
 }

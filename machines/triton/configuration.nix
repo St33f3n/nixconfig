@@ -39,7 +39,7 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "triton";
-  networking.networkmanager.enable = true;  # Make sure this is explicitly set
+  networking.networkmanager.enable = true; # Make sure this is explicitly set
 
   networking.interfaces."enp0s13f0u3u2".wakeOnLan.enable = true;
 
@@ -84,7 +84,7 @@ in
           "type" = "ethernet";
           "interface-name" = "enp0s13f0u1u2";
           "autoconnect" = true;
-          "autoconnect-priority" = 100;  # Higher priority
+          "autoconnect-priority" = 100; # Higher priority
         };
         "ipv4" = {
           "method" = "manual";
@@ -92,7 +92,7 @@ in
           "dns" = "192.168.2.32;192.168.2.1";
         };
       };
-    
+
     };
   };
   networking.nameservers = [
@@ -218,40 +218,39 @@ in
   services.openssh.settings.KbdInteractiveAuthentication = false;
 
   nix.gc = {
-  automatic = true;
-  dates = "weekly";
-  options = "--delete-older-than 7d";
-};
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
 
-nix.optimise = {
-  automatic = true;
-  dates = [ "weekly" ];
-};
-services.k3s-cluster = {
-  agent = {
-    enable = true;
-    serverAddress = "https://neptune.local:6443";
-    tokenFile = config.sops.secrets."k3s_token".path;
-    nodeAddress = ip_address;
+  nix.optimise = {
+    automatic = true;
+    dates = [ "weekly" ];
+  };
+  services.k3s-cluster = {
+    agent = {
+      enable = true;
+      serverAddress = "https://neptune.local:6443";
+      tokenFile = config.sops.secrets."k3s_token".path;
+      nodeAddress = ip_address;
       nodeLabels = [
-  ];
-  
-  nodeTaints = [ ];
+      ];
+
+      nodeTaints = [ ];
+    };
+
+    storage.client = {
+      enable = true;
+      serverAddress = "neptune.local";
+      serverUser = "k3s-storage";
+      remoteDir = "/mnt/test";
+      mountPoint = "mnt/test";
+      sshKeyFile = config.sops.secrets."nfs_ssh_key".path;
+    };
   };
 
-  storage.client = {
-    enable = true;
-    serverAddress = "neptune.local";
-    serverUser = "k3s-storage";
-    remoteDir = "/mnt/test";
-    mountPoint = "mnt/test";
-    sshKeyFile = config.sops.secrets."nfs_ssh_key".path;
-  };
-};
+  services.logind.lidSwitch = "ignore";
 
- 
-services.logind.lidSwitch = "ignore";
-  
   # For the other options, use the new nested structure:
   services.logind.settings = {
     Login = {
@@ -259,7 +258,6 @@ services.logind.lidSwitch = "ignore";
       HandleLidSwitchExternalPower = "ignore";
     };
   };
-  
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

@@ -100,7 +100,6 @@ with lib;
       ];
     })
 
-    
     # KVM/QEMU Virtualization Configuration
     (mkIf config.virt.quemu.enable {
       environment.systemPackages = with pkgs; [

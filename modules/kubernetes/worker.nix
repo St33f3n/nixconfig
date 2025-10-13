@@ -34,7 +34,10 @@ in
     nodeLabels = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "node-role=worker" "workload=compute" ];
+      example = [
+        "node-role=worker"
+        "workload=compute"
+      ];
       description = "Node labels in key=value format";
     };
 

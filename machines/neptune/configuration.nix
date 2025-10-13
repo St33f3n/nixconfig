@@ -48,8 +48,6 @@ in
     ../../modules/kubernetes
   ];
 
-
-
   # ============================================================================
   # MODULE AKTIVIERUNG
   # ============================================================================
@@ -96,6 +94,7 @@ in
   networking.hostName = "neptune";
   networking.extraHosts = ''
     192.168.2.56 neptune.local
+    192.168.2.56 traefik.local
   '';
 
   # Video Treiber für beide GPUs
@@ -396,34 +395,43 @@ in
         "storage=local"
       ];
       nodeTaints = [
-       
+      
       ];
+      traefik = {
+        enable = true;
+        publicDomain = "organiccircuitlab.com";
+        dashboard = {
+          enable = true;
+          domain = "neptune.local";
+        };
+      };
     };
+
+    
 
     storage.server = {
-       enable = true;
-  storageDir = "/mnt/test";
-    sshUser = "k3s-storage";
-    authorizedKeys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL2KmHyTXh7p/lC6UbsJ605X4XuRcf7d/olIadBgJQnm nfs-client-triton"
-    ];
-  };
+      enable = true;
+      storageDir = "/mnt/test";
+      sshUser = "k3s-storage";
+      authorizedKeys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL2KmHyTXh7p/lC6UbsJ605X4XuRcf7d/olIadBgJQnm nfs-client-triton"
+      ];
     };
-
+  };
 
   # ============================================================================
   # SYSTEM VERSION
   # ============================================================================
-    nix.gc = {
-  automatic = true;
-  dates = "weekly";
-  options = "--delete-older-than 7d";
-};
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
 
-nix.optimise = {
-  automatic = true;
-  dates = [ "weekly" ];
-};
+  nix.optimise = {
+    automatic = true;
+    dates = [ "weekly" ];
+  };
   # NixOS Release Version - NICHT ÄNDERN nach der ersten Installation!
   system.stateVersion = "24.05";
 }
