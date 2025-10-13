@@ -214,12 +214,15 @@ services.k3s-cluster = {
 };
 
  
-  services.logind = {
-    lidSwitch = "suspend";
-    lidSwitchDocked = "ignore";  # When docked/external monitor connected
-    lidSwitchExternalPower = "ignore";  # When on AC power
+services.logind.lidSwitch = "ignore";
+  
+  # For the other options, use the new nested structure:
+  services.logind.settings = {
+    Login = {
+      HandleLidSwitchDocked = "ignore";
+      HandleLidSwitchExternalPower = "ignore";
+    };
   };
-
   
 
   # This value determines the NixOS release from which the default
