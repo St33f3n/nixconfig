@@ -147,6 +147,147 @@ in
       role = "server";
       inherit (cfg) tokenFile;
 
+      manifests = {
+        # 1. Traefik HelmChartConfig - Grundkonfiguration
+        traefik-config = mkIf cfg.traefik.enable {
+          content = {
+            apiVersion = "helm.cattle.io/v1";
+            kind = "HelmChartConfig";
+            metadata = {
+              name = "traefik";
+              namespace = "kube-system";
+            };
+            spec = {
+              valuesContent = ''
+              ${optionalString cfg.traefik.dashboard.enable ''
+                ingressRoute:
+                  dashboard:
+                    enabled: true
+                    matchRule: Host(`${cfg.traefik.dashboard.domain}`)
+                    entryPoints: ["websecure"]
+              ''}
+                
+                ports:
+                  web:
+                    port: 80
+                    redirections:
+                      entryPoint:
+                        to: websecure
+                        scheme: https
+                        permanent: true
+                  websecure:
+                    port: 443
+                    tls:
+                      enabled: true                
+                tls:
+                  stores:
+                    default:
+                      defaultCertificate:
+                        secretName: local-tls-cert
+                    public:
+                      defaultCertificate:
+                        secretName: public-tls-cert
+                  options:
+                    default:
+                      minVersion: VersionTLS12
+                      sniStrict: true
+                      cipherSuites:
+                        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+                        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+                        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+
+                ${optionalString cfg.traefik.dashboard.enable ''
+                  # Dashboard über Helm aktivieren
+                  api:
+                    dashboard:
+                      enabled: true
+                ''}
+
+                additionalArguments:
+                  - "--entrypoints.websecure.http.middlewares=default-security-headers@kubernetescrd"
+
+              '';
+            };
+          };
+        };
+
+        # 2. HSTS Middleware als Kubernetes CRD
+        traefik-middleware-hsts = mkIf cfg.traefik.enable {
+          content = {
+            apiVersion = "traefik.io/v1alpha1";
+            kind = "Middleware";
+            metadata = {
+              name = "hsts";
+              namespace = "default";
+            };
+            spec = {
+              headers = {
+                customResponseHeaders = {
+            "Strict-Transport-Security" = "max-age=31536000; includeSubDomains; preload";
+            "X-Frame-Options" = "DENY";
+            "X-Content-Type-Options" = "nosniff";
+            "X-XSS-Protection" = "1; mode=block";
+            "Referrer-Policy" = "strict-origin-when-cross-origin";
+            "Content-Security-Policy" = "default-src 'self'";
+          };
+          forceSTSHeader = true;
+              };
+            };
+          };
+        };
+
+        # 3. Dashboard Auth Middleware
+        traefik-dashboard-middleware = mkIf cfg.traefik.dashboard.enable {
+          content = {
+            apiVersion = "traefik.io/v1alpha1";
+            kind = "Middleware";
+            metadata = {
+              name = "dashboard-auth";
+              namespace = "kube-system";
+            };
+            spec = {
+              basicAuth = {
+                secret = "traefik-dashboard-auth";
+              };
+            };
+          };
+        };
+        # 4. Dashboard IngressRoute - MIT HSTS
+        traefik-dashboard-ingressroute = mkIf cfg.traefik.dashboard.enable {
+          content = {
+            apiVersion = "traefik.io/v1alpha1";
+            kind = "IngressRoute";
+            metadata = {
+              name = "traefik-dashboard";
+              namespace = "default";
+            };
+            spec = {
+              entryPoints = [ "websecure" ];
+              routes = [
+                {
+                  match = "Host(`${cfg.traefik.dashboard.domain}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))";
+                  kind = "Rule";
+                  middlewares = [
+                    {
+                      name = "hsts";
+                      namespace = "default";
+                    }
+                  ];
+                  services = [
+                    {
+                      name = "api@internal";
+                      kind = "TraefikService";
+                    }
+                  ];
+                }
+              ];
+              tls = {
+                secretName = "local-tls-cert";
+                 };
+            };
+          };
+        };
+      };
       extraFlags = lib.concatStringsSep " " (
         [
           "--node-ip=${cfg.nodeAddress}"
@@ -163,98 +304,8 @@ in
     };
 
     systemd.tmpfiles.rules = [
-      "d /var/lib/rancher/k3s/server/manifests 0755 root root -"
       "d ${dirOf cfg.kubeconfigPath} 0755 biocirc users -"
     ];
-
-
-    # Traefik HelmChartConfig
-    environment.etc."rancher/k3s/server/manifests/traefik-config.yaml" = mkIf cfg.traefik.enable {
-      text = ''
-        apiVersion: helm.cattle.io/v1
-        kind: HelmChartConfig
-        metadata:
-          name: traefik
-          namespace: kube-system
-        spec:
-          valuesContent: |-
-            ports:
-              web:
-                port: 80
-                exposedPort: 80
-                redirectTo:
-                  port: websecure
-              websecure:
-                port: 443
-                exposedPort: 443
-                tls:
-                  enabled: true
-            
-            tls:
-              stores:
-                default:
-                  defaultCertificate:
-                    secretName: local-tls-cert
-                public:
-                  defaultCertificate:
-                    secretName: public-tls-cert
-              
-              options:
-                default:
-                  minVersion: VersionTLS12
-                  sniStrict: true
-                  cipherSuites:
-                    - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-                    - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-                    - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
-            
-            ${optionalString cfg.traefik.dashboard.enable ''
-            dashboard:
-              enabled: true
-            
-            ingressRoute:
-              dashboard:
-                enabled: true
-                matchRule: Host(`${cfg.traefik.dashboard.domain}`)
-                entryPoints:
-                  - websecure
-                tls: {}
-                middlewares:
-                  - name: dashboard-auth
-            ''}
-            
-            additionalArguments:
-              - "--entrypoints.websecure.http.middlewares=hsts@file"
-            
-            providers:
-              file:
-                content: |
-                  [http.middlewares.hsts.headers]
-                    stsSeconds = 31536000
-                    stsIncludeSubdomains = true
-                    stsPreload = true
-      '';
-      mode = "0644";
-      user = "root";
-      group = "root";
-    };
-    # Traefik Dashboard BasicAuth Middleware
-    environment.etc."rancher/k3s/server/manifests/traefik-dashboard-middleware.yaml" = mkIf cfg.traefik.dashboard.enable {
-      text = ''
-        apiVersion: traefik.io/v1alpha1
-        kind: Middleware
-        metadata:
-          name: dashboard-auth
-          namespace: kube-system
-        spec:
-          basicAuth:
-            secret: traefik-dashboard-auth
-      '';
-      mode = "0644";
-      user = "root";
-      group = "root";
-    };
-
 
     systemd.services.k3s.serviceConfig = {
       ExecStartPost = "${pkgs.coreutils}/bin/chown biocirc:users ${cfg.kubeconfigPath}";
@@ -266,9 +317,6 @@ in
       kubernetes-helm
     ];
 
-    
-
-    
     environment.variables = {
       KUBECONFIG = cfg.kubeconfigPath;
     };
@@ -317,7 +365,7 @@ in
         ${pkgs.kubectl}/bin/kubectl create secret tls local-tls-cert \
           --cert="$TMPDIR/local.crt" \
           --key="$TMPDIR/local.key" \
-          --namespace=kube-system \
+          --namespace=default \
           --dry-run=client -o yaml | ${pkgs.kubectl}/bin/kubectl apply -f -
 
         echo "Deploying public TLS certificate..."
@@ -327,7 +375,7 @@ in
         ${pkgs.kubectl}/bin/kubectl create secret tls public-tls-cert \
           --cert="$TMPDIR/public.crt" \
           --key="$TMPDIR/public.key" \
-          --namespace=kube-system \
+          --namespace=default \
           --dry-run=client -o yaml | ${pkgs.kubectl}/bin/kubectl apply -f -
 
         echo "TLS certificates deployed successfully"
@@ -336,94 +384,47 @@ in
     # Dashboard BasicAuth Secret Deployment
     systemd.services.k3s-deploy-dashboard-auth = mkIf cfg.traefik.dashboard.enable {
       description = "Deploy Traefik Dashboard BasicAuth Secret";
-      after = [ 
-        "k3s.service" 
-        "k3s-deploy-tls-certs.service" 
+      after = [
+        "k3s.service"
+        "k3s-deploy-tls-certs.service"
       ];
       requires = [ "k3s.service" ];
       wantedBy = [ "multi-user.target" ];
-      
-      path = [ pkgs.apacheHttpd pkgs.kubectl ];
-      
+
+      path = [
+        pkgs.apacheHttpd
+        pkgs.kubectl
+      ];
+
       environment = {
         KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
       };
-      
+
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
         Restart = "on-failure";
         RestartSec = "30s";
       };
-      
+
       preStart = "${pkgs.coreutils}/bin/sleep 10";
-      
+
       script = ''
         set -euo pipefail
-        
+
         echo "Generating htpasswd for dashboard..."
         PASSWORD=$(${pkgs.coreutils}/bin/cat ${cfg.traefik.dashboard.passwordFile})
         HTPASSWD=$(${pkgs.apacheHttpd}/bin/htpasswd -nb admin "$PASSWORD")
-        
+
         echo "Deploying BasicAuth secret..."
         ${pkgs.kubectl}/bin/kubectl create secret generic traefik-dashboard-auth \
           --from-literal=users="$HTPASSWD" \
           --namespace=kube-system \
           --dry-run=client -o yaml | ${pkgs.kubectl}/bin/kubectl apply -f -
-        
+
         echo "Dashboard auth secret deployed"
       '';
     };
 
-  # Traefik Configuration Trigger
-      systemd.services.k3s-traefik-restart = mkIf cfg.traefik.enable {
-        description = "Restart Traefik pods to apply new configuration";
-        after = [ 
-          "k3s.service" 
-          "k3s-deploy-tls-certs.service"
-        ] ++ optional cfg.traefik.dashboard.enable "k3s-deploy-dashboard-auth.service";
-        requires = [ "k3s.service" ];
-        wantedBy = [ "multi-user.target" ];
-      
-        path = [ pkgs.kubectl pkgs.coreutils ];
-      
-        environment = {
-          KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
-        };
-      
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          Restart = "on-failure";
-          RestartSec = "30s";
-        };
-      
-        preStart = "${pkgs.coreutils}/bin/sleep 15";
-      
-        script = ''
-          set -euo pipefail
-        
-          echo "Waiting for Traefik deployment to be ready..."
-          for i in {1..30}; do
-            if ${pkgs.kubectl}/bin/kubectl get deployment traefik -n kube-system &>/dev/null; then
-              echo "Traefik deployment found"
-              break
-            fi
-            if [ $i -eq 30 ]; then
-              echo "Timeout waiting for Traefik deployment"
-              exit 1
-            fi
-            ${pkgs.coreutils}/bin/sleep 2
-          done
-        
-          echo "Restarting Traefik pods to apply configuration..."
-          ${pkgs.kubectl}/bin/kubectl rollout restart deployment/traefik -n kube-system
-        
-          echo "Waiting for rollout to complete..."
-          ${pkgs.kubectl}/bin/kubectl rollout status deployment/traefik -n kube-system --timeout=5m
-        
-          echo "Traefik restart completed successfully"
-        '';
-      };
   };
 }

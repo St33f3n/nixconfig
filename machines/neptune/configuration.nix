@@ -93,8 +93,8 @@ in
 
   networking.hostName = "neptune";
   networking.extraHosts = ''
-    192.168.2.56 neptune.local
-    192.168.2.56 traefik.local
+    192.168.2.56 neptune.home
+    192.168.2.56 traefik.neptune.home
   '';
 
   # Video Treiber für beide GPUs
@@ -395,19 +395,17 @@ in
         "storage=local"
       ];
       nodeTaints = [
-      
+
       ];
       traefik = {
         enable = true;
         publicDomain = "organiccircuitlab.com";
         dashboard = {
           enable = true;
-          domain = "neptune.local";
+          domain = "traefik.neptune.home";
         };
       };
     };
-
-    
 
     storage.server = {
       enable = true;
